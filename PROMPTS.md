@@ -50,3 +50,46 @@ Please execute these steps and confirm when complete.
 
 **Context:**
 Setting up the project's foundational dependencies, clean architecture folder structure, and Material 3 design system using local fonts.
+
+## Entry #3: Implement the "Cinematic Gold" Material 3 Theme
+**Prompt:**
+Task 3: Implement the "Cinematic Gold" Material 3 Theme
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #3. Context: "Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying the local Poppins font family."
+
+Action: > I need you to create a comprehensive theme configuration file at /lib/core/theme/app_theme.dart. We are building a premium, modern movie app, so we need a highly polished Dark Mode theme.
+
+Please implement an AppTheme class with a static darkTheme getter that returns a ThemeData object meeting these exact specifications:
+
+Color Scheme (Material 3):
+
+brightness: Brightness.dark
+
+primary / secondary / tertiary: Use a rich, vibrant "Cinematic Gold" or Amber (e.g., Color(0xFFFFC107) or similar).
+
+background / scaffoldBackgroundColor: A deep, premium charcoal or near-black (e.g., Color(0xFF121212)).
+
+surface: A slightly lighter dark grey for movie cards and bottom sheets (e.g., Color(0xFF1E1E1E)).
+
+onPrimary: Black or very dark grey (for text inside gold buttons).
+
+onBackground / onSurface: White or very light grey (for standard text).
+
+Typography:
+
+Set the global fontFamily to 'Poppins' (which we configured in pubspec.yaml).
+
+Ensure headers are bold and clear, while body text is highly legible for movie descriptions.
+
+Component Themes:
+
+CardTheme: Rounded corners (e.g., radius 12 or 16), slight elevation, using the surface color.
+
+ElevatedButtonTheme: Pill-shaped (StadiumBorder) or rounded rectangles, using the Gold primary color.
+
+AppBarTheme: Transparent or matching the scaffold background, no elevation, center title.
+
+Please generate the complete app_theme.dart file. Once done, let me know so I can apply it to my MaterialApp widget in main.dart.
+
+**Context:**
+Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying the local Poppins font family.
