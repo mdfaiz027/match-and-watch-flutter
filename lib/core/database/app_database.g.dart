@@ -464,7 +464,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 }
 
-class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
+class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movie> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -535,7 +535,7 @@ class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
   static const String $name = 'movies';
   @override
   VerificationContext validateIntegrity(
-    Insertable<Movy> instance, {
+    Insertable<Movie> instance, {
     bool isInserting = false,
   }) {
     final context = VerificationContext();
@@ -578,9 +578,9 @@ class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Movy map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Movie map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Movy(
+    return Movie(
       id: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}id'],
@@ -610,13 +610,13 @@ class $MoviesTable extends Movies with TableInfo<$MoviesTable, Movy> {
   }
 }
 
-class Movy extends DataClass implements Insertable<Movy> {
+class Movie extends DataClass implements Insertable<Movie> {
   final int id;
   final String title;
   final String? posterPath;
   final String? releaseYear;
   final String? overview;
-  const Movy({
+  const Movie({
     required this.id,
     required this.title,
     this.posterPath,
@@ -656,12 +656,12 @@ class Movy extends DataClass implements Insertable<Movy> {
     );
   }
 
-  factory Movy.fromJson(
+  factory Movie.fromJson(
     Map<String, dynamic> json, {
     ValueSerializer? serializer,
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Movy(
+    return Movie(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       posterPath: serializer.fromJson<String?>(json['posterPath']),
@@ -681,21 +681,21 @@ class Movy extends DataClass implements Insertable<Movy> {
     };
   }
 
-  Movy copyWith({
+  Movie copyWith({
     int? id,
     String? title,
     Value<String?> posterPath = const Value.absent(),
     Value<String?> releaseYear = const Value.absent(),
     Value<String?> overview = const Value.absent(),
-  }) => Movy(
+  }) => Movie(
     id: id ?? this.id,
     title: title ?? this.title,
     posterPath: posterPath.present ? posterPath.value : this.posterPath,
     releaseYear: releaseYear.present ? releaseYear.value : this.releaseYear,
     overview: overview.present ? overview.value : this.overview,
   );
-  Movy copyWithCompanion(MoviesCompanion data) {
-    return Movy(
+  Movie copyWithCompanion(MoviesCompanion data) {
+    return Movie(
       id: data.id.present ? data.id.value : this.id,
       title: data.title.present ? data.title.value : this.title,
       posterPath: data.posterPath.present
@@ -710,7 +710,7 @@ class Movy extends DataClass implements Insertable<Movy> {
 
   @override
   String toString() {
-    return (StringBuffer('Movy(')
+    return (StringBuffer('Movie(')
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('posterPath: $posterPath, ')
@@ -725,7 +725,7 @@ class Movy extends DataClass implements Insertable<Movy> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Movy &&
+      (other is Movie &&
           other.id == this.id &&
           other.title == this.title &&
           other.posterPath == this.posterPath &&
@@ -733,7 +733,7 @@ class Movy extends DataClass implements Insertable<Movy> {
           other.overview == this.overview);
 }
 
-class MoviesCompanion extends UpdateCompanion<Movy> {
+class MoviesCompanion extends UpdateCompanion<Movie> {
   final Value<int> id;
   final Value<String> title;
   final Value<String?> posterPath;
@@ -753,7 +753,7 @@ class MoviesCompanion extends UpdateCompanion<Movy> {
     this.releaseYear = const Value.absent(),
     this.overview = const Value.absent(),
   }) : title = Value(title);
-  static Insertable<Movy> custom({
+  static Insertable<Movie> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? posterPath,
@@ -1450,7 +1450,7 @@ typedef $$MoviesTableUpdateCompanionBuilder =
     });
 
 final class $$MoviesTableReferences
-    extends BaseReferences<_$AppDatabase, $MoviesTable, Movy> {
+    extends BaseReferences<_$AppDatabase, $MoviesTable, Movie> {
   $$MoviesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static MultiTypedResultKey<$SavedMoviesTable, List<SavedMovy>>
@@ -1626,14 +1626,14 @@ class $$MoviesTableTableManager
         RootTableManager<
           _$AppDatabase,
           $MoviesTable,
-          Movy,
+          Movie,
           $$MoviesTableFilterComposer,
           $$MoviesTableOrderingComposer,
           $$MoviesTableAnnotationComposer,
           $$MoviesTableCreateCompanionBuilder,
           $$MoviesTableUpdateCompanionBuilder,
-          (Movy, $$MoviesTableReferences),
-          Movy,
+          (Movie, $$MoviesTableReferences),
+          Movie,
           PrefetchHooks Function({bool savedMoviesRefs})
         > {
   $$MoviesTableTableManager(_$AppDatabase db, $MoviesTable table)
@@ -1689,7 +1689,7 @@ class $$MoviesTableTableManager
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (savedMoviesRefs)
-                    await $_getPrefetchedData<Movy, $MoviesTable, SavedMovy>(
+                    await $_getPrefetchedData<Movie, $MoviesTable, SavedMovy>(
                       currentTable: table,
                       referencedTable: $$MoviesTableReferences
                           ._savedMoviesRefsTable(db),
@@ -1714,14 +1714,14 @@ typedef $$MoviesTableProcessedTableManager =
     ProcessedTableManager<
       _$AppDatabase,
       $MoviesTable,
-      Movy,
+      Movie,
       $$MoviesTableFilterComposer,
       $$MoviesTableOrderingComposer,
       $$MoviesTableAnnotationComposer,
       $$MoviesTableCreateCompanionBuilder,
       $$MoviesTableUpdateCompanionBuilder,
-      (Movy, $$MoviesTableReferences),
-      Movy,
+      (Movie, $$MoviesTableReferences),
+      Movie,
       PrefetchHooks Function({bool savedMoviesRefs})
     >;
 typedef $$SavedMoviesTableCreateCompanionBuilder =

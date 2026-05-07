@@ -15,11 +15,9 @@ class AppTheme {
         primary: cinematicGold,
         secondary: cinematicGold,
         tertiary: cinematicGold,
-        background: deepBackground,
-        surface: surfaceGrey,
+        surface: deepBackground,
         onPrimary: Colors.black,
-        onBackground: Colors.white,
-        onSurface: Colors.white70,
+        onSurface: Colors.white,
       ),
       
       scaffoldBackgroundColor: deepBackground,

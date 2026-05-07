@@ -17,6 +17,7 @@ class Users extends Table {
   BoolColumn get pendingSync => boolean().withDefault(const Constant(false))();
 }
 
+@DataClassName('Movie')
 class Movies extends Table {
   IntColumn get id => integer()(); // TMDB/OMDB ID
   TextColumn get title => text()();

@@ -207,3 +207,32 @@ Please generate these classes. Ensure they are structured cleanly and handle off
 
 **Context:**
 Building the Repository pattern to act as the single source of truth, and setting up BLoCs/Cubits to expose database streams to the UI.
+
+## Entry #7: Background Sync (WorkManager) & App Initialization
+**Prompt:**
+Task 6: Background Sync (WorkManager) & App Initialization
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #7. Context: "Implementing the WorkManager background task to sync offline-created users to the server, and setting up the app icon and splash screen packages."
+
+Action 1: WorkManager Background Task
+In /lib/features/sync/, create a file called sync_manager.dart. I need you to implement the WorkManager callback dispatcher.
+The background task should do the following:
+
+Query the UserRepository (or directly via the Drift database) for any users where pendingSync == true.
+
+For each pending user, attempt to POST them to the Reqres API via our ReqresService.
+
+If successful, update that user's record in the Drift database with the new serverId returned from the API, and set pendingSync = false.
+
+Handle errors gracefully (if the network is still down, the task should fail so WorkManager knows to retry it later).
+
+Action 2: Initialize in Main
+Update main.dart to initialize WorkManager, register the background task, and ensure our Drift database and Dio client are initialized before runApp is called.
+
+Action 3: Polish Packages
+Please add flutter_launcher_icons and flutter_native_splash to the dev_dependencies in pubspec.yaml. Create the base configuration for both in pubspec.yaml (or their respective config files) using our "Cinematic Gold" dark background color (#121212). Use a placeholder image path like assets/images/logo.png for now.
+
+Please generate these files and confirm when complete.
+
+**Context:**
+Implementing the WorkManager background task to sync offline-created users to the server, and setting up the app icon and splash screen packages.

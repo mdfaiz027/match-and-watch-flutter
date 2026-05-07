@@ -36,14 +36,12 @@ class MovieRepository {
   }
 
   Future<void> toggleSaveMovie(int userId, Movie movie) async {
-    final query = _db.select(_db.savedMovies)
+    final query = _db.delete(_db.savedMovies)
       ..where((t) => t.userId.equals(userId) & t.movieId.equals(movie.id));
     
-    final existing = await query.getSingleOrNull();
+    final deletedCount = await query.go();
 
-    if (existing != null) {
-      await query.delete();
-    } else {
+    if (deletedCount == 0) {
       // Ensure movie exists in local DB before saving relation
       await _db.into(_db.movies).insertOnConflictUpdate(movie);
       
