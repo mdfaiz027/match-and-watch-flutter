@@ -174,3 +174,36 @@ Please write these files and confirm when complete. Do not hook them up to the U
 
 **Context:**
 Building the Dio network client, including API services for Reqres and TMDB, and a custom interceptor to simulate the required 30% network failure and auto-retry logic.
+
+## Entry #6: Repositories & State Management (Bloc)
+**Prompt:**
+Task 5: Repositories & State Management (Bloc)
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #6. Context: "Building the Repository pattern to act as the single source of truth, and setting up BLoCs/Cubits to expose database streams to the UI."
+
+Action 1: Repositories
+Create two repositories in /lib/core/repositories/:
+
+UserRepository:
+
+Needs a method to fetch users from the ReqresService, save them into the Drift database, and return a Stream of users directly from the database.
+
+Needs a method to create a new user. If offline, it saves to Drift with pendingSync = true. If online, it sends to the API and saves to Drift.
+
+MovieRepository:
+
+Needs a method to fetch trending movies from TmdbService, save them to Drift, and return a Stream of movies from Drift.
+
+Needs a method to toggle a movie's "saved" status for a specific user in the SavedMovies junction table.
+
+Action 2: State Management (Bloc/Cubit)
+Create the state management for our main features:
+
+In /lib/features/users/bloc/: Create a UserCubit (or Bloc) that listens to the UserRepository's user stream. It should emit loading states, loaded states (with the list of users), and error states.
+
+In /lib/features/movies/bloc/: Create a MovieCubit (or Bloc) that listens to the MovieRepository's trending movies stream. It should also have a method to trigger the "save/unsave" action.
+
+Please generate these classes. Ensure they are structured cleanly and handle offline scenarios gracefully (e.g., if the API fetch fails, the repository should catch the error but the Stream from the database should still emit whatever is locally available). Confirm when complete.
+
+**Context:**
+Building the Repository pattern to act as the single source of truth, and setting up BLoCs/Cubits to expose database streams to the UI.
