@@ -1,6 +1,6 @@
 # AI Prompt Log
 
-## Entry #0: Establish the AI Log
+## Entry #1: Establish the AI Log
 **Prompt:**
 System Mandate: You are my expert Flutter Developer agent. We are going to build an offline-first movie discovery app called Match&Watch.
 
@@ -14,7 +14,7 @@ Immediate Action: Create the PROMPTS.md file now. Add a title # AI Prompt Log. T
 **Context:**
 This prompt establishes the ground rules for the project's documentation and logs the initial setup instruction for the AI Log system to ensure all future interactions are documented.
 
-## Entry #1: Core Dependencies, Folder Structure, & Local Theming
+## Entry #2: Core Dependencies, Folder Structure, & Local Theming
 **Prompt:**
 Task 1: Core Dependencies, Folder Structure, & Local Theming
 
@@ -51,7 +51,7 @@ Please execute these steps and confirm when complete.
 **Context:**
 Setting up the project's foundational dependencies, clean architecture folder structure, and Material 3 design system using local fonts.
 
-## Entry #2: Implement the "Cinematic Gold" Material 3 Theme
+## Entry #3: Implement the "Cinematic Gold" Material 3 Theme
 **Prompt:**
 Task 2: Implement the "Cinematic Gold" Material 3 Theme
 
@@ -94,7 +94,7 @@ Please generate the complete app_theme.dart file. Once done, let me know so I ca
 **Context:**
 Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying the local Poppins font family.
 
-## Entry #3: Drift Database Schema & Offline-First Setup
+## Entry #4: Drift Database Schema & Offline-First Setup
 **Prompt:**
 Task 3: Drift Database Schema & Offline-First Setup
 
@@ -146,3 +146,31 @@ Please write the Drift table classes, the @DriftDatabase annotation setup, and p
 
 **Context:**
 Designing the Drift database schema to support offline-first data, including Users, Movies, and a junction table for Saved Movies.
+
+## Entry #5: Robust API Layer with Dio & Interceptors
+**Prompt:**
+Task 4: Robust API Layer with Dio & Interceptors
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #5. Context: "Building the Dio network client, including API services for Reqres and TMDB, and a custom interceptor to simulate the required 30% network failure and auto-retry logic."
+
+Action 1: The Dio Client & Interceptors
+Please create a core network client at /lib/core/network/api_client.dart using the dio package.
+Crucially, I need you to implement two specific interceptors:
+
+Failure Simulator Interceptor: Based on the assignment requirements, create an interceptor that randomly fails 30% of all outgoing requests to simulate a bad connection.
+
+Retry Interceptor: Implement a retry mechanism that catches these (and any other) network failures and automatically retries the request with a slight exponential backoff.
+
+Action 2: API Services
+Create two service classes to handle our specific endpoints:
+
+/lib/core/network/reqres_service.dart: Needs a method to GET users with pagination (https://reqres.in/api/users?page={page}) and POST a new user (https://reqres.in/api/users).
+
+/lib/core/network/tmdb_service.dart: Needs a method to GET trending movies with pagination (https://api.themoviedb.org/3/trending/movie/day?language=en-US&page={page}&api_key={key}) and GET movie details (https://api.themoviedb.org/3/movie/{movie_id}?api_key={key}).
+
+Note: For the TMDB service, set it up to accept the API key via an environment variable or a constants file, but use a placeholder for now.
+
+Please write these files and confirm when complete. Do not hook them up to the UI yet.
+
+**Context:**
+Building the Dio network client, including API services for Reqres and TMDB, and a custom interceptor to simulate the required 30% network failure and auto-retry logic.
