@@ -1,6 +1,6 @@
 # AI Prompt Log
 
-## Entry #1: Establish the AI Log
+## Entry #0: Establish the AI Log
 **Prompt:**
 System Mandate: You are my expert Flutter Developer agent. We are going to build an offline-first movie discovery app called Match&Watch.
 
@@ -14,7 +14,7 @@ Immediate Action: Create the PROMPTS.md file now. Add a title # AI Prompt Log. T
 **Context:**
 This prompt establishes the ground rules for the project's documentation and logs the initial setup instruction for the AI Log system to ensure all future interactions are documented.
 
-## Entry #2: Core Dependencies, Folder Structure, & Local Theming
+## Entry #1: Core Dependencies, Folder Structure, & Local Theming
 **Prompt:**
 Task 1: Core Dependencies, Folder Structure, & Local Theming
 
@@ -51,9 +51,9 @@ Please execute these steps and confirm when complete.
 **Context:**
 Setting up the project's foundational dependencies, clean architecture folder structure, and Material 3 design system using local fonts.
 
-## Entry #3: Implement the "Cinematic Gold" Material 3 Theme
+## Entry #2: Implement the "Cinematic Gold" Material 3 Theme
 **Prompt:**
-Task 3: Implement the "Cinematic Gold" Material 3 Theme
+Task 2: Implement the "Cinematic Gold" Material 3 Theme
 
 Log this first: Please log this prompt into PROMPTS.md as Entry #3. Context: "Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying the local Poppins font family."
 
@@ -93,3 +93,56 @@ Please generate the complete app_theme.dart file. Once done, let me know so I ca
 
 **Context:**
 Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying the local Poppins font family.
+
+## Entry #3: Drift Database Schema & Offline-First Setup
+**Prompt:**
+Task 3: Drift Database Schema & Offline-First Setup
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #4. Context: "Designing the Drift database schema to support offline-first data, including Users, Movies, and a junction table for Saved Movies."
+
+Action: > I need you to set up our local SQLite database using drift. Please create the necessary files in /lib/core/database/.
+
+We need three tables defined to perfectly match our assignment requirements:
+
+Users Table:
+
+id: Int (Local primary key, auto-increment).
+
+serverId: Int (Nullable. This will store the Reqres API ID. It's null if created offline).
+
+firstName: Text
+
+lastName: Text
+
+avatar: Text (Nullable)
+
+movieTaste: Text (Maps to the "job" field in Reqres API).
+
+pendingSync: Boolean (Defaults to false. True if created offline and waiting for WorkManager).
+
+Movies Table:
+
+id: Int (Primary key. We will use the TMDB/OMDB movie ID here).
+
+title: Text
+
+posterPath: Text (Nullable)
+
+releaseYear: Text (Nullable)
+
+overview: Text (Nullable)
+
+SavedMovies Table (Junction Table for many-to-many):
+
+userId: Int (References Users.id)
+
+movieId: Int (References Movies.id)
+
+createdAt: DateTime (To sort recently saved movies)
+
+Make the combination of userId and movieId the primary key to prevent duplicate saves.
+
+Please write the Drift table classes, the @DriftDatabase annotation setup, and provide the command I need to run in my terminal (e.g., dart run build_runner build) to generate the database code. Confirm when ready.
+
+**Context:**
+Designing the Drift database schema to support offline-first data, including Users, Movies, and a junction table for Saved Movies.
