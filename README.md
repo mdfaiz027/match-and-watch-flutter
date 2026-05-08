@@ -70,5 +70,18 @@ The app is built to be fully functional in "Airplane Mode":
 ## 🤝 AI Collaboration
 This project was developed in a partnership between a lead architect and a senior AI engineer. The full context, decision logs, and refactoring history can be found in `PROMPTS.md`.
 
+## 🧪 Testing Strategy
+
+The project includes a strategic test suite to ensure stability and correctness:
+
+*   **Unit Tests**: Verifying Repository logic, ensuring offline caching and database interactions work as expected using `mocktail`.
+*   **Bloc Tests**: Using `bloc_test` to verify state transitions in response to events (e.g., `Loading -> Loaded`).
+*   **Widget Tests**: Ensuring critical UI components like `MovieCard` render correctly and handle user interactions.
+
+To run the tests:
+```bash
+flutter test
+```
+
 ---
 *Built with ❤️ for Platform Commons.*

@@ -55,8 +55,7 @@ class UserCubit extends Cubit<UserState> {
         emit(UserError(e.toString()));
       }
     } finally {
-      // If we are still in UserLoading after the sync attempt, it means no users were found
-      // We force transition to UserLoaded so the shimmer stops and "No users" is shown.
+      // Transition to Loaded if we are still in Loading to stop shimmer
       if (state is UserLoading) {
         emit(UserLoaded(const []));
       }

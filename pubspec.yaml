@@ -52,6 +52,10 @@ dev_dependencies:
   drift_dev: ^2.20.0
   build_runner: ^2.4.12
 
+  # Testing
+  bloc_test: ^9.1.7
+  mocktail: ^1.0.4
+
   # Polish
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.4.0

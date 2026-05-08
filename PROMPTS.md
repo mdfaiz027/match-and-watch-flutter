@@ -767,3 +767,9 @@ Final audit against the assignment scoring rubric (Functionality, UI Quality, Co
 
 **Action:**
 Performing final reliability checks on SyncManager and Dio Interceptors, refactoring code for quality, and generating a high-impact Mermaid-enhanced README.
+
+---
+
+### Entry #33
+**Context:** Implementing a strategic test suite (Unit and Widget tests) to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria.
+**Action:** Added bloc_test and mocktail to dev_dependencies. Created unit tests for MovieRepository, Bloc tests for UserCubit, and Widget tests for MovieCard. Updated README with Testing Strategy.
