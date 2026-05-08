@@ -51,7 +51,9 @@ class MatchesPage extends StatelessWidget {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(8),
                               child: CachedNetworkImage(
-                                imageUrl: match.movie.posterPath ?? '',
+                                imageUrl: match.movie.posterPath != null
+                                    ? 'https://image.tmdb.org/t/p/w185${match.movie.posterPath}'
+                                    : '',
                                 width: 80,
                                 height: 120,
                                 fit: BoxFit.cover,

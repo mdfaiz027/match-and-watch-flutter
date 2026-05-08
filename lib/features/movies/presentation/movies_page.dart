@@ -121,7 +121,9 @@ class _MovieCard extends StatelessWidget {
                   bottomLeft: Radius.circular(16),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: movie.posterPath ?? '',
+                  imageUrl: movie.posterPath != null
+                      ? 'https://image.tmdb.org/t/p/w185${movie.posterPath}'
+                      : '',
                   width: 100,
                   height: 150,
                   fit: BoxFit.cover,

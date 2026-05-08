@@ -365,3 +365,49 @@ Please generate these pages, apply our 'Cinematic Gold' theme, and confirm when 
 
 **Context:**
 Building the final UI screens—User's Saved Movies and the Matches Page—relying entirely on local database streams for offline support and real-time updates.
+
+## Entry #12: Switch Back to TMDB API
+**Prompt:**
+Task 11: Switch Back to TMDB API
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #12. Context: "Reverting the fallback API and fully integrating TMDB for trending movies and movie details, including the specific image prefixing required by TMDB."
+
+Action 1: The TMDB Service
+We have our TMDB API key. Please swap out OmdbService and replace it with TmdbService in /lib/core/network/.
+* Add the Trending endpoint: GET https://api.themoviedb.org/3/trending/movie/day?language=en-US&page={page}&api_key={YOUR_KEY}.
+* Add the Details endpoint: GET https://api.themoviedb.org/3/movie/{movie_id}?api_key={YOUR_KEY}.
+
+Action 2: Update the Repository
+Update MovieRepository to use TmdbService.
+Remove the hardcoded "Batman" or "Marvel" search query we used for OMDB. We just want the pure trending feed now.
+Ensure the JSON parsing maps TMDB's fields (title, release_date, overview, poster_path) correctly to our Drift Movies table.
+
+Action 3: Fix the Image URLs
+TMDB only returns the end path of an image (e.g., /something.jpg). Based on the assignment requirements, we need to construct the full URL.
+Please update the UI (or a helper function in the model/repository) to prepend the correct base URLs:
+* For the list cards (Movies Page, Matches Page, Saved Page), use: https://image.tmdb.org/t/p/w185{poster_path}.
+* For the Hero image on the Movie Detail Page, use: https://image.tmdb.org/t/p/w500{poster_path}.
+
+Please generate these changes and show me exactly where to paste my TMDB API key in the configuration.
+
+**Context:**
+Reverting the fallback API and fully integrating TMDB for trending movies and movie details, including the specific image prefixing required by TMDB.
+
+## Entry #11: Fix Reqres Missing API Key Error
+**Prompt:**
+Task 10: Fix Reqres Missing API Key Error
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #11. Context: "Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client."
+
+Action 1: Inject the Header
+We are getting a rejected request from Reqres because we are missing the API key header.
+Please update our network layer (either in /lib/core/network/api_client.dart or specifically in ReqresService, depending on how you structured it).
+
+Add an Interceptor or update the BaseOptions for the Reqres Dio instance to automatically include the header: "x-api-key": "YOUR_REQRES_KEY".
+
+Make sure to leave a clear comment or a constant variable so I know exactly where to paste my actual Reqres key.
+
+Please generate the fix and confirm exactly which file I need to open to paste my key.
+
+**Context:**
+Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client.

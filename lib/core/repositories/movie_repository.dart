@@ -1,38 +1,35 @@
 import 'package:drift/drift.dart';
 import '../database/app_database.dart';
-import '../network/omdb_service.dart';
+import '../network/tmdb_service.dart';
 
 class MovieRepository {
   final AppDatabase _db;
-  final OmdbService _omdbService;
+  final TmdbService _tmdbService;
 
-  MovieRepository(this._db, this._omdbService);
+  MovieRepository(this._db, this._tmdbService);
 
   Stream<List<Movie>> watchMovies() {
     return _db.select(_db.movies).watch();
   }
 
-  Future<void> refreshMovies({String query = 'Batman', int page = 1}) async {
+  Future<void> refreshMovies({int page = 1}) async {
     try {
-      final response = await _omdbService.searchMovies(query: query, page: page);
-      if (response.data['Response'] == 'True') {
-        final moviesData = response.data['Search'] as List;
+      final response = await _tmdbService.getTrendingMovies(page: page);
+      final moviesData = response.data['results'] as List;
 
-        final companions = moviesData.map((m) {
-          final idString = m['imdbID'].toString().replaceAll(RegExp(r'[^0-9]'), '');
-          return MoviesCompanion.insert(
-            id: Value(int.parse(idString)),
-            title: m['Title'] ?? 'Untitled',
-            posterPath: Value(m['Poster']),
-            releaseYear: Value(m['Year']),
-            overview: const Value(null), // Search doesn't provide overview
-          );
-        }).toList();
+      final companions = moviesData.map((m) {
+        return MoviesCompanion.insert(
+          id: Value(m['id']),
+          title: m['title'] ?? m['name'] ?? 'Untitled',
+          posterPath: Value(m['poster_path']),
+          releaseYear: Value(m['release_date']?.toString().split('-').first),
+          overview: Value(m['overview']),
+        );
+      }).toList();
 
-        await _db.batch((batch) {
-          batch.insertAllOnConflictUpdate(_db.movies, companions);
-        });
-      }
+      await _db.batch((batch) {
+        batch.insertAllOnConflictUpdate(_db.movies, companions);
+      });
     } catch (e) {
       // Fail silently
     }
@@ -40,22 +37,18 @@ class MovieRepository {
 
   Future<void> fetchMovieDetails(int movieId) async {
     try {
-      // Reconstruct imdbID (simplified, assuming 7-8 digits)
-      final imdbId = 'tt${movieId.toString().padLeft(7, '0')}';
-      final response = await _omdbService.getMovieDetails(imdbId);
+      final response = await _tmdbService.getMovieDetails(movieId);
+      final m = response.data;
       
-      if (response.data['Response'] == 'True') {
-        final m = response.data;
-        await _db.into(_db.movies).insertOnConflictUpdate(
-          MoviesCompanion.insert(
-            id: Value(movieId),
-            title: m['Title'] ?? 'Untitled',
-            posterPath: Value(m['Poster']),
-            releaseYear: Value(m['Year']),
-            overview: Value(m['Plot']),
-          ),
-        );
-      }
+      await _db.into(_db.movies).insertOnConflictUpdate(
+        MoviesCompanion.insert(
+          id: Value(movieId),
+          title: m['title'] ?? 'Untitled',
+          posterPath: Value(m['poster_path']),
+          releaseYear: Value(m['release_date']?.toString().split('-').first),
+          overview: Value(m['overview']),
+        ),
+      );
     } catch (e) {
       // Fail silently
     }

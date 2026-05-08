@@ -5,8 +5,8 @@ class TmdbService {
   final ApiClient _apiClient;
   static const String _baseUrl = 'https://api.themoviedb.org/3';
   
-  // Placeholder for API Key. Use --dart-define=TMDB_API_KEY=your_key or a constants file in production.
-  static const String _apiKey = 'YOUR_TMDB_API_KEY_HERE';
+  // Replace with your TMDB API Key
+  static const String _apiKey = 'd3d9991864acd9b493f857b091ff97ed';
 
   TmdbService(this._apiClient);
 

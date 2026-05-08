@@ -46,7 +46,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   background: Hero(
                     tag: 'movie-poster-${movie.id}',
                     child: CachedNetworkImage(
-                      imageUrl: movie.posterPath ?? '',
+                      imageUrl: movie.posterPath != null
+                          ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                          : '',
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) => Container(
                         color: Colors.grey[800],

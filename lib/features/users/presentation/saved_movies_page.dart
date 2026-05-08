@@ -106,7 +106,9 @@ class SavedMoviesPage extends StatelessWidget {
                 leading: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: CachedNetworkImage(
-                    imageUrl: movie.posterPath ?? '',
+                    imageUrl: movie.posterPath != null
+                        ? 'https://image.tmdb.org/t/p/w185${movie.posterPath}'
+                        : '',
                     width: 50,
                     height: 75,
                     fit: BoxFit.cover,
