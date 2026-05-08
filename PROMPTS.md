@@ -893,4 +893,33 @@ Verification: Ensure the log is chronologically perfect, ending with this entry 
 
 **Context:**
 Implementing a scalable 'Social Proof' stacked avatar UI for movie cards to provide social validation, and performing a final audit/synchronization of the AI prompt log.
-\n## Entry #33: Reposition Social Proof UI\n**Prompt:**\nentry 36: put it in movies details page and also in the matches page  becuase there also weare showing how many people has bookmarked it and remove it from movies_page\n\n**Context:**\nMoving the stacked avatar 'Social Proof' UI from the main movie list to the Movie Details and Matches pages for better contextual relevance.\n
+
+## Entry #33: Reposition Social Proof UI
+**Prompt:**
+entry 36: put it in movies details page and also in the matches page  becuase there also weare showing how many people has bookmarked it and remove it from movies_page
+
+**Context:**
+Moving the stacked avatar 'Social Proof' UI from the main movie list to the Movie Details and Matches pages for better contextual relevance.
+
+## Entry #34: Social Proof UI Verification & Final Sync
+**Prompt:**
+Log this first: Please log this into PROMPTS.md as Entry #37.
+Context: "Adding automated tests to verify the social proof UI logic on specific pages, validating junction table relationships, and performing the final synchronization of the project log."
+
+Action 1: Widget Verification (SocialAvatars)
+Create Test File: test/core/widgets/social_avatars_test.dart.
+Test Case A: Verify that passing 1 user shows exactly one avatar and no "+N" badge.
+Test Case B: Verify that passing 5 users shows exactly two avatars and a text widget containing "+3".
+
+Action 2: Integration & Database Testing
+Update movie_repository_test.dart: Add a test case to verify that getUsersForMovie(movieId) correctly fetches the list of users who saved a movie from the Drift SavedMovies junction table.
+Manual Verification: Confirm that if User A and User B both save "The Batman", the SocialAvatars stack appears correctly on both the MovieDetailPage and the MatchesPage.
+
+Action 3: Final Log Synchronization & Cleanup
+Audit PROMPTS.md: * Unify all logs to the "Entry #[Number]: [Title]" format.
+Ensure the chronology is perfect from Entry #1 to Entry #34.
+Remove any redundant references to "Task" or "Step" numbering that conflict with the Entry sequence.
+Clean Code Check: Perform a final pass to remove any leftover print() statements or unused imports across the project.
+
+**Context:**
+Adding automated tests for the SocialAvatars widget and repository logic, and performing a final cleanup and synchronization of the AI prompt log.

@@ -25,5 +25,16 @@ void main() {
 
       expect(() => repository.refreshMovies(page: 1), throwsException);
     });
+
+    test('watchUsersWhoSavedMovie should return stream from database', () {
+      final users = [
+        const User(id: 1, firstName: 'A', lastName: 'B', movieTaste: 'T', pendingSync: false),
+      ];
+      when(() => mockDb.watchUsersWhoSavedMovie(1)).thenAnswer((_) => Stream.value(users));
+
+      final result = repository.watchUsersWhoSavedMovie(1);
+
+      expect(result, emits(users));
+    });
   });
 }
