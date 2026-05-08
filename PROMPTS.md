@@ -805,24 +805,3 @@ Please confirm when the cleanup is complete. Once done, I will run the final bui
 
 **Context:**
 Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build.
-
-## Entry #36: Prevent Duplicate Submissions & Add Loading State
-**Prompt:**
-Log this first: Please log this prompt into PROMPTS.md as Entry #36. Context: "Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation."
-
-Action 1: Update UserCubit State
-Ensure the UserCubit has a specific state for UserAdding or check if the state is UserLoading.
-
-Action 2: Update Add User Button UI
-Open the "Add User" dialog or screen.
-Wrap the "Add" button's content in an AnimatedSwitcher.
-Logic: If the state is Loading, replace the "Add User" text with a small, themed CircularProgressIndicator (use strokeWidth: 2 to keep it elegant).
-Disabled State: Set the onPressed callback to null if the state is Loading. This automatically greys out/disables the button in Flutter.
-
-Action 3: Haptic Confirmation
-Trigger HapticFeedback.mediumImpact() the moment the button is pressed, and a HapticFeedback.lightImpact() once the user is successfully added and the dialog closes.
-
-Please implement this and confirm. This ensures a "one-tap" guarantee for our database integrity.
-
-**Context:**
-Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation.

@@ -227,9 +227,8 @@ class _UsersPageState extends State<UsersPage> {
         ),
         onTargetClick: () {
           HapticFeedback.lightImpact();
-          context.push('/add_user');
         },
-        disposeOnTap: true,
+        disposeOnTap: false,
         child: FloatingActionButton(
           backgroundColor: AppColors.primaryGold,
           onPressed: () => context.push('/add_user'),
