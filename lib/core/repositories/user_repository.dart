@@ -75,4 +75,8 @@ class UserRepository {
 
     return query.watchSingle().map((row) => row.read(countExp) ?? 0);
   }
+
+  Stream<User?> watchUserById(int userId) {
+    return (_db.select(_db.users)..where((t) => t.id.equals(userId))).watchSingleOrNull();
+  }
 }

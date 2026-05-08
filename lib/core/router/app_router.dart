@@ -4,6 +4,9 @@ import '../../features/users/presentation/add_user_page.dart';
 import '../../features/movies/presentation/movies_page.dart';
 import '../../features/movies/presentation/movie_detail_page.dart';
 
+import '../../features/users/presentation/saved_movies_page.dart';
+import '../../features/movies/presentation/matches_page.dart';
+
 final appRouter = GoRouter(
   initialLocation: '/',
   routes: [
@@ -33,6 +36,19 @@ final appRouter = GoRouter(
         final userId = int.parse(state.uri.queryParameters['userId'] ?? '0');
         return MovieDetailPage(movieId: movieId, userId: userId);
       },
+    ),
+    GoRoute(
+      path: '/saved_movies',
+      name: 'saved_movies',
+      builder: (context, state) {
+        final userId = int.parse(state.uri.queryParameters['userId'] ?? '0');
+        return SavedMoviesPage(userId: userId);
+      },
+    ),
+    GoRoute(
+      path: '/matches',
+      name: 'matches',
+      builder: (context, state) => const MatchesPage(),
     ),
   ],
 );

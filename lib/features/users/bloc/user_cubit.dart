@@ -69,6 +69,7 @@ class UserCubit extends Cubit<UserState> {
   }
 
   Stream<int> getSavedMovieCount(int userId) => _repository.watchSavedMovieCount(userId);
+  Stream<User?> watchUserById(int userId) => _repository.watchUserById(userId);
 
   @override
   Future<void> close() {

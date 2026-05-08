@@ -43,6 +43,14 @@ class _MoviesPageState extends State<MoviesPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Movies'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmarks),
+            onPressed: () {
+              context.push('/saved_movies?userId=${widget.userId}');
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<MovieCubit, MovieState>(
         builder: (context, state) {

@@ -43,9 +43,9 @@ class _UsersPageState extends State<UsersPage> {
         title: const Text('Match & Watch Users'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border),
+            icon: const Icon(Icons.favorite),
             onPressed: () {
-              debugPrint('Matches icon pressed');
+              context.push('/matches');
             },
           ),
         ],

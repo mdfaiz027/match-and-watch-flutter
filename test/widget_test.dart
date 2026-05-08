@@ -3,7 +3,7 @@ import 'package:match_and_watch/main.dart';
 import 'package:match_and_watch/core/database/app_database.dart';
 import 'package:match_and_watch/core/network/api_client.dart';
 import 'package:match_and_watch/core/network/reqres_service.dart';
-import 'package:match_and_watch/core/network/tmdb_service.dart';
+import 'package:match_and_watch/core/network/omdb_service.dart';
 import 'package:match_and_watch/core/repositories/user_repository.dart';
 import 'package:match_and_watch/core/repositories/movie_repository.dart';
 import 'package:drift/native.dart';
@@ -14,16 +14,17 @@ void main() {
     final database = AppDatabase.forTesting(NativeDatabase.memory());
     final apiClient = ApiClient();
     final reqresService = ReqresService(apiClient);
-    final tmdbService = TmdbService(apiClient);
+    final omdbService = OmdbService(apiClient);
     final userRepository = UserRepository(database, reqresService);
-    final movieRepository = MovieRepository(database, tmdbService);
+    final movieRepository = MovieRepository(database, omdbService);
 
     await tester.pumpWidget(MatchAndWatchApp(
       userRepository: userRepository,
       movieRepository: movieRepository,
     ));
 
-    expect(find.text('Match & Watch Initialized'), findsOneWidget);
+    // The initial route is UsersPage, which has this title
+    expect(find.text('Match & Watch Users'), findsOneWidget);
     
     await database.close();
   });

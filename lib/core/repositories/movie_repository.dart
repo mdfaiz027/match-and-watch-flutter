@@ -111,6 +111,35 @@ class MovieRepository {
     return query.watchSingle().map((row) => row.read(countExp) ?? 0);
   }
 
+  Stream<List<({Movie movie, List<User> users})>> watchMatches() {
+    final movieStream = _db.select(_db.movies).watch();
+    
+    return movieStream.asyncMap((movies) async {
+      final matches = <({Movie movie, List<User> users})>[];
+      
+      for (final movie in movies) {
+        final users = await (_db.select(_db.users).join([
+          innerJoin(_db.savedMovies, _db.savedMovies.userId.equalsExp(_db.users.id)),
+        ])..where(_db.savedMovies.movieId.equals(movie.id))).get().then(
+          (rows) => rows.map((row) => row.readTable(_db.users)).toList(),
+        );
+        
+        if (users.length >= 2) {
+          matches.add((movie: movie, users: users));
+        }
+      }
+      
+      matches.sort((a, b) => b.users.length.compareTo(a.users.length));
+      return matches;
+    });
+  }
+
+  Stream<int> watchTotalUserCount() {
+    final countExp = _db.users.id.count();
+    final query = _db.selectOnly(_db.users)..addColumns([countExp]);
+    return query.watchSingle().map((row) => row.read(countExp) ?? 0);
+  }
+
   Stream<bool> watchIsSaved(int userId, int movieId) {
     final query = _db.select(_db.savedMovies)
       ..where((t) => t.userId.equals(userId) & t.movieId.equals(movieId));

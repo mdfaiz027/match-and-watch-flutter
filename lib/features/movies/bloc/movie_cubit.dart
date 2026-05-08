@@ -68,6 +68,9 @@ class MovieCubit extends Cubit<MovieState> {
   Stream<bool> isSaved(int userId, int movieId) => _repository.watchIsSaved(userId, movieId);
   Stream<List<User>> getUsersWhoSaved(int movieId) => _repository.watchUsersWhoSavedMovie(movieId);
   Stream<Movie?> getMovieById(int id) => _repository.watchMovieById(id);
+  Stream<List<({Movie movie, List<User> users})>> watchMatches() => _repository.watchMatches();
+  Stream<int> watchTotalUserCount() => _repository.watchTotalUserCount();
+  Stream<List<Movie>> watchSavedMovies(int userId) => _repository.watchSavedMovies(userId);
 
   @override
   Future<void> close() {

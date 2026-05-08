@@ -324,3 +324,44 @@ Please generate these updates and confirm when complete. Let me know where I sho
 
 **Context:**
 Pivoting the API layer from TMDB to OMDB due to API availability, and building the Movies Page and Movie Detail Page UIs.
+
+## Entry #10: Saved Movies Page & Matches Page (The Final UI)
+**Prompt:**
+Task 9: Saved Movies Page & Matches Page (The Final UI)
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #10. Context: "Building the final UI screens—User's Saved Movies and the Matches Page—relying entirely on local database streams for offline support and real-time updates."
+
+Action 1: User's Saved Movies (Page 05)
+In /lib/features/users/presentation/saved_movies_page.dart:
+
+Header: Show the active user's profile photo, name, and Movie Taste note.
+
+Body: Listen to a stream from the database that joins SavedMovies and Movies for this specific user.
+
+List: Display their saved movies (poster and title). Allow the user to unsave directly from this page.
+
+Empty State: If they have no saved movies, show a friendly empty state prompting them to browse.
+
+Action 2: The Matches Page (Page 06)
+In /lib/features/movies/presentation/matches_page.dart:
+
+Body: Listen to a stream from the database that calculates movies saved by 2 or more users.
+
+List Requirements: Sort from most saves to least. Show the poster, title, save count, and small profile photos (avatars) of the users who saved it.
+
+Top Pick Logic: If a movie has been saved by all currently available users, highlight it visually (e.g., a gold border or a "Group Pick!" badge).
+
+Empty State: If there are no matches, show an explanation of how matching works.
+
+Action 3: Routing & Connections
+
+Update app_router.dart with routes for /saved_movies and /matches.
+
+Update the MoviesPage AppBar to include an action button navigating to /saved_movies.
+
+Update the UsersPage (and anywhere else needed) so the "Matches" button navigates to /matches.
+
+Please generate these pages, apply our 'Cinematic Gold' theme, and confirm when complete.
+
+**Context:**
+Building the final UI screens—User's Saved Movies and the Matches Page—relying entirely on local database streams for offline support and real-time updates.
