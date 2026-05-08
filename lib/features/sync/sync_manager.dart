@@ -2,17 +2,19 @@ import 'dart:developer' as developer;
 import 'package:workmanager/workmanager.dart';
 import 'package:drift/drift.dart';
 import '../../core/database/app_database.dart';
-import '../../core/network/api_client.dart';
 import '../../core/network/reqres_service.dart';
+import '../../core/di/injection_container.dart' as di;
 
 const String syncTaskName = "com.match_and_watch.syncUsersTask";
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    final database = AppDatabase();
-    final apiClient = ApiClient();
-    final reqresService = ReqresService(apiClient);
+    // Ensure DI is initialized in the background isolate
+    await di.init();
+    
+    final database = di.sl<AppDatabase>();
+    final reqresService = di.sl<ReqresService>();
 
     try {
       // 1. Query users needing sync

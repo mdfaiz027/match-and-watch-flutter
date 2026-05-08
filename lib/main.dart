@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
 import 'core/database/app_database.dart';
-import 'core/network/api_client.dart';
-import 'core/network/reqres_service.dart';
-import 'core/network/tmdb_service.dart';
 import 'core/repositories/user_repository.dart';
 import 'core/repositories/movie_repository.dart';
 import 'core/theme/app_theme.dart';
@@ -14,21 +11,13 @@ import 'features/users/bloc/active_user_cubit.dart';
 import 'features/movies/bloc/movie_cubit.dart';
 import 'core/router/app_router.dart';
 import 'core/network/connection_state.dart';
+import 'core/di/injection_container.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Core components
-  final database = AppDatabase();
-  final apiClient = ApiClient();
-  
-  // Services
-  final reqresService = ReqresService(apiClient);
-  final tmdbService = TmdbService(apiClient);
-
-  // Repositories
-  final userRepository = UserRepository(database, reqresService);
-  final movieRepository = MovieRepository(database, tmdbService);
+  // Initialize Dependency Injection
+  await di.init();
 
   // Initialize WorkManager
   await Workmanager().initialize(callbackDispatcher);
@@ -43,34 +32,24 @@ void main() async {
     ),
   );
 
-  runApp(MatchAndWatchApp(
-    userRepository: userRepository,
-    movieRepository: movieRepository,
-  ));
+  runApp(const MatchAndWatchApp());
 }
 
 class MatchAndWatchApp extends StatelessWidget {
-  final UserRepository userRepository;
-  final MovieRepository movieRepository;
-
-  const MatchAndWatchApp({
-    super.key,
-    required this.userRepository,
-    required this.movieRepository,
-  });
+  const MatchAndWatchApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => UserCubit(userRepository),
+          create: (context) => di.sl<UserCubit>(),
         ),
         BlocProvider(
-          create: (context) => ActiveUserCubit(),
+          create: (context) => di.sl<ActiveUserCubit>(),
         ),
         BlocProvider(
-          create: (context) => MovieCubit(movieRepository),
+          create: (context) => di.sl<MovieCubit>(),
         ),
       ],
       child: MaterialApp.router(

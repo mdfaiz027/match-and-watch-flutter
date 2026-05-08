@@ -564,3 +564,38 @@ Please implement these state separations and confirm when complete.
 
 **Context:**
 Auditing Page 5 to ensure the 'Save' button reflects the Active User's state when viewing another user's profile, and enforcing strict offline-only data streams.
+
+## Entry #19: Page 6 Audit - Dependency Injection (get_it)
+**Prompt:**
+Task 18: Page 6 Audit - Dependency Injection (get_it)
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #19. Context: "Fulfilling the strict 'Dependency Injection' requirement from the assignment's technical checklist by implementing get_it."
+
+Action 1: Setup get_it
+The assignment technical checklist explicitly requires the use of get_it for dependency injection.
+
+Please add the get_it package to pubspec.yaml.
+
+Create a file at /lib/core/di/injection_container.dart.
+
+Action 2: Register Dependencies
+Inside injection_container.dart, create an init() function and register all of our core components as singletons or factories:
+
+Core: Dio client, Drift database.
+
+Services: TmdbService, ReqresService.
+
+Repositories: MovieRepository, UserRepository.
+
+State Management: Register all Blocs/Cubits (UserCubit, MovieCubit, etc.) as factories.
+
+Action 3: Refactor Main & UI
+
+Update main.dart to await the init() function before runApp.
+
+Ensure all our UI pages and Routers instantiate their Cubits using the get_it locator (e.g., sl<UserCubit>()) instead of direct instantiation.
+
+Please implement this DI refactor and confirm when complete.
+
+**Context:**
+Fulfilling the strict 'Dependency Injection' requirement from the assignment's technical checklist by implementing get_it.
