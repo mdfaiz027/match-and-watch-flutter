@@ -30,62 +30,67 @@ class _OnboardingPageState extends State<OnboardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              setState(() {
-                _isLastPage = index == 2;
-              });
-            },
-            children: [
-              _OnboardingStep(
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: PageView(
                 controller: _pageController,
-                index: 0,
-                animation: AppAssets.movieAnim,
-                title: AppStrings.onboardingDiscoverTitle,
-                description: AppStrings.onboardingDiscoverDesc,
-                lottieHeight: 320,
-              ),
-              _OnboardingStep(
-                controller: _pageController,
-                index: 1,
-                animation: AppAssets.offlineAnim,
-                title: AppStrings.onboardingOfflineTitle,
-                description: AppStrings.onboardingOfflineDesc,
-                lottieHeight: 240,
-              ),
-              _OnboardingStep(
-                controller: _pageController,
-                index: 2,
-                animation: AppAssets.matchAnim,
-                title: AppStrings.onboardingMatchTitle,
-                description: AppStrings.onboardingMatchDesc,
-                lottieHeight: 300,
-              ),
-            ],
-          ),
-          Container(
-            alignment: const Alignment(0, 0.85),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SmoothPageIndicator(
-                  controller: _pageController,
-                  count: 3,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColors.primaryGold,
-                    dotColor: Colors.white24,
-                    dotHeight: 10,
-                    dotWidth: 10,
-                    spacing: 8,
+                onPageChanged: (index) {
+                  setState(() {
+                    _isLastPage = index == 2;
+                  });
+                },
+                children: [
+                  _OnboardingStep(
+                    controller: _pageController,
+                    index: 0,
+                    animation: AppAssets.movieAnim,
+                    title: AppStrings.onboardingDiscoverTitle,
+                    description: AppStrings.onboardingDiscoverDesc,
+                    lottieHeight: 320,
                   ),
-                ),
-                const SizedBox(height: AppDimensions.spacingXXL),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spacingXXL),
-                  child: AnimatedSwitcher(
+                  _OnboardingStep(
+                    controller: _pageController,
+                    index: 1,
+                    animation: AppAssets.offlineAnim,
+                    title: AppStrings.onboardingOfflineTitle,
+                    description: AppStrings.onboardingOfflineDesc,
+                    lottieHeight: 240,
+                  ),
+                  _OnboardingStep(
+                    controller: _pageController,
+                    index: 2,
+                    animation: AppAssets.matchAnim,
+                    title: AppStrings.onboardingMatchTitle,
+                    description: AppStrings.onboardingMatchDesc,
+                    lottieHeight: 300,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: AppDimensions.spacingXXL,
+                left: AppDimensions.spacingXXL,
+                right: AppDimensions.spacingXXL,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SmoothPageIndicator(
+                    controller: _pageController,
+                    count: 3,
+                    effect: const ExpandingDotsEffect(
+                      activeDotColor: AppColors.primaryGold,
+                      dotColor: Colors.white24,
+                      dotHeight: 10,
+                      dotWidth: 10,
+                      spacing: 8,
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.spacingXXL),
+                  AnimatedSwitcher(
                     duration: const Duration(milliseconds: AppConstants.durationMediumMs),
                     child: _isLastPage
                         ? SizedBox(
@@ -122,11 +127,11 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             ),
                           ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -167,44 +172,48 @@ class _OnboardingStep extends StatelessWidget {
           opacity: opacity,
           child: Transform.scale(
             scale: scale,
-            child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.spacingXXL),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: lottieHeight,
-                    child: Lottie.asset(
-                      animation,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.movie_outlined,
-                          size: 120,
-                          color: AppColors.primaryGold,
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: AppDimensions.spacingXXL),
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppColors.primaryGold,
-                          fontWeight: FontWeight.bold,
+            child: Center(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(AppDimensions.spacingXXL),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: lottieHeight,
+                        child: Lottie.asset(
+                          animation,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(
+                              Icons.movie_outlined,
+                              size: 120,
+                              color: AppColors.primaryGold,
+                            );
+                          },
                         ),
-                    textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: AppDimensions.spacingXXL),
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                              color: AppColors.primaryGold,
+                              fontWeight: FontWeight.bold,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: AppDimensions.spacingL),
+                      Text(
+                        description,
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontSize: 18,
+                              height: 1.5,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: AppDimensions.spacingL),
-                  Text(
-                    description,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontSize: 18,
-                          height: 1.5,
-                        ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                ),
               ),
             ),
           ),

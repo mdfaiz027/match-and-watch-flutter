@@ -754,9 +754,9 @@ Please implement this premium tutorial flow and confirm when complete.
 **Context:**
 Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback.
 
-## Entry #29: Handling Pagination Network Failures
+## Entry #30: Fixing Onboarding Layout Overlap
 **Prompt:**
-(User provided logs showing Unhandled Exception: DioException [connection error] from Simulated Network Failure during loadNextPage)
+in some phones, the text on onboarding screen is showing on top of the page indicators
 
 **Context:**
-Fixing unhandled exceptions in `UserCubit` and `MovieCubit` during pagination (`loadNextPage`) by wrapping repository calls in try-catch blocks, ensuring the app handles simulated network failures gracefully without crashing or logging unhandled errors.
+Refactored the `OnboardingPage` layout from a `Stack` to a `Column` with `Expanded(PageView)` to strictly separate content from navigation controls. Also added `SingleChildScrollView` to `_OnboardingStep` to handle smaller screen heights gracefully.
