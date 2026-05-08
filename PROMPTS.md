@@ -4,7 +4,6 @@
 **Prompt:**
 System Mandate: You are my expert Flutter Developer agent. We are going to build an offline-first movie discovery app called Match&Watch.
 
-Task 0: Establish the AI Log
 Before we write a single line of code, configure our project structure, or touch any checklists, I need you to create a file named PROMPTS.md in the root of the project.
 
 Your Ongoing Strict Rule: From this exact moment forward, every time I give you a prompt, you must silently append it to PROMPTS.md before executing the task. You must include the prompt text and a 1-2 sentence explanation of the context/why it was asked.
@@ -16,8 +15,6 @@ This prompt establishes the ground rules for the project's documentation and log
 
 ## Entry #2: Core Dependencies, Folder Structure, & Local Theming
 **Prompt:**
-Task 1: Core Dependencies, Folder Structure, & Local Theming
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #2. Context: "Setting up the project's foundational dependencies, clean architecture folder structure, and Material 3 design system using local fonts."
 
 Action 1: Dependencies
@@ -53,8 +50,6 @@ Setting up the project's foundational dependencies, clean architecture folder st
 
 ## Entry #3: Implement the "Cinematic Gold" Material 3 Theme
 **Prompt:**
-Task 2: Implement the "Cinematic Gold" Material 3 Theme
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #3. Context: "Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying the local Poppins font family."
 
 Action: > I need you to create a comprehensive theme configuration file at /lib/core/theme/app_theme.dart. We are building a premium, modern movie app, so we need a highly polished Dark Mode theme.
@@ -96,8 +91,6 @@ Implementing the centralized Material 3 'Cinematic Gold' dark theme and applying
 
 ## Entry #4: Drift Database Schema & Offline-First Setup
 **Prompt:**
-Task 3: Drift Database Schema & Offline-First Setup
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #4. Context: "Designing the Drift database schema to support offline-first data, including Users, Movies, and a junction table for Saved Movies."
 
 Action: > I need you to set up our local SQLite database using drift. Please create the necessary files in /lib/core/database/.
@@ -149,8 +142,6 @@ Designing the Drift database schema to support offline-first data, including Use
 
 ## Entry #5: Robust API Layer with Dio & Interceptors
 **Prompt:**
-Task 4: Robust API Layer with Dio & Interceptors
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #5. Context: "Building the Dio network client, including API services for Reqres and TMDB, and a custom interceptor to simulate the required 30% network failure and auto-retry logic."
 
 Action 1: The Dio Client & Interceptors
@@ -177,8 +168,6 @@ Building the Dio network client, including API services for Reqres and TMDB, and
 
 ## Entry #6: Repositories & State Management (Bloc)
 **Prompt:**
-Task 5: Repositories & State Management (Bloc)
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #6. Context: "Building the Repository pattern to act as the single source of truth, and setting up BLoCs/Cubits to expose database streams to the UI."
 
 Action 1: Repositories
@@ -210,8 +199,6 @@ Building the Repository pattern to act as the single source of truth, and settin
 
 ## Entry #7: Background Sync (WorkManager) & App Initialization
 **Prompt:**
-Task 6: Background Sync (WorkManager) & App Initialization
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #7. Context: "Implementing the WorkManager background task to sync offline-created users to the server, and setting up the app icon and splash screen packages."
 
 Action 1: WorkManager Background Task
@@ -239,8 +226,6 @@ Implementing the WorkManager background task to sync offline-created users to th
 
 ## Entry #8: UI - Users Page, Add User Form, & Routing
 **Prompt:**
-Task 7: UI - Users Page, Add User Form, & Routing
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #8. Context: "Building the initial UI screens (Users Page and Add User Form) using the Cinematic Gold theme, integrating the UserBloc, and setting up GoRouter."
 
 Action 1: App Router
@@ -282,8 +267,6 @@ Building the initial UI screens (Users Page and Add User Form) using the Cinemat
 
 ## Entry #9: OMDB Integration, Movies Page, & Detail Page
 **Prompt:**
-Task 8: OMDB Integration, Movies Page, & Detail Page
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #9. Context: "Pivoting the API layer from TMDB to OMDB due to API availability, and building the Movies Page and Movie Detail Page UIs."
 
 Action 1: Swap TMDB for OMDB
@@ -327,8 +310,6 @@ Pivoting the API layer from TMDB to OMDB due to API availability, and building t
 
 ## Entry #10: Saved Movies Page & Matches Page (The Final UI)
 **Prompt:**
-Task 9: Saved Movies Page & Matches Page (The Final UI)
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #10. Context: "Building the final UI screens—User's Saved Movies and the Matches Page—relying entirely on local database streams for offline support and real-time updates."
 
 Action 1: User's Saved Movies (Page 05)
@@ -368,8 +349,6 @@ Building the final UI screens—User's Saved Movies and the Matches Page—relyi
 
 ## Entry #11: Fix Reqres Missing API Key Error
 **Prompt:**
-Task 10: Fix Reqres Missing API Key Error
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #11. Context: "Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client."
 
 Action 1: Inject the Header
@@ -387,8 +366,6 @@ Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' 
 
 ## Entry #12: Switch Back to TMDB API
 **Prompt:**
-Task 11: Switch Back to TMDB API
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #12. Context: "Reverting the fallback API and fully integrating TMDB for trending movies and movie details, including the specific image prefixing required by TMDB."
 
 Action 1: The TMDB Service
@@ -414,8 +391,6 @@ Reverting the fallback API and fully integrating TMDB for trending movies and mo
 
 ## Entry #13: The Final UI Polish & Reconnection State
 **Prompt:**
-Task 12: The Final UI Polish & Reconnection State
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #13. Context: "Implementing the final UI polish requirements from the assignment: Staggered list animations, animated count badges, and a non-blocking 'reconnecting...' UI bar."
 
 Action 1: Staggered List Animations
@@ -439,8 +414,6 @@ Implementing the final UI polish requirements from the assignment: Staggered lis
 
 ## Entry #14: Page 1 Audit - Active User State & Dynamic Counts
 **Prompt:**
-Task 13: Page 1 Audit - Active User State & Dynamic Counts
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #14. Context: "Auditing Page 1 requirements to ensure dynamic saved movie counts are streamed from Drift, and establishing the 'Active User' state for navigation."
 
 Action 1: Dynamic User Movie Count
@@ -464,8 +437,6 @@ Auditing Page 1 requirements to ensure dynamic saved movie counts are streamed f
 
 ## Entry #15: Page 2 Audit - Form Data Mapping & Offline Detection
 **Prompt:**
-Task 14: Page 2 Audit - Form Data Mapping & Offline Detection
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #15. Context: "Auditing Page 2 requirements to ensure correct data mapping between the UI, local DB, and Reqres API, and tightening the offline detection logic."
 
 Action 1: Form Data Mapping (Name & Job)
@@ -489,8 +460,6 @@ Auditing Page 2 requirements to ensure correct data mapping between the UI, loca
 
 ## Entry #16: Page 3 Audit - Aggressive DB Caching & Real-Time Badges
 **Prompt:**
-Task 15: Page 3 Audit - Aggressive DB Caching & Real-Time Badges
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #16. Context: "Auditing Page 3 requirements to ensure aggressive local caching of API movies and setting up individual Drift streams for real-time save count badges."
 
 Action 1: Aggressive Caching (Upsert)
@@ -515,8 +484,6 @@ Auditing Page 3 requirements to ensure aggressive local caching of API movies an
 
 ## Entry #17: Page 4 Audit - Avatar Streams & Offline-First Hydration
 **Prompt:**
-Task 16: Page 4 Audit - Avatar Streams & Offline-First Hydration
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #17. Context: "Auditing Page 4 to ensure the UI streams the actual User avatars for saved movies, and implementing offline-first hydration for the movie details."
 
 Action 1: Reactive User Avatars Stream
@@ -542,8 +509,6 @@ Auditing Page 4 to ensure the UI streams the actual User avatars for saved movie
 
 ## Entry #18: Page 5 Audit - Cross-User Context & Strict Offline Enforcement
 **Prompt:**
-Task 17: Page 5 Audit - Cross-User Context & Strict Offline Enforcement
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #18. Context: "Auditing Page 5 to ensure the 'Save' button reflects the Active User's state when viewing another user's profile, and enforcing strict offline-only data streams."
 
 Action 1: Cross-User Save Logic
@@ -567,8 +532,6 @@ Auditing Page 5 to ensure the 'Save' button reflects the Active User's state whe
 
 ## Entry #19: Page 6 Audit - Dependency Injection (get_it)
 **Prompt:**
-Task 18: Page 6 Audit - Dependency Injection (get_it)
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #19. Context: "Fulfilling the strict 'Dependency Injection' requirement from the assignment's technical checklist by implementing get_it."
 
 Action 1: Setup get_it
@@ -602,8 +565,6 @@ Fulfilling the strict 'Dependency Injection' requirement from the assignment's t
 
 ## Entry #20: Page 7 Audit - Exponential Backoff & The Offline ID Swap
 **Prompt:**
-Task 20: Page 7 Audit - Exponential Backoff & The Offline ID Swap
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #20. Context: "Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync."
 
 Action 1: Exponential Backoff Verification
@@ -627,8 +588,6 @@ Auditing Page 07 requirements to ensure the network retry logic uses exponential
 
 ## Entry #21: Page 8 Audit - Image Fallbacks & Global Error States
 **Prompt:**
-Task 21: Page 8 Audit - Image Fallbacks & Global Error States
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #21. Context: "Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states."
 
 Action 1: CachedNetworkImage Fallbacks
@@ -653,8 +612,6 @@ Auditing Page 08 UI requirements to ensure graceful visual degradation for offli
 
 ## Entry #22: First-Launch Onboarding Screens
 **Prompt:**
-Task 23: First-Launch Onboarding Screens
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #22. Context: "Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features."
 
 Action 1: Setup and State
@@ -692,8 +649,6 @@ Implementing a first-launch onboarding experience using shared_preferences to in
 
 ## Entry #23: Contextual Coach Marks & Premium Lottie Onboarding Upgrade
 **Prompt:**
-Task 24: Contextual Coach Marks & Premium Lottie Onboarding Upgrade
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #23. Context: "Implementing premium onboarding animations and adding contextual tutorial coach marks using the showcaseview package to guide the user through the core UI."
 
 Action 1: Setup Lottie and ShowcaseView
@@ -720,9 +675,7 @@ Implementing premium onboarding animations and adding contextual tutorial coach 
 
 ## Entry #24: Premium Contextual Coach Marks
 **Prompt:**
-Task 25: Premium Contextual Coach Marks
-
-Log this first: Please log this prompt into PROMPTS.md as Entry #25. Context: "Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback."
+Log this first: Please log this prompt into PROMPTS.md as Entry #24. Context: "Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback."
 
 Action 1: Setup Advanced ShowcaseWidget
 
@@ -756,8 +709,6 @@ Implementing premium contextual coach marks using showcaseview, featuring backgr
 
 ## Entry #25: Automatic Retry and Manual Refresh
 **Prompt:**
-Task 26: Automatic Retry and Manual Refresh
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #25. Context: "Adding RefreshIndicator and explicit Retry buttons to empty states to ensure data fetch reliability when the API returns no results."
 
 Action 1: Add RefreshIndicator
@@ -773,8 +724,6 @@ Added `RefreshIndicator` and an explicit "Retry" button to the empty states of b
 
 ## Entry #26: Final Rubric Audit & High-Impact Documentation
 **Prompt:**
-Task 27: Final Rubric Audit & High-Impact Documentation
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #26. Context: "Performing a final audit against the assignment rubric and generating high-impact Mermaid-enhanced documentation."
 
 Action 1: Final Reliability Checks
@@ -793,8 +742,6 @@ Final audit against the assignment scoring rubric (Functionality, UI Quality, Co
 
 ## Entry #33: Strategic Test Suite (Unit & Widget Tests)
 **Prompt:**
-Task 34: Strategic Test Suite (Unit & Widget Tests)
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #33. Context: "Implementing a strategic test suite to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria."
 
 Action 1: Add Test Dependencies
@@ -816,8 +763,6 @@ Implementing a strategic test suite (Unit and Widget tests) to verify core offli
 
 ## Entry #34: Professional Package Name Refactor
 **Prompt:**
-Task 35: Professional Package Name Refactor
-
 Log this first: Please log this prompt into PROMPTS.md as Entry #34. Context: "Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name."
 
 Action 1: Add Package Rename Tool
@@ -836,7 +781,7 @@ Refactoring the project to replace the default 'com.example' bundle ID with a un
 
 ## Entry #35: Final Master Cleanup & Project Optimization
 **Prompt:**
-Task 36: Final Master Cleanup & Project Optimization
+Log this first: Please log this prompt into PROMPTS.md as Entry #35. Context: "Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build."
 
 Action 1: Dead Code & Import Audit
 Please run a project-wide scan. Remove any import statements that are grayed out or unused.
@@ -863,56 +808,21 @@ Performing a final deep-clean of the project to remove dead code, unused assets,
 
 ## Entry #36: Prevent Duplicate Submissions & Add Loading State
 **Prompt:**
-Task 37: Prevent Duplicate Submissions & Add Loading State
-
-Log this first: Please log this prompt into PROMPTS.md as Entry #37. Context: "Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation."
+Log this first: Please log this prompt into PROMPTS.md as Entry #36. Context: "Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation."
 
 Action 1: Update UserCubit State
-
 Ensure the UserCubit has a specific state for UserAdding or check if the state is UserLoading.
 
 Action 2: Update Add User Button UI
-
 Open the "Add User" dialog or screen.
-
 Wrap the "Add" button's content in an AnimatedSwitcher.
-
 Logic: If the state is Loading, replace the "Add User" text with a small, themed CircularProgressIndicator (use strokeWidth: 2 to keep it elegant).
-
 Disabled State: Set the onPressed callback to null if the state is Loading. This automatically greys out/disables the button in Flutter.
 
 Action 3: Haptic Confirmation
-
 Trigger HapticFeedback.mediumImpact() the moment the button is pressed, and a HapticFeedback.lightImpact() once the user is successfully added and the dialog closes.
 
 Please implement this and confirm. This ensures a "one-tap" guarantee for our database integrity.
 
 **Context:**
 Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation.
-
-## Entry #37: Final Master Cleanup & Project Optimization
-**Prompt:**
-Task 38: Final Master Cleanup & Project Optimization
-
-Action 1: Dead Code & Import Audit
-Please run a project-wide scan. Remove any import statements that are grayed out or unused.
-Remove any commented-out code blocks, "TODO" comments (unless critical), or print statements that were missed in previous steps.
-Ensure all classes and variables follow the camelCase and PascalCase Dart conventions strictly.
-
-Action 2: Asset & Dependency Purge
-Audit the assets/ folder. Delete any images or Lottie files that are not actually being called in the UI.
-Check pubspec.yaml. Remove any packages that were added during development but are no longer used in the final architecture.
-
-Action 3: Android Resource Shrinking
-Open android/app/build.gradle.
-Inside buildTypes.release, ensure the following are set to true:
-minifyEnabled true
-shrinkResources true
-This will trigger R8 to strip out unused Java/Kotlin code and resources from the final APK.
-
-Action 4: Final Documentation Sync
-Ensure the README.md and PROMPTS.md are in their final state and saved in the root directory.
-Please confirm when the cleanup is complete. Once done, I will run the final build command.
-
-**Context:**
-Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build.
