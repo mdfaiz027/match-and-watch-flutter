@@ -754,9 +754,31 @@ Please implement this premium tutorial flow and confirm when complete.
 **Context:**
 Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback.
 
-## Entry #30: Fixing Onboarding Layout Overlap
+## Entry #31: Secure API Configuration with .env and Endpoints
 **Prompt:**
-in some phones, the text on onboarding screen is showing on top of the page indicators
+Task 29: Secure API Configuration with .env and Endpoints
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #31. Context: "Implementing a secure and scalable API configuration using flutter_dotenv for sensitive keys and a centralized AppEndpoints class for URLs."
+
+Action 1: Setup Environment Variables
+Please add the flutter_dotenv package to pubspec.yaml.
+Create a .env file in the root directory.
+Inside .env, add:
+TMDB_API_KEY=your_key_here
+REQRES_API_KEY=your_key_here
+Update pubspec.yaml to include .env in the assets section.
+Update main.dart to initialize the dotenv: await dotenv.load(fileName: ".env");.
+
+Action 2: Create Centralized Endpoints File
+Create /lib/core/constants/app_endpoints.dart. Define a class AppEndpoints that pulls base URLs and combines them with paths.
+Use dotenv.env['TMDB_API_KEY'] and dotenv.env['REQRES_API_KEY'] inside this file to construct the full request strings.
+Define static constants for: baseUrlTmdb, baseUrlReqres, trendingMovies, movieDetails, usersList.
+
+Action 3: Refactor Services
+Audit TmdbService and ReqresService.
+Replace all hardcoded URLs and key references with the constants from AppEndpoints.
+
+Please implement this secure configuration and confirm when complete.
 
 **Context:**
-Refactored the `OnboardingPage` layout from a `Stack` to a `Column` with `Expanded(PageView)` to strictly separate content from navigation controls. Also added `SingleChildScrollView` to `_OnboardingStep` to handle smaller screen heights gracefully.
+Implementing a secure and scalable API configuration using flutter_dotenv for sensitive keys and a centralized AppEndpoints class for URLs.

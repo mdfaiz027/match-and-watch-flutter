@@ -8,7 +8,6 @@ import '../../../core/theme/app_dimensions.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
 import '../../movies/bloc/movie_cubit.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 
 class SavedMoviesPage extends StatelessWidget {

@@ -1,16 +1,25 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class AppEndpoints {
-  // TMDB
-  static const String tmdbBaseUrl = 'https://api.themoviedb.org/3';
-  static const String tmdbTrending = '/trending/movie/day';
-  static const String tmdbMovieDetail = '/movie';
+  // Base URLs
+  static const String baseUrlTmdb = 'https://api.themoviedb.org/3';
+  static const String baseUrlReqres = 'https://reqres.in/api';
+
+  // Paths
+  static const String trendingMovies = '/trending/movie/day';
+  static const String movieDetails = '/movie';
+  static const String usersList = '/users';
+
+  // Images
   static const String tmdbImageBaseW185 = 'https://image.tmdb.org/t/p/w185';
   static const String tmdbImageBaseW500 = 'https://image.tmdb.org/t/p/w500';
 
-  // Reqres
-  static const String reqresBaseUrl = 'https://reqres.in/api';
-  static const String reqresUsers = '/users';
+  // Computed Endpoints
+  static String get tmdbTrendingUrl => '$baseUrlTmdb$trendingMovies';
+  static String get tmdbDetailsUrl => '$baseUrlTmdb$movieDetails';
+  static String get reqresUsersUrl => '$baseUrlReqres$usersList';
 
-  // API Keys (Ideally these would be in a .env file, but for now we centralize them here or keep them in services)
-  static const String tmdbApiKey = 'd3d9991864acd9b493f857b091ff97ed';
-  static const String reqresApiKey = 'free_user_3DQl89b1wFD72BqXyUsTHQE9lGq';
+  // API Keys from Environment
+  static String get tmdbApiKey => dotenv.env['TMDB_API_KEY'] ?? '';
+  static String get reqresApiKey => dotenv.env['REQRES_API_KEY'] ?? '';
 }

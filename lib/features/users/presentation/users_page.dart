@@ -14,7 +14,6 @@ import '../../../core/theme/app_dimensions.dart';
 import '../../../core/di/injection_container.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
-import '../../../core/theme/app_theme.dart';
 
 class UsersPage extends StatefulWidget {
   const UsersPage({super.key});

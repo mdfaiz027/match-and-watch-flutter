@@ -9,7 +9,7 @@ class TmdbService {
 
   Future<Response> getTrendingMovies({int page = 1}) async {
     return _apiClient.dio.get(
-      '${AppEndpoints.tmdbBaseUrl}${AppEndpoints.tmdbTrending}',
+      AppEndpoints.tmdbTrendingUrl,
       queryParameters: {
         'api_key': AppEndpoints.tmdbApiKey,
         'language': 'en-US',
@@ -20,7 +20,7 @@ class TmdbService {
 
   Future<Response> getMovieDetails(int movieId) async {
     return _apiClient.dio.get(
-      '${AppEndpoints.tmdbBaseUrl}${AppEndpoints.tmdbMovieDetail}/$movieId',
+      '${AppEndpoints.tmdbDetailsUrl}/$movieId',
       queryParameters: {
         'api_key': AppEndpoints.tmdbApiKey,
       },

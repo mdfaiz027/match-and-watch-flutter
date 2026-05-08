@@ -15,7 +15,6 @@ import '../../../core/theme/app_dimensions.dart';
 import '../../../core/di/injection_container.dart';
 import '../bloc/movie_cubit.dart';
 import '../../users/bloc/active_user_cubit.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 
 class MoviesPage extends StatefulWidget {

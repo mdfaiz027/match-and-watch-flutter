@@ -9,7 +9,7 @@ class ReqresService {
 
   Future<Response> getUsers({int page = 1}) async {
     return _apiClient.dio.get(
-      '${AppEndpoints.reqresBaseUrl}${AppEndpoints.reqresUsers}',
+      AppEndpoints.reqresUsersUrl,
       queryParameters: {'page': page},
       options: Options(
         headers: {'x-api-key': AppEndpoints.reqresApiKey},
@@ -22,7 +22,7 @@ class ReqresService {
     required String movieTaste,
   }) async {
     return _apiClient.dio.post(
-      '${AppEndpoints.reqresBaseUrl}${AppEndpoints.reqresUsers}',
+      AppEndpoints.reqresUsersUrl,
       data: {
         'name': fullName,
         'job': movieTaste,
