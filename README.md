@@ -1,17 +1,74 @@
-# match_and_watch
+# Match & Watch 🎬
 
-A new Flutter project.
+A premium Flutter application designed for movie discovery and social matching, built with a focus on **offline-first reliability**, **high-performance animations**, and **clean architecture**.
 
-## Getting Started
+## 🏗 System Architecture
 
-This project is a starting point for a Flutter application.
+The project follows a modified Clean Architecture pattern with BLoC/Cubit for state management, ensuring a clear separation of concerns between UI, Business Logic, and Data.
 
-A few resources to get you started if this is your first Flutter project:
+```mermaid
+graph TD
+    UI[Flutter UI / Presentation] --> Cubit[Cubit / State Management]
+    Cubit --> Repo[Repository Layer]
+    Repo --> Dio[Network - Dio Service]
+    Repo --> Drift[Local Storage - Drift DB]
+    Dio --> API[Remote API - TMDB/Reqres]
+    Drift --> SQLite[SQLite File]
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+## 📊 Database Schema
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Our database uses a dual-ID system (Local ID vs. Server ID) to ensure that relationships between users and saved movies are never broken during background synchronization.
+
+```mermaid
+erDiagram
+    USERS ||--o{ SAVED_MOVIES : "saves"
+    MOVIES ||--o{ SAVED_MOVIES : "is saved"
+    USERS {
+        int id PK "Local Auto-increment"
+        int serverId "Null if pending sync"
+        string firstName
+        string lastName
+        string avatar "URL or Asset Path"
+        string movieTaste
+        bool pendingSync
+    }
+    MOVIES {
+        int id PK "TMDB/OMDB ID"
+        string title
+        string posterPath
+        string releaseYear
+        string overview
+    }
+    SAVED_MOVIES {
+        int userId FK
+        int movieId FK
+        datetime createdAt
+    }
+```
+
+## 🎨 Design System
+
+We employ a **12dp/16dp mathematical grid system** for consistent spatial alignment.
+
+| Token | Value | Choice |
+| :--- | :--- | :--- |
+| **Primary Gold** | `#FFD700` | High contrast against dark theme, creates a premium feel. |
+| **Card Radius** | `16dp` | Soft, modern corners for a friendly UI. |
+| **Grid Base** | `4dp / 8dp` | Ensures all components are vertically and horizontally aligned. |
+| **Animations** | `300ms - 500ms` | Curved transitions (EaseInOut) for natural motion. |
+
+## 📶 Offline & Sync Strategy
+
+The app is built to be fully functional in "Airplane Mode":
+
+1.  **Aggressive Caching**: Every network response from TMDB or Reqres is immediately upserted into the Drift SQLite database. The UI always watches a Stream from the database, never the network directly.
+2.  **Pending Sync Mechanism**: When a user is created offline, we flag them with `pendingSync: true`.
+3.  **WorkManager**: A background periodic task (every 15 mins) identifies pending users, attempts to POST them to the server, and updates the local record with the newly assigned `serverId` once successful.
+4.  **Resilient Networking**: A custom Dio Interceptor handles retries with **Exponential Backoff** (1s, 2s, 4s...) and provides non-blocking UI feedback via a global "Reconnecting..." state.
+
+## 🤝 AI Collaboration
+This project was developed in a partnership between a lead architect and a senior AI engineer. The full context, decision logs, and refactoring history can be found in `PROMPTS.md`.
+
+---
+*Built with ❤️ for Platform Commons.*
