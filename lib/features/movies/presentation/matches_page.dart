@@ -10,6 +10,7 @@ import '../../../core/constants/app_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../core/widgets/user_avatar.dart';
+import '../../../core/widgets/social_avatars.dart';
 import '../bloc/movie_cubit.dart';
 import '../../../core/database/app_database.dart';
 
@@ -133,7 +134,7 @@ class MatchesPage extends StatelessWidget {
                                               ),
                                             ),
                                             const SizedBox(height: AppDimensions.spacingS),
-                                            _buildUserAvatars(match.users),
+                                            SocialAvatars(users: match.users),
                                           ],
                                         ),
                                       ),
@@ -154,26 +155,6 @@ class MatchesPage extends StatelessWidget {
         },
       ),
     ));
-  }
-
-  Widget _buildUserAvatars(List<User> users) {
-    return SizedBox(
-      height: 30,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          return Padding(
-            padding: const EdgeInsets.only(right: AppDimensions.spacingXXS),
-            child: UserAvatar(
-              avatarUrl: user.avatar,
-              radius: AppDimensions.avatarRadiusS,
-            ),
-          );
-        },
-      ),
-    );
   }
 
   Widget _buildEmptyState(BuildContext context) {

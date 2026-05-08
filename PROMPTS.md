@@ -740,9 +740,9 @@ Please complete these final polish steps and confirm.
 **Context:**
 Final audit against the assignment scoring rubric (Functionality, UI Quality, Code Quality, Offline Sync, and Connection Handling) and generating the submission documentation.
 
-## Entry #33: Strategic Test Suite (Unit & Widget Tests)
+## Entry #27: Strategic Test Suite (Unit & Widget Tests)
 **Prompt:**
-Log this first: Please log this prompt into PROMPTS.md as Entry #33. Context: "Implementing a strategic test suite to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria."
+Log this first: Please log this prompt into PROMPTS.md as Entry #27. Context: "Implementing a strategic test suite to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria."
 
 Action 1: Add Test Dependencies
 Add `bloc_test` and `mocktail` to `dev_dependencies` in `pubspec.yaml`.
@@ -761,9 +761,9 @@ Please implement this test suite and confirm when complete.
 **Context:**
 Implementing a strategic test suite (Unit and Widget tests) to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria.
 
-## Entry #34: Professional Package Name Refactor
+## Entry #28: Professional Package Name Refactor
 **Prompt:**
-Log this first: Please log this prompt into PROMPTS.md as Entry #34. Context: "Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name."
+Log this first: Please log this prompt into PROMPTS.md as Entry #28. Context: "Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name."
 
 Action 1: Add Package Rename Tool
 Add `change_app_package_name` to `dev_dependencies` in `pubspec.yaml`.
@@ -779,9 +779,9 @@ Please execute this refactor and confirm when complete.
 **Context:**
 Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name.
 
-## Entry #35: Final Master Cleanup & Project Optimization
+## Entry #29: Final Master Cleanup & Project Optimization
 **Prompt:**
-Log this first: Please log this prompt into PROMPTS.md as Entry #35. Context: "Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build."
+Log this first: Please log this prompt into PROMPTS.md as Entry #29. Context: "Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build."
 
 Action 1: Dead Code & Import Audit
 Please run a project-wide scan. Remove any import statements that are grayed out or unused.
@@ -805,3 +805,92 @@ Please confirm when the cleanup is complete. Once done, I will run the final bui
 
 **Context:**
 Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build.
+
+## Entry #30: Prevent Duplicate Submissions & Add Loading State
+**Prompt:**
+Log this first: Please log this prompt into PROMPTS.md as Entry #30. Context: "Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation."
+
+Action 1: Update UserCubit State
+Ensure the UserCubit has a specific state for UserAdding or check if the state is UserLoading.
+
+Action 2: Update Add User Button UI
+Open the "Add User" dialog or screen.
+Wrap the "Add" button's content in an AnimatedSwitcher.
+Logic: If the state is Loading, replace the "Add User" text with a small, themed CircularProgressIndicator (use strokeWidth: 2 to keep it elegant).
+Disabled State: Set the onPressed callback to null if the state is Loading. This automatically greys out/disables the button in Flutter.
+
+Action 3: Haptic Confirmation
+Trigger HapticFeedback.mediumImpact() the moment the button is pressed, and a HapticFeedback.lightImpact() once the user is successfully added and the dialog closes.
+
+Please implement this and confirm. This ensures a "one-tap" guarantee for our database integrity.
+
+**Context:**
+Enhancing the 'Add User' flow to prevent duplicate submissions by disabling the button and showing a loader during the asynchronous operation.
+
+## Entry #31: Fix Showcase Sequence Logic
+**Prompt:**
+Log this first: Please log this prompt into PROMPTS.md as Entry #31.
+Context: "The Showcase sequence on UsersPage breaks after the first item (FAB) because the onTargetClick callback triggers navigation to a new page, which kills the showcase context before the 'Matches' tutorial can appear."
+
+Action 1: Core Implementation
+Modify onTargetClick: In UsersPage.dart, locate the Showcase widget wrapping the FloatingActionButton. Remove the context.push('/add_user') call from the onTargetClick property.
+
+Explanation: onTargetClick fires when the user taps the highlighted FAB during the tutorial. If this navigates away, the ShowcaseWidget sequence is destroyed. Removing navigation allows the sequence to progress to the _matchesKey (the Matches icon in the AppBar).
+
+Verify Sequence: Ensure ShowCaseWidget.of(context).startShowCase([_fabKey, _matchesKey]) is still correctly called in _checkShowcase.
+
+Action 2: Professional Standards Audit
+Clean Code: Ensure the GlobalKey references (_fabKey and _matchesKey) remain private and properly initialized.
+UX Feedback: Ensure HapticFeedback.lightImpact() is still called on target click to provide tactile confirmation that the tutorial is progressing.
+Navigation Logic: Verify that the onPressed of the actual FloatingActionButton still handles the navigation correctly for normal usage (outside of the showcase).
+
+Action 3: File Organization & Scalability
+Naming Sync: Ensure the title of this task in PROMPTS.md matches "Entry #31: Fix Showcase Sequence Logic".
+
+**Context:**
+Fixing the Showcase sequence on UsersPage by removing premature navigation that breaks the tutorial context.
+
+## Entry #32: Scalable Social Proof UI (Stacked Avatars)
+**Prompt:**
+Log this first: Please log this into PROMPTS.md as Entry #32.
+Context: "Implementing a scalable 'Social Proof' stacked avatar UI for movie cards and performing the final synchronization of the project log for submission."
+
+Action 1: Scalable Social Proof UI (Stacked Avatars)
+
+Requirement: Movie cards must show which users have bookmarked a specific movie to provide social proof.
+
+Widget Creation: Create a reusable widget SocialAvatars in lib/core/widgets/social_avatars.dart.
+
+Logic:
+
+Accept a list of User objects.
+
+1 User: Show 1 avatar.
+
+2 Users: Show 2 overlapping avatars using a Stack.
+
+> 2 Users: Show 2 overlapping avatars and a circular badge with +N (e.g., if 5 people saved it, show 2 avatars and a +3 badge).
+
+Styling: Use AppDimensions.avatarSm. Add a 2dp border (using AppColors.surfaceGrey) around each avatar to create a "cutout" effect that separates them visually.
+
+Action 2: Integration & Data Flow
+
+Update the MovieCard widget to include the SocialAvatars row.
+
+Data Source: Ensure the widget receives the list of users who have saved that specific movie by querying the SavedMovies relationship in the Drift database.
+
+UX: The row should animate in along with the card using the existing staggered animation logic.
+
+Action 3: Final Log Synchronization
+
+Perform a final sweep of PROMPTS.md.
+
+Unification: Ensure every single log follows the unified "Entry #[Number]: [Title]" format.
+
+Cleanup: Remove any redundant references to "Task X" or "Step Y" that conflict with the "Entry" numbering.
+
+Verification: Ensure the log is chronologically perfect, ending with this entry (#32).
+
+**Context:**
+Implementing a scalable 'Social Proof' stacked avatar UI for movie cards to provide social validation, and performing a final audit/synchronization of the AI prompt log.
+\n## Entry #33: Reposition Social Proof UI\n**Prompt:**\nentry 36: put it in movies details page and also in the matches page  becuase there also weare showing how many people has bookmarked it and remove it from movies_page\n\n**Context:**\nMoving the stacked avatar 'Social Proof' UI from the main movie list to the Movie Details and Matches pages for better contextual relevance.\n
