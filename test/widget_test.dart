@@ -1,30 +1,30 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:match_and_watch/main.dart';
+import 'package:match_and_watch/core/database/app_database.dart';
+import 'package:match_and_watch/core/network/api_client.dart';
+import 'package:match_and_watch/core/network/reqres_service.dart';
+import 'package:match_and_watch/core/network/tmdb_service.dart';
+import 'package:match_and_watch/core/repositories/user_repository.dart';
+import 'package:match_and_watch/core/repositories/movie_repository.dart';
+import 'package:drift/native.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  testWidgets('App initialization smoke test', (WidgetTester tester) async {
+    // Use an in-memory database for testing
+    final database = AppDatabase.forTesting(NativeDatabase.memory());
+    final apiClient = ApiClient();
+    final reqresService = ReqresService(apiClient);
+    final tmdbService = TmdbService(apiClient);
+    final userRepository = UserRepository(database, reqresService);
+    final movieRepository = MovieRepository(database, tmdbService);
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    await tester.pumpWidget(MatchAndWatchApp(
+      userRepository: userRepository,
+      movieRepository: movieRepository,
+    ));
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Match & Watch Initialized'), findsOneWidget);
+    
+    await database.close();
   });
 }

@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:workmanager/workmanager.dart';
 import 'package:drift/drift.dart';
 import '../../core/database/app_database.dart';
@@ -41,12 +42,12 @@ void callbackDispatcher() {
           }
         } catch (e) {
           // Individual user sync failed, continue to next but don't mark task as success if needed
-          print("Failed to sync user ${user.id}: $e");
+          developer.log("Failed to sync user ${user.id}: $e");
         }
       }
       return Future.value(true);
     } catch (e) {
-      print("Sync task error: $e");
+      developer.log("Sync task error: $e");
       return Future.value(false);
     } finally {
       await database.close();

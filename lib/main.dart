@@ -25,10 +25,7 @@ void main() async {
   final movieRepository = MovieRepository(database, tmdbService);
 
   // Initialize WorkManager
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: true, // Set to false in production
-  );
+  await Workmanager().initialize(callbackDispatcher);
 
   // Register the sync task
   await Workmanager().registerPeriodicTask(
