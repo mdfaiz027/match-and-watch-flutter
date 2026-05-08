@@ -9,6 +9,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
+import '../../../core/widgets/user_avatar.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
 import '../../movies/bloc/movie_cubit.dart';
@@ -64,20 +65,9 @@ class SavedMoviesPage extends StatelessWidget {
       color: AppColors.surfaceGrey,
       child: Row(
         children: [
-          CachedNetworkImage(
-            imageUrl: user.avatar ?? '',
-            imageBuilder: (context, imageProvider) => CircleAvatar(
-              radius: AppDimensions.avatarRadiusL,
-              backgroundImage: imageProvider,
-            ),
-            placeholder: (context, url) => const CircleAvatar(
-              radius: AppDimensions.avatarRadiusL,
-              child: Icon(Icons.person, size: 40),
-            ),
-            errorWidget: (context, url, error) => const CircleAvatar(
-              radius: AppDimensions.avatarRadiusL,
-              child: Icon(Icons.person, size: 40, color: AppColors.primaryGold),
-            ),
+          UserAvatar(
+            avatarUrl: user.avatar,
+            radius: AppDimensions.avatarRadiusL,
           ),
           const SizedBox(width: AppDimensions.spacingL),
           Expanded(

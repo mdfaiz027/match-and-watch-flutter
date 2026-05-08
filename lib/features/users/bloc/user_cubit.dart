@@ -41,7 +41,8 @@ class UserCubit extends Cubit<UserState> {
     _subscription?.cancel();
     _subscription = _repository.watchUsersWithMovieCount().listen(
       (users) {
-        if (state is! UserError || users.isNotEmpty) {
+        // Only transition to Loaded if we have data OR if we aren't currently waiting for the initial sync
+        if (users.isNotEmpty || state is! UserLoading) {
           emit(UserLoaded(users));
         }
       },
@@ -52,6 +53,12 @@ class UserCubit extends Cubit<UserState> {
     } catch (e) {
       if (state is UserLoading || (state is UserLoaded && (state as UserLoaded).users.isEmpty)) {
         emit(UserError(e.toString()));
+      }
+    } finally {
+      // If we are still in UserLoading after the sync attempt, it means no users were found
+      // We force transition to UserLoaded so the shimmer stops and "No users" is shown.
+      if (state is UserLoading) {
+        emit(UserLoaded(const []));
       }
     }
   }

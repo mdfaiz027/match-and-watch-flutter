@@ -19,7 +19,10 @@ class ApiClient {
 
     _dio.interceptors.addAll([
       if (AppConstants.enableNetworkSimulation) FailureSimulatorInterceptor(),
-      RetryInterceptor(dio: _dio),
+      RetryInterceptor(
+        dio: _dio,
+        maxRetries: AppConstants.maxRetryAttempts,
+      ),
       LogInterceptor(responseBody: true, requestBody: true),
     ]);
   }

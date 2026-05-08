@@ -21,7 +21,8 @@ class UserRepository {
       leftOuterJoin(_db.savedMovies, _db.savedMovies.userId.equalsExp(_db.users.id)),
     ])
       ..addColumns([countExp])
-      ..groupBy([_db.users.id]);
+      ..groupBy([_db.users.id])
+      ..orderBy([OrderingTerm.asc(_db.users.firstName)]);
 
     return query.watch().map((rows) {
       return rows.map<UserWithMovieCount>((row) {
@@ -34,7 +35,7 @@ class UserRepository {
   }
 
   Stream<List<User>> watchUsers() {
-    return _db.select(_db.users).watch();
+    return (_db.select(_db.users)..orderBy([(t) => OrderingTerm.asc(t.firstName)])).watch();
   }
 
   Future<void> refreshUsers({int page = 1, bool silent = false}) async {
@@ -42,13 +43,25 @@ class UserRepository {
       final response = await _reqresService.getUsers(page: page, silent: silent);
       final usersData = response.data['data'] as List;
 
+      // Find existing users by serverId to avoid duplicates
+      final serverIds = usersData.map((u) => u['id'] as int).toList();
+      final existingUsers = await (_db.select(_db.users)
+            ..where((u) => u.serverId.isIn(serverIds)))
+          .get();
+      
+      final serverIdToLocalId = {for (var u in existingUsers) u.serverId: u.id};
+
       final companions = usersData.map((u) {
-        return UsersCompanion.insert(
-          serverId: Value(u['id']),
-          firstName: u['first_name'],
-          lastName: u['last_name'],
+        final serverId = u['id'] as int;
+        final localId = serverIdToLocalId[serverId];
+
+        return UsersCompanion(
+          id: localId != null ? Value(localId) : const Value.absent(),
+          serverId: Value(serverId),
+          firstName: Value(u['first_name']),
+          lastName: Value(u['last_name']),
           avatar: Value(u['avatar']),
-          movieTaste: 'Unknown', // Reqres doesn't provide this by default
+          movieTaste: const Value('Unknown'),
           pendingSync: const Value(false),
         );
       }).toList();
@@ -97,6 +110,7 @@ class UserRepository {
             serverId: Value(serverId),
             firstName: firstName,
             lastName: lastName,
+            avatar: const Value('assets/images/profile_pic.png'),
             movieTaste: movieTaste,
             pendingSync: Value(pendingSync),
           ),

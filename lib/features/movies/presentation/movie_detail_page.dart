@@ -6,6 +6,7 @@ import '../../../core/constants/app_strings.dart';
 import '../../../core/constants/app_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
+import '../../../core/widgets/user_avatar.dart';
 import '../bloc/movie_cubit.dart';
 import '../../users/bloc/active_user_cubit.dart';
 import '../../../core/database/app_database.dart';
@@ -171,21 +172,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               child: Row(
                 children: users.map((user) => Padding(
                   padding: const EdgeInsets.only(right: AppDimensions.spacingXS),
-                  child: CachedNetworkImage(
-                    imageUrl: user.avatar ?? '',
-                    imageBuilder: (context, imageProvider) => CircleAvatar(
-                      radius: AppDimensions.avatarRadiusM,
-                      backgroundImage: imageProvider,
-                    ),
-                    placeholder: (context, url) => const CircleAvatar(
-                      radius: AppDimensions.avatarRadiusM,
-                      child: Icon(Icons.person),
-                    ),
-                    errorWidget: (context, url, error) => const CircleAvatar(
-                      radius: AppDimensions.avatarRadiusM,
-                      backgroundColor: AppColors.surfaceLight,
-                      child: Icon(Icons.person, color: AppColors.primaryGold, size: 20),
-                    ),
+                  child: UserAvatar(
+                    avatarUrl: user.avatar,
+                    radius: AppDimensions.avatarRadiusM,
                   ),
                 )).toList(),
               ),

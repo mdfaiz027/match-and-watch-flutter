@@ -46,7 +46,8 @@ class MovieCubit extends Cubit<MovieState> {
     _subscription = _repository.watchMovies().listen(
       (movies) {
         developer.log('MovieCubit stream received ${movies.length} movies from DB');
-        if (state is! MovieError || movies.isNotEmpty) {
+        // Only transition to Loaded if we have data OR if we aren't currently waiting for the initial sync
+        if (movies.isNotEmpty || state is! MovieLoading) {
           emit(MovieLoaded(movies));
         }
       },
@@ -63,6 +64,12 @@ class MovieCubit extends Cubit<MovieState> {
       developer.log('MovieCubit catch error: $e');
       if (state is MovieLoading || (state is MovieLoaded && (state as MovieLoaded).movies.isEmpty)) {
         emit(MovieError(e.toString()));
+      }
+    } finally {
+      // If we are still in MovieLoading after the sync attempt, it means no movies were found
+      // We force transition to MovieLoaded so the shimmer stops and "No movies" is shown.
+      if (state is MovieLoading) {
+        emit(MovieLoaded(const []));
       }
     }
   }

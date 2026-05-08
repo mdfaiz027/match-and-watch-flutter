@@ -9,6 +9,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
+import '../../../core/widgets/user_avatar.dart';
 import '../bloc/movie_cubit.dart';
 import '../../../core/database/app_database.dart';
 
@@ -161,20 +162,9 @@ class MatchesPage extends StatelessWidget {
           final user = users[index];
           return Padding(
             padding: const EdgeInsets.only(right: AppDimensions.spacingXXS),
-            child: CachedNetworkImage(
-              imageUrl: user.avatar ?? '',
-              imageBuilder: (context, imageProvider) => CircleAvatar(
-                radius: AppDimensions.avatarRadiusS,
-                backgroundImage: imageProvider,
-              ),
-              placeholder: (context, url) => const CircleAvatar(
-                radius: AppDimensions.avatarRadiusS,
-                child: Icon(Icons.person, size: 15),
-              ),
-              errorWidget: (context, url, error) => const CircleAvatar(
-                radius: AppDimensions.avatarRadiusS,
-                child: Icon(Icons.person, size: 15, color: AppColors.primaryGold),
-              ),
+            child: UserAvatar(
+              avatarUrl: user.avatar,
+              radius: AppDimensions.avatarRadiusS,
             ),
           );
         },

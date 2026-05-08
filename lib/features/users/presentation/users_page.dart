@@ -12,6 +12,7 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
 import '../../../core/di/injection_container.dart';
+import '../../../core/widgets/user_avatar.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
 
@@ -149,23 +150,9 @@ class _UsersPageState extends State<UsersPage> {
                                 context.read<ActiveUserCubit>().setUser(user);
                                 context.push('/movies');
                               },
-                              leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
-                                child: CachedNetworkImage(
-                                  imageUrl: user.avatar ?? '',
-                                  width: AppDimensions.iconSizeXL,
-                                  height: AppDimensions.iconSizeXL,
-                                  fit: BoxFit.cover,
-                                  placeholder: (context, url) => Container(
-                                    color: AppColors.surfaceLight,
-                                    child: const Icon(Icons.person, color: AppColors.textMuted),
-                                  ),
-                                  errorWidget: (context, url, error) => Container(
-                                    color: AppColors.surfaceLight,
-                                    child: const Icon(Icons.person, color: AppColors.primaryGold),
-                                  ),
-                                  fadeInDuration: const Duration(milliseconds: AppConstants.durationSlowMs),
-                                ),
+                              leading: UserAvatar(
+                                avatarUrl: user.avatar,
+                                radius: AppDimensions.iconSizeXL / 2,
                               ),
                               title: Text(
                                 '${user.firstName} ${user.lastName}',
