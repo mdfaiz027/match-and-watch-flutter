@@ -10,6 +10,7 @@ import 'features/onboarding/bloc/onboarding_cubit.dart';
 import 'core/router/app_router.dart';
 import 'core/network/connection_state.dart';
 import 'core/di/injection_container.dart' as di;
+import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
@@ -55,6 +56,9 @@ class MatchAndWatchApp extends StatelessWidget {
         ),
       ],
       child: ShowCaseWidget(
+        blurValue: 3.0,
+        onStart: (index, key) => HapticFeedback.lightImpact(),
+        onComplete: (index, key) => HapticFeedback.lightImpact(),
         builder: (context) => MaterialApp.router(
           title: 'Match & Watch',
           debugShowCheckedModeBanner: false,

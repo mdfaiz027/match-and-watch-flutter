@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/di/injection_container.dart';
@@ -28,22 +29,15 @@ class _MoviesPageState extends State<MoviesPage> {
     super.initState();
     context.read<MovieCubit>().loadMovies();
     _scrollController.addListener(_onScroll);
-    
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkShowcase();
-    });
   }
 
   void _checkShowcase() {
     final prefs = sl<SharedPreferences>();
     final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
     if (!hasSeenTutorial) {
-      // Small delay to ensure list is rendered if data is already there
-      Future.delayed(const Duration(milliseconds: 500), () {
-        if (mounted) {
-          ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
-          prefs.setBool('hasSeenMoviesTutorial', true);
-        }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
+        prefs.setBool('hasSeenMoviesTutorial', true);
       });
     }
   }
@@ -76,7 +70,12 @@ class _MoviesPageState extends State<MoviesPage> {
         ],
       ),
       body: SafeArea(
-        child: BlocBuilder<MovieCubit, MovieState>(
+        child: BlocConsumer<MovieCubit, MovieState>(
+          listener: (context, state) {
+            if (state is MovieLoaded && state.movies.isNotEmpty) {
+              _checkShowcase();
+            }
+          },
           builder: (context, state) {
             if (state is MovieLoading) {
               return _buildShimmerList();
@@ -266,6 +265,24 @@ class _MovieCard extends StatelessWidget {
                                           key: saveButtonKey!,
                                           title: 'Save Movie',
                                           description: 'Tap to save a movie to your offline list.',
+                                          tooltipBackgroundColor: AppTheme.surfaceGrey,
+                                          textColor: Colors.white,
+                                          titleTextStyle: const TextStyle(
+                                            color: AppTheme.cinematicGold,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                          ),
+                                          descTextStyle: const TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 14,
+                                          ),
+                                          onTargetClick: () {
+                                            HapticFeedback.lightImpact();
+                                            if (userId != 0) {
+                                              context.read<MovieCubit>().toggleSave(userId, movie);
+                                            }
+                                          },
+                                          disposeOnTap: true,
                                           child: iconButton,
                                         );
                                       }

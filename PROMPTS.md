@@ -403,7 +403,7 @@ Ensure the JSON parsing maps TMDB's fields (title, release_date, overview, poste
 
 Action 3: Fix the Image URLs
 TMDB only returns the end path of an image (e.g., /something.jpg). Based on the assignment requirements, we need to construct the full URL.
-Please update the UI (or a helper function in the model/repository) to prepend the correct base URLs:
+Please update the UI (or a helper function in the model/repository) to prepend the base URLs:
 * For the list cards (Movies Page, Matches Page, Saved Page), use: https://image.tmdb.org/t/p/w185{poster_path}.
 * For the Hero image on the Movie Detail Page, use: https://image.tmdb.org/t/p/w500{poster_path}.
 
@@ -690,9 +690,9 @@ Please implement this flow, ensure the app compiles, and confirm when complete.
 **Context:**
 Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features.
 
-## Entry #23: Premium Onboarding & Contextual Coach Marks
+## Entry #23: Contextual Coach Marks & Premium Lottie Onboarding Upgrade
 **Prompt:**
-Task 24 & 25: Premium Onboarding & Contextual Coach Marks
+Task 24: Contextual Coach Marks & Premium Lottie Onboarding Upgrade
 
 Log this first: Please log this prompt into PROMPTS.md as Entry #23. Context: "Implementing premium onboarding animations and adding contextual tutorial coach marks using the showcaseview package to guide the user through the core UI."
 
@@ -717,3 +717,64 @@ Please implement these enhancements and confirm when complete.
 
 **Context:**
 Implementing premium onboarding animations and adding contextual tutorial coach marks using the showcaseview package to guide the user through the core UI.
+
+## Entry #24: Premium Contextual Coach Marks
+**Prompt:**
+Task 25: Premium Contextual Coach Marks
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #25. Context: "Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback."
+
+Action 1: Setup Advanced ShowcaseWidget
+
+Please add the showcaseview package to pubspec.yaml (if not already added).
+
+Wrap our root application or router inside a ShowCaseWidget.
+
+The Premium Polish: Configure the ShowCaseWidget to use a blurValue (e.g., 2.0 or 3.0) so the background UI beautifully blurs out, rather than just dimming.
+
+Action 2: Instrument the UI with Custom Tooltips
+Please create GlobalKeys and wrap the following widgets in a Showcase widget. Do not use the default styling. Instead, style the tooltips to look premium: use our dark surface color for the tooltip background, add our Gold primary color for the text/title, and include rounded corners.
+
+On UsersPage: Highlight the "Add User" FAB. (Title: "New User", Description: "Start here! Create a profile to start saving movies.")
+
+On UsersPage: Highlight the "Matches" AppBar icon. (Title: "Matches", Description: "Tap here to see which movies everyone wants to watch!")
+
+On MoviesPage: Highlight the "Save" button on the first movie card. (Title: "Save Movie", Description: "Tap to save a movie to your offline list.")
+
+Action 3: Trigger Logic & Haptics
+
+Use SharedPreferences to create boolean flags (e.g., hasSeenUsersTutorial, hasSeenMoviesTutorial).
+
+In the initState of UsersPage and MoviesPage, check these flags. If false, trigger the showcase using ShowCaseWidget.of(context).startShowCase([...]) and set the flag to true.
+
+The Premium Polish: Add HapticFeedback.lightImpact() (import services.dart) inside the onStart and onComplete callbacks of the showcases so the user physically feels the tutorial appearing and disappearing.
+
+Please implement this premium tutorial flow and confirm when complete.
+
+**Context:**
+Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback.
+
+## Entry #25: Fix Showcase Sequence & Render Timing
+**Prompt:**
+Task 24.1: Fix Showcase Sequence & Render Timing
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #26. Context: \"Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle.\"
+
+Action 1: Fix UsersPage Sequence
+The UsersPage has two tutorials (FAB and Matches Icon). They are only showing one.
+
+Please ensure that BOTH GlobalKeys are passed into the trigger array in the exact order we want them to appear: ShowCaseWidget.of(context).startShowCase([fabKey, matchesKey]);
+
+Crucial Timing Fix: You cannot call startShowCase directly inside initState. You must wrap the trigger and the SharedPreferences check inside WidgetsBinding.instance.addPostFrameCallback((_) { ... }) so the widgets actually exist on screen before the overlay tries to find them.
+
+Action 2: Fix MoviesPage Trigger
+The MoviesPage has one tutorial (the Save button on the first card).
+
+If the list is still loading (Shimmer state), the GlobalKey won't be attached to anything.
+
+Please update the logic: Do not trigger the showcase in initState. Instead, trigger the SharedPreferences check and the startShowCase inside the BlocConsumer or BlocListener only when the state becomes Loaded and the list is not empty. Wrap it in a WidgetsBinding.instance.addPostFrameCallback to be safe.
+
+Please implement these timing fixes and confirm when complete.
+
+**Context:**
+Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle.

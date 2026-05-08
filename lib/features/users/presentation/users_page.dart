@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/di/injection_container.dart';
@@ -38,8 +39,13 @@ class _UsersPageState extends State<UsersPage> {
     final prefs = sl<SharedPreferences>();
     final hasSeenTutorial = prefs.getBool('hasSeenUsersTutorial') ?? false;
     if (!hasSeenTutorial) {
-      ShowCaseWidget.of(context).startShowCase([_addUserKey, _matchesKey]);
-      prefs.setBool('hasSeenUsersTutorial', true);
+      // Ensure the showcase starts after a small delay to allow UI to stabilize
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          ShowCaseWidget.of(context).startShowCase([_addUserKey, _matchesKey]);
+          prefs.setBool('hasSeenUsersTutorial', true);
+        }
+      });
     }
   }
 
@@ -66,6 +72,23 @@ class _UsersPageState extends State<UsersPage> {
             key: _matchesKey,
             title: 'Matches',
             description: 'Tap here to see which movies everyone wants to watch!',
+            tooltipBackgroundColor: AppTheme.surfaceGrey,
+            textColor: Colors.white,
+            titleTextStyle: const TextStyle(
+              color: AppTheme.cinematicGold,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
+            descTextStyle: const TextStyle(
+              color: Colors.white70,
+              fontSize: 14,
+            ),
+            targetShapeBorder: const CircleBorder(),
+            onTargetClick: () {
+              HapticFeedback.lightImpact();
+              context.push('/matches');
+            },
+            disposeOnTap: true,
             child: IconButton(
               icon: const Icon(Icons.favorite),
               onPressed: () {
@@ -176,6 +199,22 @@ class _UsersPageState extends State<UsersPage> {
         key: _addUserKey,
         title: 'New User',
         description: 'Start here! Create a profile to start saving movies.',
+        tooltipBackgroundColor: AppTheme.surfaceGrey,
+        textColor: Colors.white,
+        titleTextStyle: const TextStyle(
+          color: AppTheme.cinematicGold,
+          fontWeight: FontWeight.bold,
+          fontSize: 18,
+        ),
+        descTextStyle: const TextStyle(
+          color: Colors.white70,
+          fontSize: 14,
+        ),
+        onTargetClick: () {
+          HapticFeedback.lightImpact();
+          context.push('/add_user');
+        },
+        disposeOnTap: true,
         child: FloatingActionButton(
           backgroundColor: AppTheme.cinematicGold,
           onPressed: () => context.push('/add_user'),
