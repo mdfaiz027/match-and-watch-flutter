@@ -47,6 +47,12 @@ void callbackDispatcher() {
           developer.log("Failed to sync user ${user.id}: $e");
         }
       }
+      // 4. Notify about results if any users were synced
+      if (pendingUsers.isNotEmpty) {
+        // Since we are in a background isolate, we can't show a SnackBar directly here.
+        // The UI will update automatically via the stream from the database.
+        developer.log("Sync task completed for ${pendingUsers.length} users.");
+      }
       return Future.value(true);
     } catch (e) {
       developer.log("Sync task error: $e");

@@ -282,7 +282,17 @@ class _MovieCard extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           if (userId != 0) {
+                                            HapticFeedback.lightImpact();
                                             context.read<MovieCubit>().toggleSave(userId, movie);
+                                            
+                                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              SnackBar(
+                                                content: Text(isSaved ? AppStrings.removedFromSaved : AppStrings.movieSaved),
+                                                duration: const Duration(seconds: 1),
+                                                backgroundColor: AppColors.primaryGold,
+                                              ),
+                                            );
                                           }
                                         },
                                       );
@@ -307,6 +317,15 @@ class _MovieCard extends StatelessWidget {
                                             HapticFeedback.lightImpact();
                                             if (userId != 0) {
                                               context.read<MovieCubit>().toggleSave(userId, movie);
+                                              
+                                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(AppStrings.movieSaved),
+                                                  duration: Duration(seconds: 1),
+                                                  backgroundColor: AppColors.primaryGold,
+                                                ),
+                                              );
                                             }
                                           },
                                           disposeOnTap: true,

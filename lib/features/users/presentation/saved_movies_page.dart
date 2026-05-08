@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
@@ -126,48 +130,77 @@ class SavedMoviesPage extends StatelessWidget {
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(AppDimensions.spacingM),
-          itemCount: movies.length,
-          itemBuilder: (context, index) {
-            final movie = movies[index];
-            return Card(
-              margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
-              child: ListTile(
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                  child: CachedNetworkImage(
-                    imageUrl: movie.posterPath != null
-                        ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
-                        : '',
-                    width: 50,
-                    height: 75,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => Container(
-                      width: 50,
-                      height: 75,
-                      color: AppColors.surfaceLight,
-                      child: const Icon(Icons.movie, color: AppColors.primaryGold, size: 20),
+        return AnimationLimiter(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(AppDimensions.spacingM),
+            itemCount: movies.length,
+            itemBuilder: (context, index) {
+              final movie = movies[index];
+              return AnimationConfiguration.staggeredList(
+                position: index,
+                duration: Duration(milliseconds: AppConstants.durationStaggerMs),
+                child: SlideAnimation(
+                  verticalOffset: 50.0,
+                  child: FadeInAnimation(
+                    child: Card(
+                      margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
+                      child: ListTile(
+                        leading: Hero(
+                          tag: 'movie-poster-${movie.id}',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
+                            child: CachedNetworkImage(
+                              imageUrl: movie.posterPath != null
+                                  ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
+                                  : '',
+                              width: 50,
+                              height: 75,
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) => Container(
+                                width: 50,
+                                height: 75,
+                                color: AppColors.surfaceLight,
+                                child: const Icon(Icons.movie, color: AppColors.primaryGold, size: 20),
+                              ),
+                            ),
+                          ),
+                        ),
+                        title: Text(movie.title, style: Theme.of(context).textTheme.titleLarge),
+                        onTap: () {
+                          context.push('/movie/${movie.id}');
+                        },
+                        trailing: StreamBuilder<bool>(
+                          stream: context.read<MovieCubit>().isSaved(activeUserId, movie.id),
+                          builder: (context, isSavedSnapshot) {
+                            final isSavedByActiveUser = isSavedSnapshot.data ?? false;
+                            return IconButton(
+                              icon: Icon(
+                                isSavedByActiveUser ? Icons.bookmark : Icons.bookmark_border,
+                                color: isSavedByActiveUser ? AppColors.primaryGold : Colors.grey,
+                              ),
+                              onPressed: () {
+                                HapticFeedback.lightImpact();
+                                context.read<MovieCubit>().toggleSave(activeUserId, movie);
+                                
+                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(isSavedByActiveUser ? AppStrings.removedFromSaved : AppStrings.movieSaved),
+                                    duration: const Duration(seconds: 1),
+                                    backgroundColor: AppColors.primaryGold,
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
                     ),
                   ),
                 ),
-                title: Text(movie.title, style: Theme.of(context).textTheme.titleLarge),
-                trailing: StreamBuilder<bool>(
-                  stream: context.read<MovieCubit>().isSaved(activeUserId, movie.id),
-                  builder: (context, isSavedSnapshot) {
-                    final isSavedByActiveUser = isSavedSnapshot.data ?? false;
-                    return IconButton(
-                      icon: Icon(
-                        isSavedByActiveUser ? Icons.bookmark : Icons.bookmark_border,
-                        color: isSavedByActiveUser ? AppColors.primaryGold : Colors.grey,
-                      ),
-                      onPressed: () => context.read<MovieCubit>().toggleSave(activeUserId, movie),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_strings.dart';
@@ -93,7 +94,10 @@ class _AddUserPageState extends State<AddUserPage> {
               ),
               const SizedBox(height: AppDimensions.spacingXXL),
               ElevatedButton(
-                onPressed: _submit,
+                onPressed: () {
+                  HapticFeedback.mediumImpact();
+                  _submit();
+                },
                 child: const Text('Add User'),
               ),
             ],

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../../core/database/app_database.dart';
@@ -33,7 +34,7 @@ class MovieCubit extends Cubit<MovieState> {
   MovieCubit(this._repository) : super(MovieInitial());
 
   void loadMovies() async {
-    print('DEBUG: MovieCubit.loadMovies() called');
+    developer.log('MovieCubit.loadMovies() called');
     
     // Only show loading if we don't have movies yet
     final bool hasData = state is MovieLoaded && (state as MovieLoaded).movies.isNotEmpty;
@@ -44,13 +45,13 @@ class MovieCubit extends Cubit<MovieState> {
     _subscription?.cancel();
     _subscription = _repository.watchMovies().listen(
       (movies) {
-        print('DEBUG: MovieCubit stream received ${movies.length} movies from DB');
+        developer.log('MovieCubit stream received ${movies.length} movies from DB');
         if (state is! MovieError || movies.isNotEmpty) {
           emit(MovieLoaded(movies));
         }
       },
       onError: (e) {
-        print('DEBUG: MovieCubit stream error: $e');
+        developer.log('MovieCubit stream error: $e');
         emit(MovieError(e.toString()));
       },
     );
@@ -59,7 +60,7 @@ class MovieCubit extends Cubit<MovieState> {
       // If we already have data, make the refresh silent (no "Reconnecting..." bar)
       await _repository.refreshMovies(page: 1, silent: hasData);
     } catch (e) {
-      print('DEBUG: MovieCubit catch error: $e');
+      developer.log('MovieCubit catch error: $e');
       if (state is MovieLoading || (state is MovieLoaded && (state as MovieLoaded).movies.isEmpty)) {
         emit(MovieError(e.toString()));
       }

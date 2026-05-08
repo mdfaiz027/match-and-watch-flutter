@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:drift/drift.dart';
 import '../database/app_database.dart';
 import '../network/tmdb_service.dart';
@@ -14,22 +15,22 @@ class MovieRepository {
 
   Future<void> refreshMovies({int page = 1, bool silent = false}) async {
     try {
-      print('DEBUG: MovieRepository.refreshMovies(page: $page, silent: $silent) started');
+      developer.log('MovieRepository.refreshMovies(page: $page, silent: $silent) started');
       final response = await _tmdbService.getTrendingMovies(page: page, silent: silent);
-      print('DEBUG: API Response received. Status: ${response.statusCode}');
+      developer.log('API Response received. Status: ${response.statusCode}');
       
       if (response.data == null) {
-        print('DEBUG: API Response data is NULL');
+        developer.log('API Response data is NULL');
         return;
       }
 
       final moviesData = response.data['results'] as List?;
       if (moviesData == null) {
-        print('DEBUG: "results" field in API response is NULL');
+        developer.log('"results" field in API response is NULL');
         return;
       }
       
-      print('DEBUG: Found ${moviesData.length} movies in response');
+      developer.log('Found ${moviesData.length} movies in response');
 
       final companions = moviesData.map((m) {
         return MoviesCompanion.insert(
@@ -44,10 +45,10 @@ class MovieRepository {
       await _db.batch((batch) {
         batch.insertAllOnConflictUpdate(_db.movies, companions);
       });
-      print('DEBUG: Successfully upserted ${companions.length} movies to DB');
+      developer.log('Successfully upserted ${companions.length} movies to DB');
     } catch (e, stack) {
-      print('DEBUG: ERROR in refreshMovies: $e');
-      print('DEBUG: StackTrace: $stack');
+      developer.log('ERROR in refreshMovies: $e');
+      developer.log('StackTrace: $stack');
       rethrow;
     }
   }

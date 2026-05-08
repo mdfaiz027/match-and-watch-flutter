@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/app_strings.dart';
@@ -98,7 +99,17 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                   ),
                                   onPressed: () {
                                     if (userId != 0) {
+                                      HapticFeedback.lightImpact();
                                       context.read<MovieCubit>().toggleSave(userId, movie);
+
+                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(isSaved ? AppStrings.removedFromSaved : AppStrings.movieSaved),
+                                          duration: const Duration(seconds: 1),
+                                          backgroundColor: AppColors.primaryGold,
+                                        ),
+                                      );
                                     }
                                   },
                                 );

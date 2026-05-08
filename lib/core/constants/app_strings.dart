@@ -42,6 +42,8 @@ class AppStrings {
   static const String noDescription = 'No description available.';
   static const String beFirstToSave = 'Be the first to save this.';
   static const String usersWantToWatch = 'users want to watch this';
+  static const String movieSaved = 'Movie saved to your list';
+  static const String removedFromSaved = 'Movie removed from your list';
 
   // Matches Page
   static const String topPick = 'Group Pick!';
