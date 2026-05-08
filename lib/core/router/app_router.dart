@@ -1,15 +1,23 @@
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../di/injection_container.dart';
 import '../../features/users/presentation/users_page.dart';
 import '../../features/users/presentation/add_user_page.dart';
 import '../../features/movies/presentation/movies_page.dart';
 import '../../features/movies/presentation/movie_detail_page.dart';
+import '../../features/onboarding/presentation/onboarding_page.dart';
 
 import '../../features/users/presentation/saved_movies_page.dart';
 import '../../features/movies/presentation/matches_page.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: sl<SharedPreferences>().getBool('hasSeenOnboarding') == true ? '/' : '/onboarding',
   routes: [
+    GoRoute(
+      path: '/onboarding',
+      name: 'onboarding',
+      builder: (context, state) => const OnboardingPage(),
+    ),
     GoRoute(
       path: '/',
       name: 'users',

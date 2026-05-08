@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
-import 'core/database/app_database.dart';
-import 'core/repositories/user_repository.dart';
-import 'core/repositories/movie_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'features/sync/sync_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/users/bloc/user_cubit.dart';
 import 'features/users/bloc/active_user_cubit.dart';
 import 'features/movies/bloc/movie_cubit.dart';
+import 'features/onboarding/bloc/onboarding_cubit.dart';
 import 'core/router/app_router.dart';
 import 'core/network/connection_state.dart';
 import 'core/di/injection_container.dart' as di;
@@ -51,6 +49,9 @@ class MatchAndWatchApp extends StatelessWidget {
         BlocProvider(
           create: (context) => di.sl<MovieCubit>(),
         ),
+        BlocProvider(
+          create: (context) => di.sl<OnboardingCubit>(),
+        ),
       ],
       child: MaterialApp.router(
         title: 'Match & Watch',
@@ -58,9 +59,10 @@ class MatchAndWatchApp extends StatelessWidget {
         theme: AppTheme.darkTheme,
         routerConfig: appRouter,
         builder: (context, child) {
+          if (child == null) return const SizedBox.shrink();
           return Stack(
             children: [
-              ?child,
+              child,
               ValueListenableBuilder<bool>(
                 valueListenable: connectionNotifier,
                 builder: (context, isReconnecting, _) {

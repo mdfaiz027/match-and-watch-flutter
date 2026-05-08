@@ -31,12 +31,14 @@ dependencies:
   
   # Navigation
   go_router: ^14.3.0
+  shared_preferences: ^2.3.2
   
   # UI/Design
   cached_network_image: ^3.4.1
   shimmer: ^3.0.0
   flutter_staggered_animations: ^1.0.0
   get_it: ^8.0.2
+  smooth_page_indicator: ^1.2.0+3
 
 dev_dependencies:
   flutter_test:
@@ -72,6 +74,7 @@ flutter:
 flutter_launcher_icons:
   android: true
   ios: true
+  remove_alpha_ios: true
   image_path: "assets/images/logo.png"
   adaptive_icon_background: "#121212"
   adaptive_icon_foreground: "assets/images/logo.png"
@@ -79,7 +82,7 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "#121212"
-  image: assets/images/splash_icon.png
+  image: assets/images/logo.png
   android_12:
-    image: assets/images/splash_icon.png
+    image: assets/images/logo.png
     color: "#121212"

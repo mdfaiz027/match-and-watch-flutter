@@ -650,3 +650,42 @@ Please implement these UI safety nets and confirm when complete.
 
 **Context:**
 Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states.
+
+## Entry #24: First-Launch Onboarding Screens
+**Prompt:**
+Task 23: First-Launch Onboarding Screens
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #24. Context: "Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features."
+
+Action 1: Setup and State
+
+Please add the shared_preferences package to pubspec.yaml.
+
+Update our get_it injection container (/lib/core/di/injection_container.dart) to register SharedPreferences as an asynchronous singleton.
+
+Create a simple utility or Cubit to check and set a boolean flag: hasSeenOnboarding.
+
+Action 2: The Onboarding UI
+
+Create a new file at /lib/features/onboarding/presentation/onboarding_page.dart.
+
+Build a beautiful, customized PageView using our "Cinematic Gold" theme. It should have 3 pages:
+
+Discover: "Find trending movies instantly." (Use a movie reel or popcorn icon).
+
+Offline Ready: "Save your favorites. Access them anywhere, even on airplane mode." (Use an offline/download icon).
+
+Match: "See what your friends want to watch and find the perfect movie night pick." (Use a group/matching icon).
+
+Add a smooth dot indicator at the bottom and a prominent "Get Started" button on the final page using our Gold primary color.
+
+Action 3: Routing Logic
+
+Update app_router.dart. We need to determine the initial route dynamically. Check the hasSeenOnboarding flag from SharedPreferences. If false, set the initial route to /onboarding. If true, set it to / (Users Page).
+
+When the user taps "Get Started" on the last onboarding screen, set the flag to true and navigate to /.
+
+Please implement this flow, ensure the app compiles, and confirm when complete.
+
+**Context:**
+Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features.
