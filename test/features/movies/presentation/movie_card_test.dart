@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:match_and_watch/features/movies/presentation/movies_page.dart';
 import 'package:match_and_watch/core/database/app_database.dart';
 import 'package:match_and_watch/features/movies/bloc/movie_cubit.dart';
 import 'package:match_and_watch/features/users/bloc/active_user_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class MockMovieCubit extends Mock implements MovieCubit {}
 class MockActiveUserCubit extends Mock implements ActiveUserCubit {}
