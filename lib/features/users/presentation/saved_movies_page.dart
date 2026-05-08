@@ -30,7 +30,8 @@ class SavedMoviesPage extends StatelessWidget {
           appBar: AppBar(
             title: Text(isOwnProfile ? 'My Saved Movies' : 'User\'s Saved Movies'),
           ),
-          body: StreamBuilder<User?>(
+          body: SafeArea(
+            child: StreamBuilder<User?>(
             stream: context.read<UserCubit>().watchUserById(effectiveProfileUserId),
             builder: (context, userSnapshot) {
               final user = userSnapshot.data;
@@ -44,6 +45,7 @@ class SavedMoviesPage extends StatelessWidget {
               );
             },
           ),
+        )
         );
       },
     );
@@ -55,10 +57,20 @@ class SavedMoviesPage extends StatelessWidget {
       color: AppTheme.surfaceGrey,
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: user.avatar != null ? CachedNetworkImageProvider(user.avatar!) : null,
-            child: user.avatar == null ? const Icon(Icons.person, size: 40) : null,
+          CachedNetworkImage(
+            imageUrl: user.avatar ?? '',
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              radius: 40,
+              backgroundImage: imageProvider,
+            ),
+            placeholder: (context, url) => const CircleAvatar(
+              radius: 40,
+              child: Icon(Icons.person, size: 40),
+            ),
+            errorWidget: (context, url, error) => const CircleAvatar(
+              radius: 40,
+              child: Icon(Icons.person, size: 40, color: AppTheme.cinematicGold),
+            ),
           ),
           const SizedBox(width: 20),
           Expanded(
@@ -128,6 +140,12 @@ class SavedMoviesPage extends StatelessWidget {
                     width: 50,
                     height: 75,
                     fit: BoxFit.cover,
+                    errorWidget: (context, url, error) => Container(
+                      width: 50,
+                      height: 75,
+                      color: Colors.grey[800],
+                      child: const Icon(Icons.movie, color: AppTheme.cinematicGold, size: 20),
+                    ),
                   ),
                 ),
                 title: Text(movie.title, style: Theme.of(context).textTheme.titleLarge),

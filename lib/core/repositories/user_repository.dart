@@ -57,8 +57,7 @@ class UserRepository {
         batch.insertAllOnConflictUpdate(_db.users, companions);
       });
     } catch (e) {
-      // Offline or network error: we just fail silently as the stream 
-      // will still provide existing local data.
+      rethrow;
     }
   }
 

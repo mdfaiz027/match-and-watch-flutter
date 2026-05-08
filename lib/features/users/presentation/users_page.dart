@@ -52,74 +52,102 @@ class _UsersPageState extends State<UsersPage> {
           ),
         ],
       ),
-      body: BlocBuilder<UserCubit, UserState>(
-        builder: (context, state) {
-          if (state is UserLoading) {
-            return _buildShimmerList();
-          } else if (state is UserLoaded) {
-            final users = state.users;
-            if (users.isEmpty) {
-              return const Center(child: Text('No users found.'));
-            }
-            return AnimationLimiter(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: users.length,
-                itemBuilder: (context, index) {
-                  final item = users[index];
-                  final user = item.user;
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: Card(
-                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: ListTile(
-                            onTap: () {
-                              context.read<ActiveUserCubit>().setUser(user);
-                              context.push('/movies');
-                            },
-                            leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(24),
-                              child: CachedNetworkImage(
-                                imageUrl: user.avatar ?? '',
-                                width: 48,
-                                height: 48,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => Container(
-                                  color: Colors.grey[800],
-                                  child: const Icon(Icons.person, color: Colors.white54),
+      body: SafeArea(
+        child: BlocBuilder<UserCubit, UserState>(
+          builder: (context, state) {
+            if (state is UserLoading) {
+              return _buildShimmerList();
+            } else if (state is UserLoaded) {
+              final users = state.users;
+              if (users.isEmpty) {
+                return const Center(child: Text('No users found.'));
+              }
+              return AnimationLimiter(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final item = users[index];
+                    final user = item.user;
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            child: ListTile(
+                              onTap: () {
+                                context.read<ActiveUserCubit>().setUser(user);
+                                context.push('/movies');
+                              },
+                              leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(24),
+                                child: CachedNetworkImage(
+                                  imageUrl: user.avatar ?? '',
+                                  width: 48,
+                                  height: 48,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(
+                                    color: Colors.grey[800],
+                                    child: const Icon(Icons.person, color: Colors.white54),
+                                  ),
+                                  errorWidget: (context, url, error) => Container(
+                                    color: Colors.grey[800],
+                                    child: const Icon(Icons.person, color: AppTheme.cinematicGold),
+                                  ),
+                                  fadeInDuration: const Duration(milliseconds: 500),
                                 ),
-                                errorWidget: (context, url, error) => Container(
-                                  color: Colors.grey[800],
-                                  child: const Icon(Icons.person, color: Colors.white54),
-                                ),
-                                fadeInDuration: const Duration(milliseconds: 500),
                               ),
-                            ),
-                            title: Text(
-                              '${user.firstName} ${user.lastName}',
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            subtitle: Text(
-                              'Saved movies: ${item.movieCount}',
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              title: Text(
+                                '${user.firstName} ${user.lastName}',
+                                style: Theme.of(context).textTheme.titleLarge,
+                              ),
+                              subtitle: Text(
+                                'Saved movies: ${item.movieCount}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
-          } else if (state is UserError) {
-            return Center(child: Text('Error: ${state.message}'));
-          }
-          return const SizedBox.shrink();
-        },
+                    );
+                  },
+                ),
+              );
+            } else if (state is UserError) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.wifi_off, size: 80, color: AppTheme.cinematicGold),
+                      const SizedBox(height: 24),
+                      Text(
+                        'No Connection',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Please connect to the internet to load the initial feed.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: () => context.read<UserCubit>().loadUsers(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.cinematicGold,

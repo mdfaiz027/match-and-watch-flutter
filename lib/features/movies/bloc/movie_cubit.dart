@@ -32,7 +32,7 @@ class MovieCubit extends Cubit<MovieState> {
 
   MovieCubit(this._repository) : super(MovieInitial());
 
-  void loadMovies() {
+  void loadMovies() async {
     emit(MovieLoading());
     _subscription?.cancel();
     _subscription = _repository.watchMovies().listen(
@@ -41,7 +41,13 @@ class MovieCubit extends Cubit<MovieState> {
       },
       onError: (e) => emit(MovieError(e.toString())),
     );
-    _repository.refreshMovies(page: 1);
+    try {
+      await _repository.refreshMovies(page: 1);
+    } catch (e) {
+      if (state is MovieLoading || (state is MovieLoaded && (state as MovieLoaded).movies.isEmpty)) {
+        emit(MovieError(e.toString()));
+      }
+    }
   }
 
   Future<void> loadNextPage() async {

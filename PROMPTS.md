@@ -624,3 +624,29 @@ Please implement these verifications and confirm when complete.
 
 **Context:**
 Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync.
+
+## Entry #22: Page 8 Audit - Image Fallbacks & Global Error States
+**Prompt:**
+Task 21: Page 8 Audit - Image Fallbacks & Global Error States
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #22. Context: "Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states."
+
+Action 1: CachedNetworkImage Fallbacks
+We must gracefully handle broken images or offline scenarios where the image isn't cached.
+
+Please audit every instance of CachedNetworkImage (Users Page avatars, Movie Cards, Movie Detail Hero, Matches Page avatars).
+
+Add an errorWidget to all of them. Use a clean, themed placeholder (e.g., a dark grey container with a subtle Icons.movie or Icons.person in the center using our primary Gold color).
+
+Action 2: "First Launch Offline" Feed States
+If the MoviesPage or UsersPage fails to fetch from the API and the Drift database returns an empty list (meaning it's the first launch and they are offline), we cannot show a blank screen.
+
+Please update the UI logic for these main feeds: If state is Error AND the database stream is empty, display a highly polished Column in the center of the screen with a relevant icon (e.g., Icons.wifi_off), a title ("No Connection"), a subtitle ("Please connect to the internet to load the initial feed."), and a "Retry" button.
+
+Action 3: SafeArea Audit
+Ensure the main scaffold bodies are wrapped appropriately so that lists do not awkwardly clip into the phone's hardware notch or bottom gesture bar.
+
+Please implement these UI safety nets and confirm when complete.
+
+**Context:**
+Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states.

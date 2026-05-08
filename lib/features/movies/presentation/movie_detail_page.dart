@@ -51,7 +51,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) => Container(
                         color: Colors.grey[800],
-                        child: const Icon(Icons.movie, size: 100, color: Colors.white54),
+                        child: const Icon(Icons.movie, size: 100, color: AppTheme.cinematicGold),
                       ),
                     ),
                   ),
@@ -169,7 +169,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     ),
                     errorWidget: (context, url, error) => const CircleAvatar(
                       radius: 20,
-                      child: Icon(Icons.person),
+                      backgroundColor: Colors.grey,
+                      child: Icon(Icons.person, color: AppTheme.cinematicGold, size: 20),
                     ),
                   ),
                 )).toList(),

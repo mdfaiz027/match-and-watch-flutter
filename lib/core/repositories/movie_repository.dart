@@ -31,7 +31,7 @@ class MovieRepository {
         batch.insertAllOnConflictUpdate(_db.movies, companions);
       });
     } catch (e) {
-      // Fail silently
+      rethrow;
     }
   }
 
@@ -50,7 +50,7 @@ class MovieRepository {
         ),
       );
     } catch (e) {
-      // Fail silently
+      rethrow;
     }
   }
 

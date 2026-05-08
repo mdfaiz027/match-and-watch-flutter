@@ -53,36 +53,67 @@ class _MoviesPageState extends State<MoviesPage> {
           ),
         ],
       ),
-      body: BlocBuilder<MovieCubit, MovieState>(
-        builder: (context, state) {
-          if (state is MovieLoading) {
-            return _buildShimmerList();
-          } else if (state is MovieLoaded) {
-            final movies = state.movies;
-            return AnimationLimiter(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: movies.length,
-                itemBuilder: (context, index) {
-                  final movie = movies[index];
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 375),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: _MovieCard(movie: movie),
+      body: SafeArea(
+        child: BlocBuilder<MovieCubit, MovieState>(
+          builder: (context, state) {
+            if (state is MovieLoading) {
+              return _buildShimmerList();
+            } else if (state is MovieLoaded) {
+              final movies = state.movies;
+              if (movies.isEmpty) {
+                return const Center(child: Text('No movies found.'));
+              }
+              return AnimationLimiter(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: movies.length,
+                  itemBuilder: (context, index) {
+                    final movie = movies[index];
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: _MovieCard(movie: movie),
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
-          } else if (state is MovieError) {
-            return Center(child: Text('Error: ${state.message}'));
-          }
-          return const SizedBox.shrink();
-        },
+                    );
+                  },
+                ),
+              );
+            } else if (state is MovieError) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.wifi_off, size: 80, color: AppTheme.cinematicGold),
+                      const SizedBox(height: 24),
+                      Text(
+                        'No Connection',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      const Text(
+                        'Please connect to the internet to load the initial feed.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70),
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: () => context.read<MovieCubit>().loadMovies(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
@@ -145,7 +176,7 @@ class _MovieCard extends StatelessWidget {
                         width: 100,
                         height: 150,
                         color: Colors.grey[800],
-                        child: const Icon(Icons.movie, color: Colors.white54),
+                        child: const Icon(Icons.movie, color: AppTheme.cinematicGold),
                       ),
                     ),
                   ),

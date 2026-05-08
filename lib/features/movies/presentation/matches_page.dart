@@ -14,7 +14,8 @@ class MatchesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Group Matches'),
       ),
-      body: StreamBuilder<int>(
+      body: SafeArea(
+        child: StreamBuilder<int>(
         stream: context.read<MovieCubit>().watchTotalUserCount(),
         builder: (context, totalUsersSnapshot) {
           final totalUsers = totalUsersSnapshot.data ?? 0;
@@ -57,6 +58,12 @@ class MatchesPage extends StatelessWidget {
                                 width: 80,
                                 height: 120,
                                 fit: BoxFit.cover,
+                                errorWidget: (context, url, error) => Container(
+                                  width: 80,
+                                  height: 120,
+                                  color: Colors.grey[800],
+                                  child: const Icon(Icons.movie, color: AppTheme.cinematicGold),
+                                ),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -110,7 +117,7 @@ class MatchesPage extends StatelessWidget {
           );
         },
       ),
-    );
+    ));
   }
 
   Widget _buildUserAvatars(List<User> users) {
@@ -123,10 +130,20 @@ class MatchesPage extends StatelessWidget {
           final user = users[index];
           return Padding(
             padding: const EdgeInsets.only(right: 6),
-            child: CircleAvatar(
-              radius: 15,
-              backgroundImage: user.avatar != null ? CachedNetworkImageProvider(user.avatar!) : null,
-              child: user.avatar == null ? const Icon(Icons.person, size: 15) : null,
+            child: CachedNetworkImage(
+              imageUrl: user.avatar ?? '',
+              imageBuilder: (context, imageProvider) => CircleAvatar(
+                radius: 15,
+                backgroundImage: imageProvider,
+              ),
+              placeholder: (context, url) => const CircleAvatar(
+                radius: 15,
+                child: Icon(Icons.person, size: 15),
+              ),
+              errorWidget: (context, url, error) => const CircleAvatar(
+                radius: 15,
+                child: Icon(Icons.person, size: 15, color: AppTheme.cinematicGold),
+              ),
             ),
           );
         },
