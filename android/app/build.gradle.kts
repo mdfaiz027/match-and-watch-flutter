@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.platform_commons.match_and_watch.app"
+    namespace = "com.platform_commons.match_and_watch"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.platform_commons.match_and_watch.app"
+        applicationId = "com.platform_commons.match_and_watch"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

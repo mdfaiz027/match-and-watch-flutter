@@ -48,7 +48,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     animation: AppAssets.movieAnim,
                     title: AppStrings.onboardingDiscoverTitle,
                     description: AppStrings.onboardingDiscoverDesc,
-                    lottieHeight: 320,
+                    lottieHeight: 300,
                   ),
                   _OnboardingStep(
                     controller: _pageController,
@@ -64,7 +64,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     animation: AppAssets.matchAnim,
                     title: AppStrings.onboardingMatchTitle,
                     description: AppStrings.onboardingMatchDesc,
-                    lottieHeight: 300,
+                    lottieHeight: 320,
                   ),
                 ],
               ),
