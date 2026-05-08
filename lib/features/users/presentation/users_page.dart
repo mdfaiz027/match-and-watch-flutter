@@ -5,6 +5,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../bloc/user_cubit.dart';
+import '../bloc/active_user_cubit.dart';
 import '../../../core/theme/app_theme.dart';
 
 class UsersPage extends StatefulWidget {
@@ -65,7 +66,8 @@ class _UsersPageState extends State<UsersPage> {
                 controller: _scrollController,
                 itemCount: users.length,
                 itemBuilder: (context, index) {
-                  final user = users[index];
+                  final item = users[index];
+                  final user = item.user;
                   return AnimationConfiguration.staggeredList(
                     position: index,
                     duration: const Duration(milliseconds: 375),
@@ -76,6 +78,7 @@ class _UsersPageState extends State<UsersPage> {
                           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                           child: ListTile(
                             onTap: () {
+                              context.read<ActiveUserCubit>().setUser(user);
                               context.push('/movies?userId=${user.id}');
                             },
                             leading: ClipRRect(
@@ -100,15 +103,9 @@ class _UsersPageState extends State<UsersPage> {
                               '${user.firstName} ${user.lastName}',
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            subtitle: StreamBuilder<int>(
-                              stream: context.read<UserCubit>().getSavedMovieCount(user.id),
-                              builder: (context, snapshot) {
-                                final count = snapshot.data ?? 0;
-                                return Text(
-                                  'Saved movies: $count',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                );
-                              },
+                            subtitle: Text(
+                              'Saved movies: ${item.movieCount}',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
                         ),

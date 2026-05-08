@@ -436,3 +436,28 @@ Please implement these finishing touches and confirm when complete.
 
 **Context:**
 Implementing the final UI polish requirements from the assignment: Staggered list animations, animated count badges, and a non-blocking 'reconnecting...' UI bar.
+
+## Entry #14: Page 1 Audit - Active User State & Dynamic Counts
+**Prompt:**
+Task 13: Page 1 Audit - Active User State & Dynamic Counts
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #14. Context: "Auditing Page 1 requirements to ensure dynamic saved movie counts are streamed from Drift, and establishing the 'Active User' state for navigation."
+
+Action 1: Dynamic User Movie Count
+The assignment requires the Users list to show how many movies each user has saved, and this must update in real time.
+
+Please update UserRepository to stream a custom class (e.g., UserWithMovieCount) by joining the Users table with the SavedMovies table.
+
+Ensure the UserCubit and UsersPage UI use this updated stream so the count badge on the user cards is accurate and reactive.
+
+Action 2: The "Active User" Context
+When a user is tapped on the UsersPage, the app needs to know they are the "Active User" for the subsequent MoviesPage and SavedMoviesPage.
+
+Please implement a way to pass or store this context. You can either pass the User object/ID as an extra in GoRouter, OR create a simple ActiveUserCubit that holds the currently selected user.
+
+Ensure the MovieCubit uses this active user context when the "Save" button is pressed on a movie.
+
+Please implement these fixes and confirm when complete.
+
+**Context:**
+Auditing Page 1 requirements to ensure dynamic saved movie counts are streamed from Drift, and establishing the 'Active User' state for navigation.

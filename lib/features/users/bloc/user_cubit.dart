@@ -12,7 +12,7 @@ abstract class UserState extends Equatable {
 class UserInitial extends UserState {}
 class UserLoading extends UserState {}
 class UserLoaded extends UserState {
-  final List<User> users;
+  final List<UserWithMovieCount> users;
   UserLoaded(this.users);
   @override
   List<Object?> get props => [users];
@@ -35,7 +35,7 @@ class UserCubit extends Cubit<UserState> {
   void loadUsers() {
     emit(UserLoading());
     _subscription?.cancel();
-    _subscription = _repository.watchUsers().listen(
+    _subscription = _repository.watchUsersWithMovieCount().listen(
       (users) {
         emit(UserLoaded(users));
       },

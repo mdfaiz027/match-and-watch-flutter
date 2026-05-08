@@ -2,11 +2,35 @@ import 'package:drift/drift.dart';
 import '../database/app_database.dart';
 import '../network/reqres_service.dart';
 
+class UserWithMovieCount {
+  final User user;
+  final int movieCount;
+  UserWithMovieCount(this.user, this.movieCount);
+}
+
 class UserRepository {
   final AppDatabase _db;
   final ReqresService _reqresService;
 
   UserRepository(this._db, this._reqresService);
+
+  Stream<List<UserWithMovieCount>> watchUsersWithMovieCount() {
+    final countExp = _db.savedMovies.userId.count();
+    final query = _db.select(_db.users).join([
+      leftOuterJoin(_db.savedMovies, _db.savedMovies.userId.equalsExp(_db.users.id)),
+    ])
+      ..addColumns([countExp])
+      ..groupBy([_db.users.id]);
+
+    return query.watch().map((rows) {
+      return rows.map<UserWithMovieCount>((row) {
+        return UserWithMovieCount(
+          row.readTable(_db.users),
+          row.read(countExp) ?? 0,
+        );
+      }).toList();
+    });
+  }
 
   Stream<List<User>> watchUsers() {
     return _db.select(_db.users).watch();

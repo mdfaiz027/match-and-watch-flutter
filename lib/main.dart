@@ -10,6 +10,7 @@ import 'core/theme/app_theme.dart';
 import 'features/sync/sync_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/users/bloc/user_cubit.dart';
+import 'features/users/bloc/active_user_cubit.dart';
 import 'features/movies/bloc/movie_cubit.dart';
 import 'core/router/app_router.dart';
 import 'core/network/connection_state.dart';
@@ -64,6 +65,9 @@ class MatchAndWatchApp extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (context) => UserCubit(userRepository),
+        ),
+        BlocProvider(
+          create: (context) => ActiveUserCubit(),
         ),
         BlocProvider(
           create: (context) => MovieCubit(movieRepository),
