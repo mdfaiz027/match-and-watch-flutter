@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
+import '../../../core/constants/app_styles.dart';
 import '../bloc/user_cubit.dart';
-import '../../../core/theme/app_theme.dart';
 
 class AddUserPage extends StatefulWidget {
   const AddUserPage({super.key});
@@ -37,8 +40,8 @@ class _AddUserPageState extends State<AddUserPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('User added successfully'),
-            backgroundColor: AppTheme.cinematicGold,
+            content: Text(AppStrings.addUserSuccess),
+            backgroundColor: AppColors.primaryGold,
           ),
         );
         context.pop();
@@ -53,7 +56,7 @@ class _AddUserPageState extends State<AddUserPage> {
         title: const Text('Add New User'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(AppDimensions.spacingL),
         child: Form(
           key: _formKey,
           child: Column(
@@ -61,18 +64,10 @@ class _AddUserPageState extends State<AddUserPage> {
             children: [
               TextFormField(
                 controller: _nameController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Name',
-                  labelStyle: const TextStyle(color: AppTheme.cinematicGold),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: AppTheme.cinematicGold),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                style: const TextStyle(color: AppColors.textMain),
+                decoration: AppStyles.inputDecoration(
+                  label: 'Name',
+                  borderRadius: AppDimensions.cardRadius,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -81,21 +76,13 @@ class _AddUserPageState extends State<AddUserPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppDimensions.spacingL),
               TextFormField(
                 controller: _movieTasteController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Movie Taste',
-                  labelStyle: const TextStyle(color: AppTheme.cinematicGold),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: AppTheme.cinematicGold),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                style: const TextStyle(color: AppColors.textMain),
+                decoration: AppStyles.inputDecoration(
+                  label: 'Movie Taste',
+                  borderRadius: AppDimensions.cardRadius,
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -104,7 +91,7 @@ class _AddUserPageState extends State<AddUserPage> {
                   return null;
                 },
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: AppDimensions.spacingXXL),
               ElevatedButton(
                 onPressed: _submit,
                 child: const Text('Add User'),

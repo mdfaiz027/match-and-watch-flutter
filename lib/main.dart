@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workmanager/workmanager.dart';
+import 'core/constants/app_constants.dart';
+import 'core/constants/app_strings.dart';
 import 'core/theme/app_theme.dart';
 import 'features/sync/sync_manager.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +28,7 @@ void main() async {
   await Workmanager().registerPeriodicTask(
     "1",
     syncTaskName,
-    frequency: const Duration(minutes: 15),
+    frequency: const Duration(minutes: AppConstants.syncIntervalMinutes),
     constraints: Constraints(
       networkType: NetworkType.connected,
     ),
@@ -60,7 +62,7 @@ class MatchAndWatchApp extends StatelessWidget {
         onStart: (index, key) => HapticFeedback.lightImpact(),
         onComplete: (index, key) => HapticFeedback.lightImpact(),
         builder: (context) => MaterialApp.router(
-          title: 'Match & Watch',
+          title: AppStrings.appTitle,
           debugShowCheckedModeBanner: false,
           theme: AppTheme.darkTheme,
           routerConfig: appRouter,
@@ -84,7 +86,7 @@ class MatchAndWatchApp extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           alignment: Alignment.center,
                           child: const Text(
-                            'Reconnecting...',
+                            AppStrings.reconnecting,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 12,

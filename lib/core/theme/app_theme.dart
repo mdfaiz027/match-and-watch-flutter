@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'app_colors.dart';
+import 'app_dimensions.dart';
+import '../constants/app_styles.dart';
 
 class AppTheme {
-  static const Color cinematicGold = Color(0xFFFFC107);
-  static const Color deepBackground = Color(0xFF121212);
-  static const Color surfaceGrey = Color(0xFF1E1E1E);
-
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,
@@ -12,22 +11,24 @@ class AppTheme {
       fontFamily: 'Poppins',
       
       colorScheme: const ColorScheme.dark(
-        primary: cinematicGold,
-        secondary: cinematicGold,
-        tertiary: cinematicGold,
-        surface: deepBackground,
-        onPrimary: Colors.black,
-        onSurface: Colors.white,
+        primary: AppColors.primaryGold,
+        secondary: AppColors.goldVariant,
+        tertiary: AppColors.goldDark,
+        surface: AppColors.deepBackground,
+        onPrimary: AppColors.onPrimary,
+        onSurface: AppColors.onSurface,
+        error: AppColors.error,
       ),
       
-      scaffoldBackgroundColor: deepBackground,
+      scaffoldBackgroundColor: AppColors.deepBackground,
       
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
+        iconTheme: IconThemeData(color: AppColors.primaryGold),
         titleTextStyle: TextStyle(
-          color: Colors.white,
+          color: AppColors.textMain,
           fontSize: 20,
           fontWeight: FontWeight.bold,
           fontFamily: 'Poppins',
@@ -35,51 +36,36 @@ class AppTheme {
       ),
       
       cardTheme: CardThemeData(
-        color: surfaceGrey,
+        color: AppColors.surfaceGrey,
         elevation: 2,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
         ),
       ),
       
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: cinematicGold,
-          foregroundColor: Colors.black,
+          backgroundColor: AppColors.primaryGold,
+          foregroundColor: AppColors.onPrimary,
+          minimumSize: const Size(double.infinity, AppDimensions.buttonHeight),
           textStyle: const TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: 'Poppins',
           ),
           shape: const StadiumBorder(),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.spacingL,
+            vertical: AppDimensions.spacingS,
+          ),
         ),
       ),
       
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-        titleLarge: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Colors.white,
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          color: Colors.white,
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          color: Colors.white70,
-        ),
-      ),
+      textTheme: AppStyles.semanticTextTheme,
     );
   }
+  
+  // Backward compatibility aliases if needed
+  static const Color cinematicGold = AppColors.primaryGold;
+  static const Color deepBackground = AppColors.deepBackground;
+  static const Color surfaceGrey = AppColors.surfaceGrey;
 }

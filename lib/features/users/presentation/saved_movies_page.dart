@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_endpoints.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
 import '../../movies/bloc/movie_cubit.dart';
@@ -28,7 +32,7 @@ class SavedMoviesPage extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(isOwnProfile ? 'My Saved Movies' : 'User\'s Saved Movies'),
+            title: Text(isOwnProfile ? 'My ${AppStrings.savedMoviesTitle}' : AppStrings.savedMoviesTitle),
           ),
           body: SafeArea(
             child: StreamBuilder<User?>(
@@ -53,26 +57,26 @@ class SavedMoviesPage extends StatelessWidget {
 
   Widget _buildHeader(BuildContext context, User user) {
     return Container(
-      padding: const EdgeInsets.all(24),
-      color: AppTheme.surfaceGrey,
+      padding: const EdgeInsets.all(AppDimensions.spacingL),
+      color: AppColors.surfaceGrey,
       child: Row(
         children: [
           CachedNetworkImage(
             imageUrl: user.avatar ?? '',
             imageBuilder: (context, imageProvider) => CircleAvatar(
-              radius: 40,
+              radius: AppDimensions.avatarRadiusL,
               backgroundImage: imageProvider,
             ),
             placeholder: (context, url) => const CircleAvatar(
-              radius: 40,
+              radius: AppDimensions.avatarRadiusL,
               child: Icon(Icons.person, size: 40),
             ),
             errorWidget: (context, url, error) => const CircleAvatar(
-              radius: 40,
-              child: Icon(Icons.person, size: 40, color: AppTheme.cinematicGold),
+              radius: AppDimensions.avatarRadiusL,
+              child: Icon(Icons.person, size: 40, color: AppColors.primaryGold),
             ),
           ),
-          const SizedBox(width: 20),
+          const SizedBox(width: AppDimensions.spacingL),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,11 +85,11 @@ class SavedMoviesPage extends StatelessWidget {
                   '${user.firstName} ${user.lastName}',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppDimensions.spacingXXS),
                 Text(
                   'Taste: ${user.movieTaste}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.cinematicGold,
+                        color: AppColors.primaryGold,
                         fontStyle: FontStyle.italic,
                       ),
                 ),
@@ -107,13 +111,13 @@ class SavedMoviesPage extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.movie_filter, size: 80, color: Colors.white24),
-                const SizedBox(height: 16),
+                const Icon(Icons.movie_filter, size: 80, color: AppColors.textMuted),
+                const SizedBox(height: AppDimensions.spacingM),
                 Text(
                   'No saved movies yet.',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white54),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.textMuted),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppDimensions.spacingXS),
                 Text(
                   'Start browsing and save some!',
                   style: Theme.of(context).textTheme.bodyMedium,
@@ -124,18 +128,18 @@ class SavedMoviesPage extends StatelessWidget {
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(AppDimensions.spacingM),
           itemCount: movies.length,
           itemBuilder: (context, index) {
             final movie = movies[index];
             return Card(
-              margin: const EdgeInsets.only(bottom: 16),
+              margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
               child: ListTile(
                 leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusM),
                   child: CachedNetworkImage(
                     imageUrl: movie.posterPath != null
-                        ? 'https://image.tmdb.org/t/p/w185${movie.posterPath}'
+                        ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
                         : '',
                     width: 50,
                     height: 75,
@@ -143,8 +147,8 @@ class SavedMoviesPage extends StatelessWidget {
                     errorWidget: (context, url, error) => Container(
                       width: 50,
                       height: 75,
-                      color: Colors.grey[800],
-                      child: const Icon(Icons.movie, color: AppTheme.cinematicGold, size: 20),
+                      color: AppColors.surfaceLight,
+                      child: const Icon(Icons.movie, color: AppColors.primaryGold, size: 20),
                     ),
                   ),
                 ),
@@ -156,7 +160,7 @@ class SavedMoviesPage extends StatelessWidget {
                     return IconButton(
                       icon: Icon(
                         isSavedByActiveUser ? Icons.bookmark : Icons.bookmark_border,
-                        color: isSavedByActiveUser ? AppTheme.cinematicGold : Colors.grey,
+                        color: isSavedByActiveUser ? AppColors.primaryGold : Colors.grey,
                       ),
                       onPressed: () => context.read<MovieCubit>().toggleSave(activeUserId, movie),
                     );

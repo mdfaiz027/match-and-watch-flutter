@@ -7,6 +7,10 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
 import '../../../core/di/injection_container.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
@@ -61,21 +65,21 @@ class _UsersPageState extends State<UsersPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Match & Watch Users'),
+        title: const Text(AppStrings.usersTitle),
         actions: [
           Showcase(
             key: _matchesKey,
-            title: 'Matches',
-            description: 'Tap here to see which movies everyone wants to watch!',
-            tooltipBackgroundColor: AppTheme.surfaceGrey,
-            textColor: Colors.white,
+            title: AppStrings.tutorialMatchesTitle,
+            description: AppStrings.tutorialMatchesDesc,
+            tooltipBackgroundColor: AppColors.surfaceGrey,
+            textColor: AppColors.onSurface,
             titleTextStyle: const TextStyle(
-              color: AppTheme.cinematicGold,
+              color: AppColors.primaryGold,
               fontWeight: FontWeight.bold,
               fontSize: 18,
             ),
             descTextStyle: const TextStyle(
-              color: Colors.white70,
+              color: AppColors.textSecondary,
               fontSize: 14,
             ),
             targetShapeBorder: const CircleBorder(),
@@ -101,7 +105,7 @@ class _UsersPageState extends State<UsersPage> {
             } else if (state is UserLoaded) {
               final users = state.users;
               if (users.isEmpty) {
-                return const Center(child: Text('No users found.'));
+                return const Center(child: Text(AppStrings.noUsersFound));
               }
               return AnimationLimiter(
                 child: ListView.builder(
@@ -112,33 +116,36 @@ class _UsersPageState extends State<UsersPage> {
                     final user = item.user;
                     return AnimationConfiguration.staggeredList(
                       position: index,
-                      duration: const Duration(milliseconds: 375),
+                      duration: const Duration(milliseconds: AppConstants.durationStaggerMs),
                       child: SlideAnimation(
                         verticalOffset: 50.0,
                         child: FadeInAnimation(
                           child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: AppDimensions.spacingM,
+                              vertical: AppDimensions.spacingXS,
+                            ),
                             child: ListTile(
                               onTap: () {
                                 context.read<ActiveUserCubit>().setUser(user);
                                 context.push('/movies');
                               },
                               leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(AppDimensions.radiusXL),
                                 child: CachedNetworkImage(
                                   imageUrl: user.avatar ?? '',
-                                  width: 48,
-                                  height: 48,
+                                  width: AppDimensions.iconSizeXL,
+                                  height: AppDimensions.iconSizeXL,
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => Container(
-                                    color: Colors.grey[800],
-                                    child: const Icon(Icons.person, color: Colors.white54),
+                                    color: AppColors.surfaceLight,
+                                    child: const Icon(Icons.person, color: AppColors.textMuted),
                                   ),
                                   errorWidget: (context, url, error) => Container(
-                                    color: Colors.grey[800],
-                                    child: const Icon(Icons.person, color: AppTheme.cinematicGold),
+                                    color: AppColors.surfaceLight,
+                                    child: const Icon(Icons.person, color: AppColors.primaryGold),
                                   ),
-                                  fadeInDuration: const Duration(milliseconds: 500),
+                                  fadeInDuration: const Duration(milliseconds: AppConstants.durationSlowMs),
                                 ),
                               ),
                               title: Text(
@@ -146,7 +153,7 @@ class _UsersPageState extends State<UsersPage> {
                                 style: Theme.of(context).textTheme.titleLarge,
                               ),
                               subtitle: Text(
-                                'Saved movies: ${item.movieCount}',
+                                '${AppStrings.savedMoviesCount}${item.movieCount}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ),
@@ -160,26 +167,26 @@ class _UsersPageState extends State<UsersPage> {
             } else if (state is UserError) {
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(AppDimensions.spacingXL),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.wifi_off, size: 80, color: AppTheme.cinematicGold),
-                      const SizedBox(height: 24),
+                      const Icon(Icons.wifi_off, size: 80, color: AppColors.primaryGold),
+                      const SizedBox(height: AppDimensions.spacingL),
                       Text(
-                        'No Connection',
+                        AppStrings.noConnection,
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppDimensions.spacingS),
                       const Text(
-                        'Please connect to the internet to load the initial feed.',
+                        AppStrings.noConnectionDesc,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white70),
+                        style: TextStyle(color: AppColors.textSecondary),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppDimensions.spacingXL),
                       ElevatedButton(
                         onPressed: () => context.read<UserCubit>().loadUsers(),
-                        child: const Text('Retry'),
+                        child: const Text(AppStrings.retry),
                       ),
                     ],
                   ),
@@ -192,17 +199,17 @@ class _UsersPageState extends State<UsersPage> {
       ),
       floatingActionButton: Showcase(
         key: _fabKey,
-        title: 'New User',
-        description: 'Start here! Create a profile to start saving movies.',
-        tooltipBackgroundColor: AppTheme.surfaceGrey,
-        textColor: Colors.white,
+        title: AppStrings.tutorialNewUserTitle,
+        description: AppStrings.tutorialNewUserDesc,
+        tooltipBackgroundColor: AppColors.surfaceGrey,
+        textColor: AppColors.onSurface,
         titleTextStyle: const TextStyle(
-          color: AppTheme.cinematicGold,
+          color: AppColors.primaryGold,
           fontWeight: FontWeight.bold,
           fontSize: 18,
         ),
         descTextStyle: const TextStyle(
-          color: Colors.white70,
+          color: AppColors.textSecondary,
           fontSize: 14,
         ),
         onTargetClick: () {
@@ -211,9 +218,9 @@ class _UsersPageState extends State<UsersPage> {
         },
         disposeOnTap: true,
         child: FloatingActionButton(
-          backgroundColor: AppTheme.cinematicGold,
+          backgroundColor: AppColors.primaryGold,
           onPressed: () => context.push('/add_user'),
-          child: const Icon(Icons.add, color: Colors.black),
+          child: const Icon(Icons.add, color: AppColors.onPrimary),
         ),
       ),
     );
@@ -224,10 +231,13 @@ class _UsersPageState extends State<UsersPage> {
       itemCount: 10,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey[900]!,
-          highlightColor: Colors.grey[800]!,
+          baseColor: AppColors.shimmerBase,
+          highlightColor: AppColors.shimmerHighlight,
           child: Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            margin: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.spacingM,
+              vertical: AppDimensions.spacingXS,
+            ),
             child: ListTile(
               leading: const CircleAvatar(backgroundColor: Colors.white),
               title: Container(

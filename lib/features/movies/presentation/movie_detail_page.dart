@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_endpoints.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
 import '../bloc/movie_cubit.dart';
 import '../../users/bloc/active_user_cubit.dart';
 import '../../../core/theme/app_theme.dart';
@@ -39,26 +43,26 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           return CustomScrollView(
             slivers: [
               SliverAppBar(
-                expandedHeight: 400,
+                expandedHeight: AppDimensions.appBarExpandedHeight,
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Hero(
                     tag: 'movie-poster-${movie.id}',
                     child: CachedNetworkImage(
                       imageUrl: movie.posterPath != null
-                          ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                          ? '${AppEndpoints.tmdbImageBaseW500}${movie.posterPath}'
                           : '',
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) => Container(
-                        color: Colors.grey[800],
-                        child: const Icon(Icons.movie, size: 100, color: AppTheme.cinematicGold),
+                        color: AppColors.surfaceLight,
+                        child: const Icon(Icons.movie, size: 100, color: AppColors.primaryGold),
                       ),
                     ),
                   ),
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppDimensions.spacingM),
                 sliver: SliverList(
                   delegate: SliverChildListDelegate([
                     Row(
@@ -72,7 +76,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 movie.title,
                                 style: Theme.of(context).textTheme.headlineMedium,
                               ),
-                              const SizedBox(height: 4),
+                              const SizedBox(height: AppDimensions.spacingXXS),
                               Text(
                                 movie.releaseYear ?? '',
                                 style: Theme.of(context).textTheme.bodyLarge,
@@ -90,8 +94,8 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                                 return IconButton(
                                   icon: Icon(
                                     isSaved ? Icons.bookmark : Icons.bookmark_border,
-                                    color: isSaved ? AppTheme.cinematicGold : null,
-                                    size: 32,
+                                    color: isSaved ? AppColors.primaryGold : null,
+                                    size: AppDimensions.iconSizeL,
                                   ),
                                   onPressed: () {
                                     if (userId != 0) {
@@ -105,17 +109,17 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppDimensions.spacingL),
                     Text(
-                      'Plot',
+                      AppStrings.plot,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppDimensions.spacingXS),
                     Text(
-                      movie.overview ?? 'No description available.',
+                      movie.overview ?? AppStrings.noDescription,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: AppDimensions.spacingXL),
                     _buildUsersWhoSaved(movie.id),
                   ]),
                 ),
@@ -135,10 +139,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
         if (users.isEmpty) {
           return const Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
+              padding: EdgeInsets.symmetric(vertical: AppDimensions.spacingL),
               child: Text(
-                'Be the first to save this.',
-                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                AppStrings.beFirstToSave,
+                style: TextStyle(fontStyle: FontStyle.italic, color: AppColors.textMuted),
               ),
             ),
           );
@@ -148,29 +152,29 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${users.length} users want to watch this',
+              '${users.length} ${AppStrings.usersWantToWatch}',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppDimensions.spacingS),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: users.map((user) => Padding(
-                  padding: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.only(right: AppDimensions.spacingXS),
                   child: CachedNetworkImage(
                     imageUrl: user.avatar ?? '',
                     imageBuilder: (context, imageProvider) => CircleAvatar(
-                      radius: 20,
+                      radius: AppDimensions.avatarRadiusM,
                       backgroundImage: imageProvider,
                     ),
                     placeholder: (context, url) => const CircleAvatar(
-                      radius: 20,
+                      radius: AppDimensions.avatarRadiusM,
                       child: Icon(Icons.person),
                     ),
                     errorWidget: (context, url, error) => const CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.grey,
-                      child: Icon(Icons.person, color: AppTheme.cinematicGold, size: 20),
+                      radius: AppDimensions.avatarRadiusM,
+                      backgroundColor: AppColors.surfaceLight,
+                      child: Icon(Icons.person, color: AppColors.primaryGold, size: 20),
                     ),
                   ),
                 )).toList(),

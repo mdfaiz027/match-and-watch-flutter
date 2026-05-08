@@ -3,7 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../../core/theme/app_theme.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_assets.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
 import '../bloc/onboarding_cubit.dart';
 
 class OnboardingPage extends StatefulWidget {
@@ -39,25 +43,25 @@ class _OnboardingPageState extends State<OnboardingPage> {
               _OnboardingStep(
                 controller: _pageController,
                 index: 0,
-                animation: 'assets/animations/movie.json',
-                title: 'Discover',
-                description: 'Find trending movies instantly.',
+                animation: AppAssets.movieAnim,
+                title: AppStrings.onboardingDiscoverTitle,
+                description: AppStrings.onboardingDiscoverDesc,
                 lottieHeight: 320,
               ),
               _OnboardingStep(
                 controller: _pageController,
                 index: 1,
-                animation: 'assets/animations/offline.json',
-                title: 'Offline Ready',
-                description: 'Save your favorites. Access them anywhere, even on airplane mode.',
+                animation: AppAssets.offlineAnim,
+                title: AppStrings.onboardingOfflineTitle,
+                description: AppStrings.onboardingOfflineDesc,
                 lottieHeight: 240,
               ),
               _OnboardingStep(
                 controller: _pageController,
                 index: 2,
-                animation: 'assets/animations/match.json',
-                title: 'Match',
-                description: 'See what your friends want to watch and find the perfect movie night pick.',
+                animation: AppAssets.matchAnim,
+                title: AppStrings.onboardingMatchTitle,
+                description: AppStrings.onboardingMatchDesc,
                 lottieHeight: 300,
               ),
             ],
@@ -71,18 +75,18 @@ class _OnboardingPageState extends State<OnboardingPage> {
                   controller: _pageController,
                   count: 3,
                   effect: const ExpandingDotsEffect(
-                    activeDotColor: AppTheme.cinematicGold,
+                    activeDotColor: AppColors.primaryGold,
                     dotColor: Colors.white24,
                     dotHeight: 10,
                     dotWidth: 10,
                     spacing: 8,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppDimensions.spacingXXL),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  padding: const EdgeInsets.symmetric(horizontal: AppDimensions.spacingXXL),
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: AppConstants.durationMediumMs),
                     child: _isLastPage
                         ? SizedBox(
                             key: const ValueKey('get_started_btn'),
@@ -94,7 +98,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   context.go('/');
                                 }
                               },
-                              child: const Text('Get Started'),
+                              child: const Text(AppStrings.getStarted),
                             ),
                           )
                         : SizedBox(
@@ -103,14 +107,14 @@ class _OnboardingPageState extends State<OnboardingPage> {
                             child: TextButton(
                               onPressed: () {
                                 _pageController.nextPage(
-                                  duration: const Duration(milliseconds: 500),
+                                  duration: const Duration(milliseconds: AppConstants.durationSlowMs),
                                   curve: Curves.easeInOut,
                                 );
                               },
                               child: const Text(
-                                'Next',
+                                AppStrings.next,
                                 style: TextStyle(
-                                  color: AppTheme.cinematicGold,
+                                  color: AppColors.primaryGold,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -164,7 +168,7 @@ class _OnboardingStep extends StatelessWidget {
           child: Transform.scale(
             scale: scale,
             child: Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(AppDimensions.spacingXXL),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -177,21 +181,21 @@ class _OnboardingStep extends StatelessWidget {
                         return const Icon(
                           Icons.movie_outlined,
                           size: 120,
-                          color: AppTheme.cinematicGold,
+                          color: AppColors.primaryGold,
                         );
                       },
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: AppDimensions.spacingXXL),
                   Text(
                     title,
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          color: AppTheme.cinematicGold,
+                          color: AppColors.primaryGold,
                           fontWeight: FontWeight.bold,
                         ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppDimensions.spacingL),
                   Text(
                     description,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(

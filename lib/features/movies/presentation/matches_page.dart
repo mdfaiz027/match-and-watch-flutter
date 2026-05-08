@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_endpoints.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
 import '../bloc/movie_cubit.dart';
-import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 
 class MatchesPage extends StatelessWidget {
@@ -12,7 +16,7 @@ class MatchesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Group Matches'),
+        title: const Text(AppStrings.matchesTitle),
       ),
       body: SafeArea(
         child: StreamBuilder<int>(
@@ -29,60 +33,63 @@ class MatchesPage extends StatelessWidget {
               }
 
               return ListView.builder(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppDimensions.spacingM),
                 itemCount: matches.length,
                 itemBuilder: (context, index) {
                   final match = matches[index];
                   final isGroupPick = totalUsers > 0 && match.users.length == totalUsers;
 
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 16),
+                    margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
                     decoration: isGroupPick
                         ? BoxDecoration(
-                            border: Border.all(color: AppTheme.cinematicGold, width: 2),
-                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: AppColors.primaryGold, width: 2),
+                            borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
                           )
                         : null,
                     child: Card(
                       margin: EdgeInsets.zero,
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(AppDimensions.spacingS),
                         child: Row(
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(AppDimensions.imageRadius),
                               child: CachedNetworkImage(
                                 imageUrl: match.movie.posterPath != null
-                                    ? 'https://image.tmdb.org/t/p/w185${match.movie.posterPath}'
+                                    ? '${AppEndpoints.tmdbImageBaseW185}${match.movie.posterPath}'
                                     : '',
-                                width: 80,
-                                height: 120,
+                                width: AppDimensions.matchCardPosterWidth,
+                                height: AppDimensions.matchCardPosterHeight,
                                 fit: BoxFit.cover,
                                 errorWidget: (context, url, error) => Container(
-                                  width: 80,
-                                  height: 120,
-                                  color: Colors.grey[800],
-                                  child: const Icon(Icons.movie, color: AppTheme.cinematicGold),
+                                  width: AppDimensions.matchCardPosterWidth,
+                                  height: AppDimensions.matchCardPosterHeight,
+                                  color: AppColors.surfaceLight,
+                                  child: const Icon(Icons.movie, color: AppColors.primaryGold),
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: AppDimensions.spacingM),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   if (isGroupPick)
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                      margin: const EdgeInsets.only(bottom: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: AppDimensions.spacingXS,
+                                        vertical: AppDimensions.spacingXXS,
+                                      ),
+                                      margin: const EdgeInsets.only(bottom: AppDimensions.spacingXS),
                                       decoration: BoxDecoration(
-                                        color: AppTheme.cinematicGold,
-                                        borderRadius: BorderRadius.circular(4),
+                                        color: AppColors.primaryGold,
+                                        borderRadius: BorderRadius.circular(AppDimensions.radiusS),
                                       ),
                                       child: const Text(
-                                        'GROUP PICK!',
+                                        AppStrings.topPick,
                                         style: TextStyle(
-                                          color: Colors.black,
+                                          color: AppColors.onPrimary,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 10,
                                         ),
@@ -92,16 +99,16 @@ class MatchesPage extends StatelessWidget {
                                     match.movie.title,
                                     style: Theme.of(context).textTheme.titleLarge,
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: AppDimensions.spacingXS),
                                   AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: AppConstants.durationMediumMs),
                                     child: Text(
                                       '${match.users.length} saves',
                                       key: ValueKey<int>(match.users.length),
-                                      style: const TextStyle(color: AppTheme.cinematicGold),
+                                      style: const TextStyle(color: AppColors.primaryGold),
                                     ),
                                   ),
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: AppDimensions.spacingS),
                                   _buildUserAvatars(match.users),
                                 ],
                               ),
@@ -129,20 +136,20 @@ class MatchesPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final user = users[index];
           return Padding(
-            padding: const EdgeInsets.only(right: 6),
+            padding: const EdgeInsets.only(right: AppDimensions.spacingXXS),
             child: CachedNetworkImage(
               imageUrl: user.avatar ?? '',
               imageBuilder: (context, imageProvider) => CircleAvatar(
-                radius: 15,
+                radius: AppDimensions.avatarRadiusS,
                 backgroundImage: imageProvider,
               ),
               placeholder: (context, url) => const CircleAvatar(
-                radius: 15,
+                radius: AppDimensions.avatarRadiusS,
                 child: Icon(Icons.person, size: 15),
               ),
               errorWidget: (context, url, error) => const CircleAvatar(
-                radius: 15,
-                child: Icon(Icons.person, size: 15, color: AppTheme.cinematicGold),
+                radius: AppDimensions.avatarRadiusS,
+                child: Icon(Icons.person, size: 15, color: AppColors.primaryGold),
               ),
             ),
           );
@@ -154,22 +161,16 @@ class MatchesPage extends StatelessWidget {
   Widget _buildEmptyState(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: const EdgeInsets.all(AppDimensions.spacingXL),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-          const Icon(Icons.people_outline, size: 80, color: Colors.white24),
-          const SizedBox(height: 16),
+          const Icon(Icons.people_outline, size: 80, color: AppColors.textMuted),
+          const SizedBox(height: AppDimensions.spacingM),
           Text(
-            'No matches found.',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.white54),
+            AppStrings.noMatchesFound,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Matches happen when 2 or more users save the same movie. Start saving movies for different users to see them here!',
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70),
           ),
         ],
       ),

@@ -7,6 +7,11 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/constants/app_strings.dart';
+import '../../../core/constants/app_constants.dart';
+import '../../../core/constants/app_endpoints.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_dimensions.dart';
 import '../../../core/di/injection_container.dart';
 import '../bloc/movie_cubit.dart';
 import '../../users/bloc/active_user_cubit.dart';
@@ -48,7 +53,7 @@ class _MoviesPageState extends State<MoviesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Movies'),
+        title: const Text(AppStrings.moviesTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.bookmarks),
@@ -78,7 +83,7 @@ class _MoviesPageState extends State<MoviesPage> {
             } else if (state is MovieLoaded) {
               final movies = state.movies;
               if (movies.isEmpty) {
-                return const Center(child: Text('No movies found.'));
+                return const Center(child: Text(AppStrings.noMoviesFound));
               }
               return AnimationLimiter(
                 child: ListView.builder(
@@ -88,7 +93,7 @@ class _MoviesPageState extends State<MoviesPage> {
                     final movie = movies[index];
                     return AnimationConfiguration.staggeredList(
                       position: index,
-                      duration: const Duration(milliseconds: 375),
+                      duration: const Duration(milliseconds: AppConstants.durationStaggerMs),
                       child: SlideAnimation(
                         verticalOffset: 50.0,
                         child: FadeInAnimation(
@@ -105,26 +110,26 @@ class _MoviesPageState extends State<MoviesPage> {
             } else if (state is MovieError) {
               return Center(
                 child: Padding(
-                  padding: const EdgeInsets.all(32.0),
+                  padding: const EdgeInsets.all(AppDimensions.spacingXL),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.wifi_off, size: 80, color: AppTheme.cinematicGold),
-                      const SizedBox(height: 24),
+                      const Icon(Icons.wifi_off, size: 80, color: AppColors.primaryGold),
+                      const SizedBox(height: AppDimensions.spacingL),
                       Text(
-                        'No Connection',
+                        AppStrings.noConnection,
                         style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppDimensions.spacingS),
                       const Text(
-                        'Please connect to the internet to load the initial feed.',
+                        AppStrings.noConnectionDesc,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white70),
+                        style: TextStyle(color: AppColors.textSecondary),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppDimensions.spacingXL),
                       ElevatedButton(
                         onPressed: () => context.read<MovieCubit>().loadMovies(),
-                        child: const Text('Retry'),
+                        child: const Text(AppStrings.retry),
                       ),
                     ],
                   ),
@@ -143,14 +148,17 @@ class _MoviesPageState extends State<MoviesPage> {
       itemCount: 6,
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: Colors.grey[900]!,
-          highlightColor: Colors.grey[800]!,
+          baseColor: AppColors.shimmerBase,
+          highlightColor: AppColors.shimmerHighlight,
           child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            height: 150,
+            margin: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.spacingM,
+              vertical: AppDimensions.spacingXS,
+            ),
+            height: AppDimensions.movieCardHeight,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+              color: AppColors.textMain,
+              borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
             ),
           ),
         );
@@ -171,40 +179,43 @@ class _MovieCard extends StatelessWidget {
       builder: (context, activeUser) {
         final userId = activeUser?.id ?? 0;
         return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.spacingM,
+            vertical: AppDimensions.spacingXS,
+          ),
           child: InkWell(
             onTap: () {
               context.push('/movie/${movie.id}');
             },
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
             child: Row(
               children: [
                 Hero(
                   tag: 'movie-poster-${movie.id}',
                   child: ClipRRect(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(16),
-                      bottomLeft: Radius.circular(16),
+                      topLeft: Radius.circular(AppDimensions.cardRadius),
+                      bottomLeft: Radius.circular(AppDimensions.cardRadius),
                     ),
                     child: CachedNetworkImage(
                       imageUrl: movie.posterPath != null
-                          ? 'https://image.tmdb.org/t/p/w185${movie.posterPath}'
+                          ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
                           : '',
-                      width: 100,
-                      height: 150,
+                      width: AppDimensions.moviePosterWidth,
+                      height: AppDimensions.movieCardHeight,
                       fit: BoxFit.cover,
                       errorWidget: (context, url, error) => Container(
-                        width: 100,
-                        height: 150,
-                        color: Colors.grey[800],
-                        child: const Icon(Icons.movie, color: AppTheme.cinematicGold),
+                        width: AppDimensions.moviePosterWidth,
+                        height: AppDimensions.movieCardHeight,
+                        color: AppColors.surfaceLight,
+                        child: const Icon(Icons.movie, color: AppColors.primaryGold),
                       ),
                     ),
                   ),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(AppDimensions.spacingM),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -214,12 +225,12 @@ class _MovieCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppDimensions.spacingXXS),
                         Text(
                           movie.releaseYear ?? '',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppDimensions.spacingXS),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -229,7 +240,7 @@ class _MovieCard extends StatelessWidget {
                                 final count = snapshot.data ?? 0;
                                 return Badge(
                                   label: AnimatedSwitcher(
-                                    duration: const Duration(milliseconds: 300),
+                                    duration: const Duration(milliseconds: AppConstants.durationMediumMs),
                                     transitionBuilder: (Widget child, Animation<double> animation) {
                                       return ScaleTransition(scale: animation, child: child);
                                     },
@@ -239,7 +250,7 @@ class _MovieCard extends StatelessWidget {
                                     ),
                                   ),
                                   isLabelVisible: count > 0,
-                                  backgroundColor: AppTheme.cinematicGold,
+                                  backgroundColor: AppColors.primaryGold,
                                   child: StreamBuilder<bool>(
                                     stream: context.read<MovieCubit>().isSaved(userId, movie.id),
                                     builder: (context, snapshot) {
@@ -247,7 +258,7 @@ class _MovieCard extends StatelessWidget {
                                       final iconButton = IconButton(
                                         icon: Icon(
                                           isSaved ? Icons.bookmark : Icons.bookmark_border,
-                                          color: isSaved ? AppTheme.cinematicGold : null,
+                                          color: isSaved ? AppColors.primaryGold : null,
                                         ),
                                         onPressed: () {
                                           if (userId != 0) {
@@ -259,17 +270,17 @@ class _MovieCard extends StatelessWidget {
                                       if (saveButtonKey != null) {
                                         return Showcase(
                                           key: saveButtonKey!,
-                                          title: 'Save Movie',
-                                          description: 'Tap to save a movie to your offline list.',
-                                          tooltipBackgroundColor: AppTheme.surfaceGrey,
-                                          textColor: Colors.white,
+                                          title: AppStrings.tutorialSaveMovieTitle,
+                                          description: AppStrings.tutorialSaveMovieDesc,
+                                          tooltipBackgroundColor: AppColors.surfaceGrey,
+                                          textColor: AppColors.onSurface,
                                           titleTextStyle: const TextStyle(
-                                            color: AppTheme.cinematicGold,
+                                            color: AppColors.primaryGold,
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18,
                                           ),
                                           descTextStyle: const TextStyle(
-                                            color: Colors.white70,
+                                            color: AppColors.textSecondary,
                                             fontSize: 14,
                                           ),
                                           onTargetClick: () {

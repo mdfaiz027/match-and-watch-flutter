@@ -54,8 +54,15 @@ class UserCubit extends Cubit<UserState> {
     if (_isFetchingNextPage) return;
     _isFetchingNextPage = true;
     _currentPage++;
-    await _repository.refreshUsers(page: _currentPage);
-    _isFetchingNextPage = false;
+    try {
+      await _repository.refreshUsers(page: _currentPage);
+    } catch (e) {
+      // For pagination, we don't necessarily want to show a full-screen error
+      // if we already have some data. We just log it or handle silently.
+      _currentPage--; // Revert page increment on failure
+    } finally {
+      _isFetchingNextPage = false;
+    }
   }
 
   Future<void> createUser({

@@ -754,31 +754,9 @@ Please implement this premium tutorial flow and confirm when complete.
 **Context:**
 Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback.
 
-## Entry #26: Fix Showcase Sequence & Render Timing
+## Entry #29: Handling Pagination Network Failures
 **Prompt:**
-Task 24.1: Fix Showcase Sequence & Render Timing
-
-Log this first: Please log this prompt into PROMPTS.md as Entry #26. Context: "Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle and list state."
-
-Action 1: Fix UsersPage Sequence (Multi-item Tutorial)
-The UsersPage has two tutorials (the FAB and the Matches Icon in the AppBar). Currently, only one is appearing.
-
-Please ensure that BOTH GlobalKeys are passed into the trigger array in the exact order we want them to appear: ShowCaseWidget.of(context).startShowCase([fabKey, matchesKey]);
-
-Crucial Timing Fix: Wrap the logic that checks SharedPreferences and calls startShowCase inside WidgetsBinding.instance.addPostFrameCallback((_) { ... }) within the initState. This ensures the AppBar and FAB are fully rendered before the showcase starts.
-
-Action 2: Fix MoviesPage Trigger (Async List Tutorial)
-The MoviesPage tutorial highlights the "Save" button on the first movie card.
-
-The Logic: You cannot trigger this tutorial in initState because the list is still loading (Shimmer state) and the "Save" button doesn't exist yet.
-
-The Fix: Move the showcase trigger logic into the BlocConsumer or BlocListener of the MovieCubit.
-
-Only call startShowCase([saveButtonKey]) when the state is Loaded AND the movie list is not empty.
-
-Still wrap this in a WidgetsBinding.instance.addPostFrameCallback to ensure the list items have finished their build cycle before the highlight appears.
-
-Please implement these lifecycle fixes to ensure the full premium tutorial sequence works.
+(User provided logs showing Unhandled Exception: DioException [connection error] from Simulated Network Failure during loadNextPage)
 
 **Context:**
-Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle and list state.
+Fixing unhandled exceptions in `UserCubit` and `MovieCubit` during pagination (`loadNextPage`) by wrapping repository calls in try-catch blocks, ensuring the app handles simulated network failures gracefully without crashing or logging unhandled errors.

@@ -54,8 +54,13 @@ class MovieCubit extends Cubit<MovieState> {
     if (_isFetchingNextPage) return;
     _isFetchingNextPage = true;
     _currentPage++;
-    await _repository.refreshMovies(page: _currentPage);
-    _isFetchingNextPage = false;
+    try {
+      await _repository.refreshMovies(page: _currentPage);
+    } catch (e) {
+      _currentPage--; // Revert page increment on failure
+    } finally {
+      _isFetchingNextPage = false;
+    }
   }
 
   Future<void> loadMovieDetails(int movieId) async {
