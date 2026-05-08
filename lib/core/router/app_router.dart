@@ -23,27 +23,20 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/movies',
       name: 'movies',
-      builder: (context, state) {
-        final userId = int.parse(state.uri.queryParameters['userId'] ?? '0');
-        return MoviesPage(userId: userId);
-      },
+      builder: (context, state) => const MoviesPage(),
     ),
     GoRoute(
       path: '/movie/:id',
       name: 'movie_detail',
       builder: (context, state) {
         final movieId = int.parse(state.pathParameters['id']!);
-        final userId = int.parse(state.uri.queryParameters['userId'] ?? '0');
-        return MovieDetailPage(movieId: movieId, userId: userId);
+        return MovieDetailPage(movieId: movieId);
       },
     ),
     GoRoute(
       path: '/saved_movies',
       name: 'saved_movies',
-      builder: (context, state) {
-        final userId = int.parse(state.uri.queryParameters['userId'] ?? '0');
-        return SavedMoviesPage(userId: userId);
-      },
+      builder: (context, state) => const SavedMoviesPage(),
     ),
     GoRoute(
       path: '/matches',

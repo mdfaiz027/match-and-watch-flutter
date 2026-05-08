@@ -95,7 +95,7 @@ class MovieRepository {
     return query.watch().map((rows) => rows.map((row) => row.readTable(_db.users)).toList());
   }
 
-  Stream<int> watchSaveCount(int movieId) {
+  Stream<int> watchSaveCountForMovie(int movieId) {
     final countExp = _db.savedMovies.userId.count();
     final query = _db.selectOnly(_db.savedMovies)
       ..addColumns([countExp])

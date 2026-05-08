@@ -2,34 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../bloc/user_cubit.dart';
+import '../bloc/active_user_cubit.dart';
 import '../../movies/bloc/movie_cubit.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 
 class SavedMoviesPage extends StatelessWidget {
-  final int userId;
-  const SavedMoviesPage({super.key, required this.userId});
+  const SavedMoviesPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Saved Movies'),
-      ),
-      body: StreamBuilder<User?>(
-        stream: context.read<UserCubit>().watchUserById(userId),
-        builder: (context, userSnapshot) {
-          final user = userSnapshot.data;
-          if (user == null) return const Center(child: CircularProgressIndicator());
-
-          return Column(
-            children: [
-              _buildHeader(context, user),
-              Expanded(child: _buildSavedList(context)),
-            ],
+    return BlocBuilder<ActiveUserCubit, User?>(
+      builder: (context, activeUser) {
+        if (activeUser == null) {
+          return const Scaffold(
+            body: Center(child: Text('No active user selected.')),
           );
-        },
-      ),
+        }
+
+        final userId = activeUser.id;
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('My Saved Movies'),
+          ),
+          body: StreamBuilder<User?>(
+            stream: context.read<UserCubit>().watchUserById(userId),
+            builder: (context, userSnapshot) {
+              final user = userSnapshot.data;
+              if (user == null) return const Center(child: CircularProgressIndicator());
+
+              return Column(
+                children: [
+                  _buildHeader(context, user),
+                  Expanded(child: _buildSavedList(context, userId)),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -69,7 +80,7 @@ class SavedMoviesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSavedList(BuildContext context) {
+  Widget _buildSavedList(BuildContext context, int userId) {
     return StreamBuilder<List<Movie>>(
       stream: context.read<MovieCubit>().watchSavedMovies(userId),
       builder: (context, snapshot) {

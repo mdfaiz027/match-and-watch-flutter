@@ -81,7 +81,7 @@ class MatchAndWatchApp extends StatelessWidget {
         builder: (context, child) {
           return Stack(
             children: [
-              if (child != null) child,
+              ?child,
               ValueListenableBuilder<bool>(
                 valueListenable: connectionNotifier,
                 builder: (context, isReconnecting, _) {
@@ -93,7 +93,7 @@ class MatchAndWatchApp extends StatelessWidget {
                     child: Material(
                       color: Colors.transparent,
                       child: Container(
-                        color: Colors.orange.withOpacity(0.9),
+                        color: Colors.orange.withValues(alpha: 0.9),
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         alignment: Alignment.center,
                         child: const Text(

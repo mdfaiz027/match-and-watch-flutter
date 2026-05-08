@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../bloc/movie_cubit.dart';
+import '../../users/bloc/active_user_cubit.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final int movieId;
-  final int userId;
 
   const MovieDetailPage({
     super.key,
     required this.movieId,
-    required this.userId,
   });
 
   @override
@@ -81,18 +80,25 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             ],
                           ),
                         ),
-                        StreamBuilder<bool>(
-                          stream: context.read<MovieCubit>().isSaved(widget.userId, movie.id),
-                          builder: (context, snapshot) {
-                            final isSaved = snapshot.data ?? false;
-                            return IconButton(
-                              icon: Icon(
-                                isSaved ? Icons.bookmark : Icons.bookmark_border,
-                                color: isSaved ? AppTheme.cinematicGold : null,
-                                size: 32,
-                              ),
-                              onPressed: () {
-                                context.read<MovieCubit>().toggleSave(widget.userId, movie);
+                        BlocBuilder<ActiveUserCubit, User?>(
+                          builder: (context, activeUser) {
+                            final userId = activeUser?.id ?? 0;
+                            return StreamBuilder<bool>(
+                              stream: context.read<MovieCubit>().isSaved(userId, movie.id),
+                              builder: (context, snapshot) {
+                                final isSaved = snapshot.data ?? false;
+                                return IconButton(
+                                  icon: Icon(
+                                    isSaved ? Icons.bookmark : Icons.bookmark_border,
+                                    color: isSaved ? AppTheme.cinematicGold : null,
+                                    size: 32,
+                                  ),
+                                  onPressed: () {
+                                    if (userId != 0) {
+                                      context.read<MovieCubit>().toggleSave(userId, movie);
+                                    }
+                                  },
+                                );
                               },
                             );
                           },

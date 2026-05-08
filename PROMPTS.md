@@ -486,3 +486,29 @@ Please implement these refinements and confirm when complete.
 
 **Context:**
 Auditing Page 2 requirements to ensure correct data mapping between the UI, local DB, and Reqres API, and tightening the offline detection logic.
+
+## Entry #16: Page 3 Audit - Aggressive DB Caching & Real-Time Badges
+**Prompt:**
+Task 15: Page 3 Audit - Aggressive DB Caching & Real-Time Badges
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #16. Context: "Auditing Page 3 requirements to ensure aggressive local caching of API movies and setting up individual Drift streams for real-time save count badges."
+
+Action 1: Aggressive Caching (Upsert)
+The assignment mandates that any movie fetched from the API must be stored locally immediately so it's available offline.
+
+Please ensure that inside MovieRepository.getTrendingMovies, immediately after receiving the TMDB API response, the repository performs an upsert (insert or replace) into the Drift Movies table for every movie in the list.
+
+Action 2: Real-Time Hybrid Badge Stream
+The save count badge on each movie card must update in real-time when any user saves it.
+
+Please create a specific query in the Drift database: watchSaveCountForMovie(int movieId) that returns a Stream<int> representing the count of rows in the SavedMovies table for that ID.
+
+On the MoviesPage UI, wrap the save count badge in a StreamBuilder connected to this specific stream. This ensures the badge updates instantly without needing to rebuild the entire paginated list.
+
+Action 3: Active User Save Action
+Ensure the "Save/Unsave" button on the movie card correctly reads the "Active User" state we set up in Task 13, and inserts/deletes the correct (userId, movieId) pair in the SavedMovies table.
+
+Please implement these data-flow refinements and confirm when complete.
+
+**Context:**
+Auditing Page 3 requirements to ensure aggressive local caching of API movies and setting up individual Drift streams for real-time save count badges.

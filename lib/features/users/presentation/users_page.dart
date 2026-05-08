@@ -79,7 +79,7 @@ class _UsersPageState extends State<UsersPage> {
                           child: ListTile(
                             onTap: () {
                               context.read<ActiveUserCubit>().setUser(user);
-                              context.push('/movies?userId=${user.id}');
+                              context.push('/movies');
                             },
                             leading: ClipRRect(
                               borderRadius: BorderRadius.circular(24),
