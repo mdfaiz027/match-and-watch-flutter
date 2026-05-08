@@ -59,6 +59,15 @@ class SavedMoviesPage extends StatelessWidget {
     );
   }
 
+  Widget _buildPosterPlaceholder() {
+    return Container(
+      width: AppDimensions.moviePosterWidth,
+      height: AppDimensions.movieCardHeight,
+      color: AppColors.surfaceLight,
+      child: const Icon(Icons.movie, color: AppColors.primaryGold),
+    );
+  }
+
   Widget _buildHeader(BuildContext context, User user) {
     return Container(
       padding: const EdgeInsets.all(AppDimensions.spacingL),
@@ -151,20 +160,15 @@ class SavedMoviesPage extends StatelessWidget {
                                   topLeft: Radius.circular(AppDimensions.cardRadius),
                                   bottomLeft: Radius.circular(AppDimensions.cardRadius),
                                 ),
-                                child: CachedNetworkImage(
-                                  imageUrl: movie.posterPath != null
-                                      ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
-                                      : '',
-                                  width: AppDimensions.moviePosterWidth,
-                                  height: AppDimensions.movieCardHeight,
-                                  fit: BoxFit.cover,
-                                  errorWidget: (context, url, error) => Container(
-                                    width: AppDimensions.moviePosterWidth,
-                                    height: AppDimensions.movieCardHeight,
-                                    color: AppColors.surfaceLight,
-                                    child: const Icon(Icons.movie, color: AppColors.primaryGold),
-                                  ),
-                                ),
+                                child: movie.posterPath?.isNotEmpty == true
+                                    ? CachedNetworkImage(
+                                        imageUrl: '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}',
+                                        width: AppDimensions.moviePosterWidth,
+                                        height: AppDimensions.movieCardHeight,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) => _buildPosterPlaceholder(),
+                                      )
+                                    : _buildPosterPlaceholder(),
                               ),
                             ),
                             Expanded(

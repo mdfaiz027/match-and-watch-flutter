@@ -16,6 +16,15 @@ import '../../../core/database/app_database.dart';
 class MatchesPage extends StatelessWidget {
   const MatchesPage({super.key});
 
+  Widget _buildMatchPosterPlaceholder() {
+    return Container(
+      width: AppDimensions.matchCardPosterWidth,
+      height: AppDimensions.matchCardPosterHeight,
+      color: AppColors.surfaceLight,
+      child: const Icon(Icons.movie, color: AppColors.primaryGold),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,20 +83,15 @@ class MatchesPage extends StatelessWidget {
                                         tag: 'movie-poster-${match.movie.id}',
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(AppDimensions.imageRadius),
-                                          child: CachedNetworkImage(
-                                            imageUrl: match.movie.posterPath != null
-                                                ? '${AppEndpoints.tmdbImageBaseW185}${match.movie.posterPath}'
-                                                : '',
-                                            width: AppDimensions.matchCardPosterWidth,
-                                            height: AppDimensions.matchCardPosterHeight,
-                                            fit: BoxFit.cover,
-                                            errorWidget: (context, url, error) => Container(
-                                              width: AppDimensions.matchCardPosterWidth,
-                                              height: AppDimensions.matchCardPosterHeight,
-                                              color: AppColors.surfaceLight,
-                                              child: const Icon(Icons.movie, color: AppColors.primaryGold),
-                                            ),
-                                          ),
+                                          child: match.movie.posterPath?.isNotEmpty == true
+                                              ? CachedNetworkImage(
+                                                  imageUrl: '${AppEndpoints.tmdbImageBaseW185}${match.movie.posterPath}',
+                                                  width: AppDimensions.matchCardPosterWidth,
+                                                  height: AppDimensions.matchCardPosterHeight,
+                                                  fit: BoxFit.cover,
+                                                  errorWidget: (context, url, error) => _buildMatchPosterPlaceholder(),
+                                                )
+                                              : _buildMatchPosterPlaceholder(),
                                         ),
                                       ),
                                       const SizedBox(width: AppDimensions.spacingM),

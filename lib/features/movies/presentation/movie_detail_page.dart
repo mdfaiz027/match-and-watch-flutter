@@ -30,6 +30,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     context.read<MovieCubit>().loadMovieDetails(widget.movieId);
   }
 
+  Widget _buildDetailPosterPlaceholder() {
+    return Container(
+      color: AppColors.surfaceLight,
+      child: const Icon(Icons.movie, size: 100, color: AppColors.primaryGold),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,16 +58,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   flexibleSpace: FlexibleSpaceBar(
                     background: Hero(
                       tag: 'movie-poster-${movie.id}',
-                      child: CachedNetworkImage(
-                        imageUrl: movie.posterPath != null
-                            ? '${AppEndpoints.tmdbImageBaseW500}${movie.posterPath}'
-                            : '',
-                        fit: BoxFit.cover,
-                        errorWidget: (context, url, error) => Container(
-                          color: AppColors.surfaceLight,
-                          child: const Icon(Icons.movie, size: 100, color: AppColors.primaryGold),
-                        ),
-                      ),
+                      child: movie.posterPath?.isNotEmpty == true
+                          ? CachedNetworkImage(
+                              imageUrl: '${AppEndpoints.tmdbImageBaseW500}${movie.posterPath}',
+                              fit: BoxFit.cover,
+                              errorWidget: (context, url, error) => _buildDetailPosterPlaceholder(),
+                            )
+                          : _buildDetailPosterPlaceholder(),
                     ),
                   ),
                 ),
