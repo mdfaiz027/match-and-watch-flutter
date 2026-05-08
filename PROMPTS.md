@@ -366,6 +366,25 @@ Please generate these pages, apply our 'Cinematic Gold' theme, and confirm when 
 **Context:**
 Building the final UI screens—User's Saved Movies and the Matches Page—relying entirely on local database streams for offline support and real-time updates.
 
+## Entry #11: Fix Reqres Missing API Key Error
+**Prompt:**
+Task 10: Fix Reqres Missing API Key Error
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #11. Context: "Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client."
+
+Action 1: Inject the Header
+We are getting a rejected request from Reqres because we are missing the API key header.
+Please update our network layer (either in /lib/core/network/api_client.dart or specifically in ReqresService, depending on how you structured it).
+
+Add an Interceptor or update the BaseOptions for the Reqres Dio instance to automatically include the header: "x-api-key": "YOUR_REQRES_KEY".
+
+Make sure to leave a clear comment or a constant variable so I know exactly where to paste my actual Reqres key.
+
+Please generate the fix and confirm exactly which file I need to open to paste my key.
+
+**Context:**
+Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client.
+
 ## Entry #12: Switch Back to TMDB API
 **Prompt:**
 Task 11: Switch Back to TMDB API
@@ -392,25 +411,6 @@ Please generate these changes and show me exactly where to paste my TMDB API key
 
 **Context:**
 Reverting the fallback API and fully integrating TMDB for trending movies and movie details, including the specific image prefixing required by TMDB.
-
-## Entry #11: Fix Reqres Missing API Key Error
-**Prompt:**
-Task 10: Fix Reqres Missing API Key Error
-
-Log this first: Please log this prompt into PROMPTS.md as Entry #11. Context: "Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client."
-
-Action 1: Inject the Header
-We are getting a rejected request from Reqres because we are missing the API key header.
-Please update our network layer (either in /lib/core/network/api_client.dart or specifically in ReqresService, depending on how you structured it).
-
-Add an Interceptor or update the BaseOptions for the Reqres Dio instance to automatically include the header: "x-api-key": "YOUR_REQRES_KEY".
-
-Make sure to leave a clear comment or a constant variable so I know exactly where to paste my actual Reqres key.
-
-Please generate the fix and confirm exactly which file I need to open to paste my key.
-
-**Context:**
-Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client.
 
 ## Entry #13: The Final UI Polish & Reconnection State
 **Prompt:**
@@ -600,11 +600,11 @@ Please implement this DI refactor and confirm when complete.
 **Context:**
 Fulfilling the strict 'Dependency Injection' requirement from the assignment's technical checklist by implementing get_it.
 
-## Entry #21: Page 7 Audit - Exponential Backoff & The Offline ID Swap
+## Entry #20: Page 7 Audit - Exponential Backoff & The Offline ID Swap
 **Prompt:**
 Task 20: Page 7 Audit - Exponential Backoff & The Offline ID Swap
 
-Log this first: Please log this prompt into PROMPTS.md as Entry #21. Context: "Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync."
+Log this first: Please log this prompt into PROMPTS.md as Entry #20. Context: "Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync."
 
 Action 1: Exponential Backoff Verification
 The assignment mandates that network retries wait "a little longer between each retry" to handle the 30% failure simulation.
@@ -625,11 +625,11 @@ Please implement these verifications and confirm when complete.
 **Context:**
 Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync.
 
-## Entry #22: Page 8 Audit - Image Fallbacks & Global Error States
+## Entry #21: Page 8 Audit - Image Fallbacks & Global Error States
 **Prompt:**
 Task 21: Page 8 Audit - Image Fallbacks & Global Error States
 
-Log this first: Please log this prompt into PROMPTS.md as Entry #22. Context: "Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states."
+Log this first: Please log this prompt into PROMPTS.md as Entry #21. Context: "Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states."
 
 Action 1: CachedNetworkImage Fallbacks
 We must gracefully handle broken images or offline scenarios where the image isn't cached.
@@ -651,11 +651,11 @@ Please implement these UI safety nets and confirm when complete.
 **Context:**
 Auditing Page 08 UI requirements to ensure graceful visual degradation for offline images and robust first-launch error states.
 
-## Entry #24: First-Launch Onboarding Screens
+## Entry #22: First-Launch Onboarding Screens
 **Prompt:**
 Task 23: First-Launch Onboarding Screens
 
-Log this first: Please log this prompt into PROMPTS.md as Entry #24. Context: "Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features."
+Log this first: Please log this prompt into PROMPTS.md as Entry #22. Context: "Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features."
 
 Action 1: Setup and State
 
@@ -689,3 +689,31 @@ Please implement this flow, ensure the app compiles, and confirm when complete.
 
 **Context:**
 Implementing a first-launch onboarding experience using shared_preferences to introduce the app's core features.
+
+## Entry #23: Premium Onboarding & Contextual Coach Marks
+**Prompt:**
+Task 24 & 25: Premium Onboarding & Contextual Coach Marks
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #23. Context: "Implementing premium onboarding animations and adding contextual tutorial coach marks using the showcaseview package to guide the user through the core UI."
+
+Action 1: Setup Lottie and ShowcaseView
+Please add the lottie and showcaseview packages to pubspec.yaml.
+Update our MaterialApp or root router setup so that our main screens are wrapped in a ShowCaseWidget.
+
+Action 2: Instrument the UI with Coach Marks
+Highlight three specific features using Showcase widgets:
+- On UsersPage: Highlight the "Add User" FAB and the "Matches" icon.
+- On MoviesPage: Highlight the "Save" button on the first movie card.
+
+Action 3: Premium Lottie Onboarding Upgrade
+Upgrade the onboarding UI in onboarding_page.dart by replacing static icons with Lottie.asset() animations.
+Implement a smooth transition effect using an AnimatedBuilder tied to the PageController for parallax/scale effects as the user swipes.
+
+Action 4: Trigger Logic
+The Showcase should only trigger the very first time the user visits these pages.
+Use SharedPreferences to track hasSeenUsersTutorial and hasSeenMoviesTutorial flags.
+
+Please implement these enhancements and confirm when complete.
+
+**Context:**
+Implementing premium onboarding animations and adding contextual tutorial coach marks using the showcaseview package to guide the user through the core UI.

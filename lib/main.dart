@@ -10,6 +10,7 @@ import 'features/onboarding/bloc/onboarding_cubit.dart';
 import 'core/router/app_router.dart';
 import 'core/network/connection_state.dart';
 import 'core/di/injection_container.dart' as di;
+import 'package:showcaseview/showcaseview.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,46 +54,48 @@ class MatchAndWatchApp extends StatelessWidget {
           create: (context) => di.sl<OnboardingCubit>(),
         ),
       ],
-      child: MaterialApp.router(
-        title: 'Match & Watch',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
-        routerConfig: appRouter,
-        builder: (context, child) {
-          if (child == null) return const SizedBox.shrink();
-          return Stack(
-            children: [
-              child,
-              ValueListenableBuilder<bool>(
-                valueListenable: connectionNotifier,
-                builder: (context, isReconnecting, _) {
-                  if (!isReconnecting) return const SizedBox.shrink();
-                  return Positioned(
-                    top: MediaQuery.of(context).padding.top,
-                    left: 0,
-                    right: 0,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        color: Colors.orange.withValues(alpha: 0.9),
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          'Reconnecting...',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+      child: ShowCaseWidget(
+        builder: (context) => MaterialApp.router(
+          title: 'Match & Watch',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.darkTheme,
+          routerConfig: appRouter,
+          builder: (context, child) {
+            if (child == null) return const SizedBox.shrink();
+            return Stack(
+              children: [
+                child,
+                ValueListenableBuilder<bool>(
+                  valueListenable: connectionNotifier,
+                  builder: (context, isReconnecting, _) {
+                    if (!isReconnecting) return const SizedBox.shrink();
+                    return Positioned(
+                      top: MediaQuery.of(context).padding.top,
+                      left: 0,
+                      right: 0,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: Container(
+                          color: Colors.orange.withValues(alpha: 0.9),
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Reconnecting...',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  );
-                },
-              ),
-            ],
-          );
-        },
+                    );
+                  },
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/di/injection_container.dart';
 import '../bloc/movie_cubit.dart';
 import '../../users/bloc/active_user_cubit.dart';
 import '../../../core/theme/app_theme.dart';
@@ -18,12 +21,31 @@ class MoviesPage extends StatefulWidget {
 
 class _MoviesPageState extends State<MoviesPage> {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey _saveButtonKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     context.read<MovieCubit>().loadMovies();
     _scrollController.addListener(_onScroll);
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkShowcase();
+    });
+  }
+
+  void _checkShowcase() {
+    final prefs = sl<SharedPreferences>();
+    final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
+    if (!hasSeenTutorial) {
+      // Small delay to ensure list is rendered if data is already there
+      Future.delayed(const Duration(milliseconds: 500), () {
+        if (mounted) {
+          ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
+          prefs.setBool('hasSeenMoviesTutorial', true);
+        }
+      });
+    }
   }
 
   void _onScroll() {
@@ -75,7 +97,10 @@ class _MoviesPageState extends State<MoviesPage> {
                       child: SlideAnimation(
                         verticalOffset: 50.0,
                         child: FadeInAnimation(
-                          child: _MovieCard(movie: movie),
+                          child: _MovieCard(
+                            movie: movie,
+                            saveButtonKey: index == 0 ? _saveButtonKey : null,
+                          ),
                         ),
                       ),
                     );
@@ -141,8 +166,9 @@ class _MoviesPageState extends State<MoviesPage> {
 
 class _MovieCard extends StatelessWidget {
   final Movie movie;
+  final GlobalKey? saveButtonKey;
 
-  const _MovieCard({required this.movie});
+  const _MovieCard({required this.movie, this.saveButtonKey});
 
   @override
   Widget build(BuildContext context) {
@@ -223,7 +249,7 @@ class _MovieCard extends StatelessWidget {
                                     stream: context.read<MovieCubit>().isSaved(userId, movie.id),
                                     builder: (context, snapshot) {
                                       final isSaved = snapshot.data ?? false;
-                                      return IconButton(
+                                      final iconButton = IconButton(
                                         icon: Icon(
                                           isSaved ? Icons.bookmark : Icons.bookmark_border,
                                           color: isSaved ? AppTheme.cinematicGold : null,
@@ -234,6 +260,16 @@ class _MovieCard extends StatelessWidget {
                                           }
                                         },
                                       );
+
+                                      if (saveButtonKey != null) {
+                                        return Showcase(
+                                          key: saveButtonKey!,
+                                          title: 'Save Movie',
+                                          description: 'Tap to save a movie to your offline list.',
+                                          child: iconButton,
+                                        );
+                                      }
+                                      return iconButton;
                                     },
                                   ),
                                 );

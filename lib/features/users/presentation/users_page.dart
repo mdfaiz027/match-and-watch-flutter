@@ -4,6 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:showcaseview/showcaseview.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/di/injection_container.dart';
 import '../bloc/user_cubit.dart';
 import '../bloc/active_user_cubit.dart';
 import '../../../core/theme/app_theme.dart';
@@ -17,12 +20,27 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   final ScrollController _scrollController = ScrollController();
+  final GlobalKey _addUserKey = GlobalKey();
+  final GlobalKey _matchesKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     context.read<UserCubit>().loadUsers();
     _scrollController.addListener(_onScroll);
+    
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkShowcase();
+    });
+  }
+
+  void _checkShowcase() {
+    final prefs = sl<SharedPreferences>();
+    final hasSeenTutorial = prefs.getBool('hasSeenUsersTutorial') ?? false;
+    if (!hasSeenTutorial) {
+      ShowCaseWidget.of(context).startShowCase([_addUserKey, _matchesKey]);
+      prefs.setBool('hasSeenUsersTutorial', true);
+    }
   }
 
   void _onScroll() {
@@ -44,11 +62,16 @@ class _UsersPageState extends State<UsersPage> {
       appBar: AppBar(
         title: const Text('Match & Watch Users'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite),
-            onPressed: () {
-              context.push('/matches');
-            },
+          Showcase(
+            key: _matchesKey,
+            title: 'Matches',
+            description: 'Tap here to see which movies everyone wants to watch!',
+            child: IconButton(
+              icon: const Icon(Icons.favorite),
+              onPressed: () {
+                context.push('/matches');
+              },
+            ),
           ),
         ],
       ),
@@ -149,10 +172,15 @@ class _UsersPageState extends State<UsersPage> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppTheme.cinematicGold,
-        onPressed: () => context.push('/add_user'),
-        child: const Icon(Icons.add, color: Colors.black),
+      floatingActionButton: Showcase(
+        key: _addUserKey,
+        title: 'New User',
+        description: 'Start here! Create a profile to start saving movies.',
+        child: FloatingActionButton(
+          backgroundColor: AppTheme.cinematicGold,
+          onPressed: () => context.push('/add_user'),
+          child: const Icon(Icons.add, color: Colors.black),
+        ),
       ),
     );
   }
