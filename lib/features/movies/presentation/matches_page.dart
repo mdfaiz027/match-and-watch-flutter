@@ -9,7 +9,6 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/constants/app_endpoints.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_dimensions.dart';
-import '../../../core/widgets/user_avatar.dart';
 import '../../../core/widgets/social_avatars.dart';
 import '../bloc/movie_cubit.dart';
 import '../../../core/database/app_database.dart';

@@ -83,5 +83,10 @@ To run the tests:
 flutter test
 ```
 
+## 📦 Production Release
+
+The production-ready APK is available for download here:
+[Download Match&Watch Release APK](https://github.com/platform-commons/match_and_watch/releases/latest)
+
 ---
 *Built with ❤️ for Platform Commons.*
