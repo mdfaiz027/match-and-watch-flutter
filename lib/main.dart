@@ -3,7 +3,7 @@ import 'package:workmanager/workmanager.dart';
 import 'core/database/app_database.dart';
 import 'core/network/api_client.dart';
 import 'core/network/reqres_service.dart';
-import 'core/network/tmdb_service.dart';
+import 'core/network/omdb_service.dart';
 import 'core/repositories/user_repository.dart';
 import 'core/repositories/movie_repository.dart';
 import 'core/theme/app_theme.dart';
@@ -22,11 +22,11 @@ void main() async {
   
   // Services
   final reqresService = ReqresService(apiClient);
-  final tmdbService = TmdbService(apiClient);
+  final omdbService = OmdbService(apiClient);
 
   // Repositories
   final userRepository = UserRepository(database, reqresService);
-  final movieRepository = MovieRepository(database, tmdbService);
+  final movieRepository = MovieRepository(database, omdbService);
 
   // Initialize WorkManager
   await Workmanager().initialize(callbackDispatcher);

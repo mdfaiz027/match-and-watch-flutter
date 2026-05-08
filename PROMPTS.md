@@ -279,3 +279,48 @@ Please generate these files, apply the app_theme.dart styles, and confirm when c
 
 **Context:**
 Building the initial UI screens (Users Page and Add User Form) using the Cinematic Gold theme, integrating the UserBloc, and setting up GoRouter.
+
+## Entry #9: OMDB Integration, Movies Page, & Detail Page
+**Prompt:**
+Task 8: OMDB Integration, Movies Page, & Detail Page
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #9. Context: "Pivoting the API layer from TMDB to OMDB due to API availability, and building the Movies Page and Movie Detail Page UIs."
+
+Action 1: Swap TMDB for OMDB
+We are using OMDB instead of TMDB. Please update our network layer:
+
+Create/Update OmdbService in /lib/core/network/.
+
+Add a method to fetch a list of movies: GET https://www.omdbapi.com/?s={query}&page={page}&apikey={YOUR_KEY}. Since OMDB requires a search term, please hardcode a default query like "Batman" or "Marvel" for the main feed.
+
+Add a method to fetch details: GET https://www.omdbapi.com/?i={imdbId}&apikey={YOUR_KEY}.
+
+Update MovieRepository to use OmdbService. Ensure that data fetched from OMDB is mapped correctly to our Drift Movies table.
+
+Action 2: Movies Page (Page 03)
+In /lib/features/movies/presentation/movies_page.dart:
+
+Body: A paginated list of movies. Use a Shimmer effect while loading.
+
+Movie Card: Show the poster (using CachedNetworkImage), title, and release year.
+
+Save Button & Badge: Add a button to save/unsave the movie for the currently active user. Include a live badge showing how many total users have saved this movie (read from the local DB stream).
+
+Navigation: Tapping the card (not the save button) should navigate to the Movie Detail page using a Hero animation for the poster.
+
+Action 3: Movie Detail Page (Page 04)
+In /lib/features/movies/presentation/movie_detail_page.dart:
+
+Show the large poster (Hero destination), title, release date, and plot description.
+
+Show the Save/Unsave button.
+
+Below the details, show a section: "X users want to watch this" along with small avatars of the users who saved it. If 0, show "Be the first to save this."
+
+Action 4: Routing
+Update app_router.dart to include /movies and /movie/:id.
+
+Please generate these updates and confirm when complete. Let me know where I should paste my OMDB API key in the code.
+
+**Context:**
+Pivoting the API layer from TMDB to OMDB due to API availability, and building the Movies Page and Movie Detail Page UIs.

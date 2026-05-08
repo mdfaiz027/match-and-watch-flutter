@@ -66,4 +66,13 @@ class UserRepository {
           ),
         );
   }
+
+  Stream<int> watchSavedMovieCount(int userId) {
+    final countExp = _db.savedMovies.movieId.count();
+    final query = _db.selectOnly(_db.savedMovies)
+      ..addColumns([countExp])
+      ..where(_db.savedMovies.userId.equals(userId));
+
+    return query.watchSingle().map((row) => row.read(countExp) ?? 0);
+  }
 }

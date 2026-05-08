@@ -67,6 +67,9 @@ class _UsersPageState extends State<UsersPage> {
                 return Card(
                   margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   child: ListTile(
+                    onTap: () {
+                      context.push('/movies?userId=${user.id}');
+                    },
                     leading: ClipRRect(
                       borderRadius: BorderRadius.circular(24),
                       child: CachedNetworkImage(
@@ -89,9 +92,15 @@ class _UsersPageState extends State<UsersPage> {
                       '${user.firstName} ${user.lastName}',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    subtitle: Text(
-                      'Saved movies: 0', // Placeholder as requested, we will update this later
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    subtitle: StreamBuilder<int>(
+                      stream: context.read<UserCubit>().getSavedMovieCount(user.id),
+                      builder: (context, snapshot) {
+                        final count = snapshot.data ?? 0;
+                        return Text(
+                          'Saved movies: $count',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        );
+                      },
                     ),
                   ),
                 );

@@ -27,28 +27,47 @@ class MovieError extends MovieState {
 class MovieCubit extends Cubit<MovieState> {
   final MovieRepository _repository;
   StreamSubscription? _subscription;
+  int _currentPage = 1;
+  bool _isFetchingNextPage = false;
 
   MovieCubit(this._repository) : super(MovieInitial());
 
-  void loadTrendingMovies() {
+  void loadMovies() {
     emit(MovieLoading());
     _subscription?.cancel();
-    _subscription = _repository.watchTrendingMovies().listen(
+    _subscription = _repository.watchMovies().listen(
       (movies) {
         emit(MovieLoaded(movies));
       },
       onError: (e) => emit(MovieError(e.toString())),
     );
-    _repository.refreshTrendingMovies();
+    _repository.refreshMovies(page: 1);
+  }
+
+  Future<void> loadNextPage() async {
+    if (_isFetchingNextPage) return;
+    _isFetchingNextPage = true;
+    _currentPage++;
+    await _repository.refreshMovies(page: _currentPage);
+    _isFetchingNextPage = false;
+  }
+
+  Future<void> loadMovieDetails(int movieId) async {
+    await _repository.fetchMovieDetails(movieId);
   }
 
   Future<void> toggleSave(int userId, Movie movie) async {
     try {
       await _repository.toggleSaveMovie(userId, movie);
     } catch (e) {
-      // In a real app, we might emit a temporary error state
+      // Handle error
     }
   }
+
+  Stream<int> getSaveCount(int movieId) => _repository.watchSaveCount(movieId);
+  Stream<bool> isSaved(int userId, int movieId) => _repository.watchIsSaved(userId, movieId);
+  Stream<List<User>> getUsersWhoSaved(int movieId) => _repository.watchUsersWhoSavedMovie(movieId);
+  Stream<Movie?> getMovieById(int id) => _repository.watchMovieById(id);
 
   @override
   Future<void> close() {
