@@ -7,12 +7,13 @@ class ReqresService {
 
   ReqresService(this._apiClient);
 
-  Future<Response> getUsers({int page = 1}) async {
+  Future<Response> getUsers({int page = 1, bool silent = false}) async {
     return _apiClient.dio.get(
       AppEndpoints.reqresUsersUrl,
       queryParameters: {'page': page},
       options: Options(
         headers: {'x-api-key': AppEndpoints.reqresApiKey},
+        extra: {'silent': silent},
       ),
     );
   }

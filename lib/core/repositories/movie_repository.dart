@@ -12,10 +12,10 @@ class MovieRepository {
     return _db.select(_db.movies).watch();
   }
 
-  Future<void> refreshMovies({int page = 1}) async {
+  Future<void> refreshMovies({int page = 1, bool silent = false}) async {
     try {
-      print('DEBUG: MovieRepository.refreshMovies(page: $page) started');
-      final response = await _tmdbService.getTrendingMovies(page: page);
+      print('DEBUG: MovieRepository.refreshMovies(page: $page, silent: $silent) started');
+      final response = await _tmdbService.getTrendingMovies(page: page, silent: silent);
       print('DEBUG: API Response received. Status: ${response.statusCode}');
       
       if (response.data == null) {

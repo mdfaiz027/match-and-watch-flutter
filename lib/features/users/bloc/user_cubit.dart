@@ -33,7 +33,11 @@ class UserCubit extends Cubit<UserState> {
   UserCubit(this._repository) : super(UserInitial());
 
   void loadUsers() async {
-    emit(UserLoading());
+    final bool hasData = state is UserLoaded && (state as UserLoaded).users.isNotEmpty;
+    if (!hasData) {
+      emit(UserLoading());
+    }
+
     _subscription?.cancel();
     _subscription = _repository.watchUsersWithMovieCount().listen(
       (users) {
@@ -44,7 +48,7 @@ class UserCubit extends Cubit<UserState> {
       onError: (e) => emit(UserError(e.toString())),
     );
     try {
-      await _repository.refreshUsers(page: 1);
+      await _repository.refreshUsers(page: 1, silent: hasData);
     } catch (e) {
       if (state is UserLoading || (state is UserLoaded && (state as UserLoaded).users.isEmpty)) {
         emit(UserError(e.toString()));

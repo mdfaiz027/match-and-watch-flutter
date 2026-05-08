@@ -37,9 +37,9 @@ class UserRepository {
     return _db.select(_db.users).watch();
   }
 
-  Future<void> refreshUsers({int page = 1}) async {
+  Future<void> refreshUsers({int page = 1, bool silent = false}) async {
     try {
-      final response = await _reqresService.getUsers(page: page);
+      final response = await _reqresService.getUsers(page: page, silent: silent);
       final usersData = response.data['data'] as List;
 
       final companions = usersData.map((u) {

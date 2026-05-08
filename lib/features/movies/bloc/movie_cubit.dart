@@ -34,12 +34,17 @@ class MovieCubit extends Cubit<MovieState> {
 
   void loadMovies() async {
     print('DEBUG: MovieCubit.loadMovies() called');
-    emit(MovieLoading());
+    
+    // Only show loading if we don't have movies yet
+    final bool hasData = state is MovieLoaded && (state as MovieLoaded).movies.isNotEmpty;
+    if (!hasData) {
+      emit(MovieLoading());
+    }
+
     _subscription?.cancel();
     _subscription = _repository.watchMovies().listen(
       (movies) {
         print('DEBUG: MovieCubit stream received ${movies.length} movies from DB');
-        // Only emit Loaded if we aren't currently showing a fresh Error
         if (state is! MovieError || movies.isNotEmpty) {
           emit(MovieLoaded(movies));
         }
@@ -49,8 +54,10 @@ class MovieCubit extends Cubit<MovieState> {
         emit(MovieError(e.toString()));
       },
     );
+
     try {
-      await _repository.refreshMovies(page: 1);
+      // If we already have data, make the refresh silent (no "Reconnecting..." bar)
+      await _repository.refreshMovies(page: 1, silent: hasData);
     } catch (e) {
       print('DEBUG: MovieCubit catch error: $e');
       if (state is MovieLoading || (state is MovieLoaded && (state as MovieLoaded).movies.isEmpty)) {

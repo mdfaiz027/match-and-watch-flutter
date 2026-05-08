@@ -65,8 +65,13 @@ class RetryInterceptor extends Interceptor {
     if (_shouldRetry(err) && retryCount < maxRetries) {
       retryCount++;
       extra['retryCount'] = retryCount;
+
+      final bool isFirstRetry = retryCount == 1;
+      final bool showUI = extra['silent'] != true;
       
-      connectionNotifier.setReconnecting(true);
+      if (isFirstRetry && showUI) {
+        connectionNotifier.startRetrying();
+      }
 
       // Exponential backoff: 1s, 2s, 4s...
       final delay = Duration(seconds: pow(2, retryCount - 1).toInt());
@@ -83,21 +88,29 @@ class RetryInterceptor extends Interceptor {
             extra: extra,
           ),
         );
-        connectionNotifier.setReconnecting(false);
+        if (isFirstRetry && showUI) {
+          connectionNotifier.stopRetrying();
+        }
         return handler.resolve(response);
       } on DioException catch (e) {
-        if (retryCount >= maxRetries) {
-          connectionNotifier.setReconnecting(false);
+        if (isFirstRetry && showUI) {
+          connectionNotifier.stopRetrying();
         }
         return super.onError(e, handler);
+      } catch (e) {
+        if (isFirstRetry && showUI) {
+          connectionNotifier.stopRetrying();
+        }
+        rethrow;
       }
     }
 
-    connectionNotifier.setReconnecting(false);
     return super.onError(err, handler);
   }
 
   bool _shouldRetry(DioException err) {
+    // Only retry on actual connection issues or simulated failures.
+    // Avoid retrying on 4xx/5xx unless specifically desired.
     return err.type == DioExceptionType.connectionTimeout ||
         err.type == DioExceptionType.receiveTimeout ||
         err.type == DioExceptionType.connectionError ||

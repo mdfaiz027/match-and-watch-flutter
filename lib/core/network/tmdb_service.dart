@@ -7,7 +7,7 @@ class TmdbService {
 
   TmdbService(this._apiClient);
 
-  Future<Response> getTrendingMovies({int page = 1}) async {
+  Future<Response> getTrendingMovies({int page = 1, bool silent = false}) async {
     return _apiClient.dio.get(
       AppEndpoints.tmdbTrendingUrl,
       queryParameters: {
@@ -15,6 +15,9 @@ class TmdbService {
         'language': 'en-US',
         'page': page,
       },
+      options: Options(
+        extra: {'silent': silent},
+      ),
     );
   }
 
