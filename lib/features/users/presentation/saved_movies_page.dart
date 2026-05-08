@@ -8,7 +8,9 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
 
 class SavedMoviesPage extends StatelessWidget {
-  const SavedMoviesPage({super.key});
+  final int? profileUserId;
+
+  const SavedMoviesPage({super.key, this.profileUserId});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +22,16 @@ class SavedMoviesPage extends StatelessWidget {
           );
         }
 
-        final userId = activeUser.id;
+        // If profileUserId is null, we are viewing the active user's own profile.
+        final effectiveProfileUserId = profileUserId ?? activeUser.id;
+        final isOwnProfile = effectiveProfileUserId == activeUser.id;
+
         return Scaffold(
           appBar: AppBar(
-            title: const Text('My Saved Movies'),
+            title: Text(isOwnProfile ? 'My Saved Movies' : 'User\'s Saved Movies'),
           ),
           body: StreamBuilder<User?>(
-            stream: context.read<UserCubit>().watchUserById(userId),
+            stream: context.read<UserCubit>().watchUserById(effectiveProfileUserId),
             builder: (context, userSnapshot) {
               final user = userSnapshot.data;
               if (user == null) return const Center(child: CircularProgressIndicator());
@@ -34,7 +39,7 @@ class SavedMoviesPage extends StatelessWidget {
               return Column(
                 children: [
                   _buildHeader(context, user),
-                  Expanded(child: _buildSavedList(context, userId)),
+                  Expanded(child: _buildSavedList(context, activeUser.id, effectiveProfileUserId)),
                 ],
               );
             },
@@ -68,9 +73,9 @@ class SavedMoviesPage extends StatelessWidget {
                 Text(
                   'Taste: ${user.movieTaste}',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppTheme.cinematicGold,
-                    fontStyle: FontStyle.italic,
-                  ),
+                        color: AppTheme.cinematicGold,
+                        fontStyle: FontStyle.italic,
+                      ),
                 ),
               ],
             ),
@@ -80,9 +85,9 @@ class SavedMoviesPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSavedList(BuildContext context, int userId) {
+  Widget _buildSavedList(BuildContext context, int activeUserId, int profileUserId) {
     return StreamBuilder<List<Movie>>(
-      stream: context.read<MovieCubit>().watchSavedMovies(userId),
+      stream: context.read<MovieCubit>().watchSavedMovies(profileUserId),
       builder: (context, snapshot) {
         final movies = snapshot.data ?? [];
         if (movies.isEmpty) {
@@ -126,9 +131,18 @@ class SavedMoviesPage extends StatelessWidget {
                   ),
                 ),
                 title: Text(movie.title, style: Theme.of(context).textTheme.titleLarge),
-                trailing: IconButton(
-                  icon: const Icon(Icons.bookmark_remove, color: Colors.redAccent),
-                  onPressed: () => context.read<MovieCubit>().toggleSave(userId, movie),
+                trailing: StreamBuilder<bool>(
+                  stream: context.read<MovieCubit>().isSaved(activeUserId, movie.id),
+                  builder: (context, isSavedSnapshot) {
+                    final isSavedByActiveUser = isSavedSnapshot.data ?? false;
+                    return IconButton(
+                      icon: Icon(
+                        isSavedByActiveUser ? Icons.bookmark : Icons.bookmark_border,
+                        color: isSavedByActiveUser ? AppTheme.cinematicGold : Colors.grey,
+                      ),
+                      onPressed: () => context.read<MovieCubit>().toggleSave(activeUserId, movie),
+                    );
+                  },
                 ),
               ),
             );

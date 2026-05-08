@@ -539,3 +539,28 @@ Please implement these refinements and confirm when complete.
 
 **Context:**
 Auditing Page 4 to ensure the UI streams the actual User avatars for saved movies, and implementing offline-first hydration for the movie details.
+
+## Entry #18: Page 5 Audit - Cross-User Context & Strict Offline Enforcement
+**Prompt:**
+Task 17: Page 5 Audit - Cross-User Context & Strict Offline Enforcement
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #18. Context: "Auditing Page 5 to ensure the 'Save' button reflects the Active User's state when viewing another user's profile, and enforcing strict offline-only data streams."
+
+Action 1: Cross-User Save Logic
+The assignment states that the currently active user can save a movie directly from another user's Saved Movies page.
+
+Please audit SavedMoviesPage. The page must accept a profileUserId (the user whose page we are viewing).
+
+The list of movies displayed must be generated from a Drift stream filtering SavedMovies by profileUserId.
+
+However, the Save/Unsave button on each movie card must evaluate against the activeUserId (from the context established in Task 13). When tapped, it must insert/delete a record in SavedMovies for the activeUserId, NOT the profileUserId.
+
+Action 2: Strict Offline Enforcement
+The assignment mandates this page works fully offline using data cached from Page 03.
+
+Please ensure the BLoC/ViewModel for this page does NOT make any network calls to TMDB or OMDB. It must exclusively listen to the local Drift database stream joining the Movies and SavedMovies tables.
+
+Please implement these state separations and confirm when complete.
+
+**Context:**
+Auditing Page 5 to ensure the 'Save' button reflects the Active User's state when viewing another user's profile, and enforcing strict offline-only data streams.

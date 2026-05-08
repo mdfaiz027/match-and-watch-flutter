@@ -36,7 +36,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/saved_movies',
       name: 'saved_movies',
-      builder: (context, state) => const SavedMoviesPage(),
+      builder: (context, state) {
+        final profileUserId = int.tryParse(state.uri.queryParameters['profileUserId'] ?? '');
+        return SavedMoviesPage(profileUserId: profileUserId);
+      },
     ),
     GoRoute(
       path: '/matches',
