@@ -833,3 +833,57 @@ Please execute this refactor and confirm when complete.
 
 **Context:**
 Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name.
+
+## Entry #35: Final Master Cleanup & Project Optimization
+**Prompt:**
+Task 36: Final Master Cleanup & Project Optimization
+
+Action 1: Dead Code & Import Audit
+Please run a project-wide scan. Remove any import statements that are grayed out or unused.
+Remove any commented-out code blocks, "TODO" comments (unless critical), or print statements that were missed in previous steps.
+Ensure all classes and variables follow the camelCase and PascalCase Dart conventions strictly.
+
+Action 2: Asset & Dependency Purge
+Audit the assets/ folder. Delete any images or Lottie files that are not actually being called in the UI.
+Check pubspec.yaml. Remove any packages that were added during development but are no longer used in the final architecture.
+
+Action 3: Android Resource Shrinking
+Open android/app/build.gradle.
+Inside buildTypes.release, ensure the following are set to true:
+minifyEnabled true
+shrinkResources true
+This will trigger R8 to strip out unused Java/Kotlin code and resources from the final APK.
+
+Action 4: Final Documentation Sync
+Ensure the README.md and PROMPTS.md are in their final state and saved in the root directory.
+Please confirm when the cleanup is complete. Once done, I will run the final build command.
+
+**Context:**
+Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build.
+
+## Entry #36: Final Master Cleanup & Project Optimization
+**Prompt:**
+Task 35: Final Master Cleanup & Project Optimization
+
+Action 1: Dead Code & Import Audit
+Please run a project-wide scan. Remove any import statements that are grayed out or unused.
+Remove any commented-out code blocks, "TODO" comments (unless critical), or print statements that were missed in previous steps.
+Ensure all classes and variables follow the camelCase and PascalCase Dart conventions strictly.
+
+Action 2: Asset & Dependency Purge
+Audit the assets/ folder. Delete any images or Lottie files that are not actually being called in the UI.
+Check pubspec.yaml. Remove any packages that were added during development but are no longer used in the final architecture.
+
+Action 3: Android Resource Shrinking
+Open android/app/build.gradle.
+Inside buildTypes.release, ensure the following are set to true:
+minifyEnabled true
+shrinkResources true
+This will trigger R8 to strip out unused Java/Kotlin code and resources from the final APK.
+
+Action 4: Final Documentation Sync
+Ensure the README.md and PROMPTS.md are in their final state and saved in the root directory.
+Please confirm when the cleanup is complete. Once done, I will run the final build command.
+
+**Context:**
+Performing a final deep-clean of the project to remove dead code, unused assets, and redundant dependencies before the final production build.
