@@ -11,6 +11,7 @@ abstract class UserState extends Equatable {
 
 class UserInitial extends UserState {}
 class UserLoading extends UserState {}
+class UserAdding extends UserState {}
 class UserLoaded extends UserState {
   final List<UserWithMovieCount> users;
   UserLoaded(this.users);
@@ -81,11 +82,17 @@ class UserCubit extends Cubit<UserState> {
     required String fullName,
     required String movieTaste,
   }) async {
+    final previousState = state;
+    emit(UserAdding());
     try {
       await _repository.createUser(
         fullName: fullName,
         movieTaste: movieTaste,
       );
+      // Restore previous state (likely UserLoaded) so the UI continues to function
+      if (previousState is UserLoaded) {
+        emit(previousState);
+      }
     } catch (e) {
       emit(UserError('Failed to add user: ${e.toString()}'));
     }

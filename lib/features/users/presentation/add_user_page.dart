@@ -34,11 +34,12 @@ class _AddUserPageState extends State<AddUserPage> {
 
       // Call createUser on UserCubit
       await context.read<UserCubit>().createUser(
-        fullName: fullName,
-        movieTaste: movieTaste,
-      );
+            fullName: fullName,
+            movieTaste: movieTaste,
+          );
 
       if (mounted) {
+        HapticFeedback.lightImpact();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(AppStrings.addUserSuccess),
@@ -94,12 +95,31 @@ class _AddUserPageState extends State<AddUserPage> {
                   },
                 ),
                 const SizedBox(height: AppDimensions.spacingXXL),
-                ElevatedButton(
-                  onPressed: () {
-                    HapticFeedback.mediumImpact();
-                    _submit();
+                BlocBuilder<UserCubit, UserState>(
+                  builder: (context, state) {
+                    final isAdding = state is UserAdding;
+                    return ElevatedButton(
+                      onPressed: isAdding
+                          ? null
+                          : () {
+                              HapticFeedback.mediumImpact();
+                              _submit();
+                            },
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: isAdding
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.onPrimary,
+                                ),
+                              )
+                            : const Text('Add User'),
+                      ),
+                    );
                   },
-                  child: const Text('Add User'),
                 ),
               ],
             ),
