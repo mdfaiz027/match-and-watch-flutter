@@ -97,16 +97,36 @@ class _UsersPageState extends State<UsersPage> {
         ],
       ),
       body: SafeArea(
-        child: BlocBuilder<UserCubit, UserState>(
-          builder: (context, state) {
-            if (state is UserLoading) {
-              return _buildShimmerList();
-            } else if (state is UserLoaded) {
-              final users = state.users;
-              if (users.isEmpty) {
-                return const Center(child: Text(AppStrings.noUsersFound));
-              }
-              return AnimationLimiter(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<UserCubit>().loadUsers();
+          },
+          child: BlocBuilder<UserCubit, UserState>(
+            builder: (context, state) {
+              if (state is UserLoading) {
+                return _buildShimmerList();
+              } else if (state is UserLoaded) {
+                final users = state.users;
+                if (users.isEmpty) {
+                  return ListView(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                      Center(
+                        child: Column(
+                          children: [
+                            const Text(AppStrings.noUsersFound),
+                            const SizedBox(height: AppDimensions.spacingM),
+                            ElevatedButton(
+                              onPressed: () => context.read<UserCubit>().loadUsers(),
+                              child: const Text(AppStrings.retry),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return AnimationLimiter(
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: users.length,
@@ -196,6 +216,7 @@ class _UsersPageState extends State<UsersPage> {
           },
         ),
       ),
+    ),
       floatingActionButton: Showcase(
         key: _fabKey,
         title: AppStrings.tutorialNewUserTitle,

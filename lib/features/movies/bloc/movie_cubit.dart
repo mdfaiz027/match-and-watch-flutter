@@ -33,17 +33,26 @@ class MovieCubit extends Cubit<MovieState> {
   MovieCubit(this._repository) : super(MovieInitial());
 
   void loadMovies() async {
+    print('DEBUG: MovieCubit.loadMovies() called');
     emit(MovieLoading());
     _subscription?.cancel();
     _subscription = _repository.watchMovies().listen(
       (movies) {
-        emit(MovieLoaded(movies));
+        print('DEBUG: MovieCubit stream received ${movies.length} movies from DB');
+        // Only emit Loaded if we aren't currently showing a fresh Error
+        if (state is! MovieError || movies.isNotEmpty) {
+          emit(MovieLoaded(movies));
+        }
       },
-      onError: (e) => emit(MovieError(e.toString())),
+      onError: (e) {
+        print('DEBUG: MovieCubit stream error: $e');
+        emit(MovieError(e.toString()));
+      },
     );
     try {
       await _repository.refreshMovies(page: 1);
     } catch (e) {
+      print('DEBUG: MovieCubit catch error: $e');
       if (state is MovieLoading || (state is MovieLoaded && (state as MovieLoaded).movies.isEmpty)) {
         emit(MovieError(e.toString()));
       }

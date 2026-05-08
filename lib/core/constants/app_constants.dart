@@ -10,6 +10,7 @@ class AppConstants {
   static const int durationStaggerMs = 375;
   
   // Feature Specific
+  static const bool enableNetworkSimulation = false; // Disabled by default for stability
   static const int syncIntervalMinutes = 15;
   static const double networkFailureProbability = 0.3;
   static const int maxRetryAttempts = 3;

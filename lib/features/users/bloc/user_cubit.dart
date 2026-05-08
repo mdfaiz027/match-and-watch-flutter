@@ -37,7 +37,9 @@ class UserCubit extends Cubit<UserState> {
     _subscription?.cancel();
     _subscription = _repository.watchUsersWithMovieCount().listen(
       (users) {
-        emit(UserLoaded(users));
+        if (state is! UserError || users.isNotEmpty) {
+          emit(UserLoaded(users));
+        }
       },
       onError: (e) => emit(UserError(e.toString())),
     );

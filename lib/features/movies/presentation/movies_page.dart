@@ -63,28 +63,48 @@ class _MoviesPageState extends State<MoviesPage> {
         ],
       ),
       body: SafeArea(
-        child: BlocConsumer<MovieCubit, MovieState>(
-          listener: (context, state) {
-            if (state is MovieLoaded && state.movies.isNotEmpty) {
-              final prefs = sl<SharedPreferences>();
-              final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
-              if (!hasSeenTutorial) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
-                  prefs.setBool('hasSeenMoviesTutorial', true);
-                });
-              }
-            }
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.read<MovieCubit>().loadMovies();
           },
-          builder: (context, state) {
-            if (state is MovieLoading) {
-              return _buildShimmerList();
-            } else if (state is MovieLoaded) {
-              final movies = state.movies;
-              if (movies.isEmpty) {
-                return const Center(child: Text(AppStrings.noMoviesFound));
+          child: BlocConsumer<MovieCubit, MovieState>(
+            listener: (context, state) {
+              if (state is MovieLoaded && state.movies.isNotEmpty) {
+                final prefs = sl<SharedPreferences>();
+                final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
+                if (!hasSeenTutorial) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
+                    prefs.setBool('hasSeenMoviesTutorial', true);
+                  });
+                }
               }
-              return AnimationLimiter(
+            },
+            builder: (context, state) {
+              if (state is MovieLoading) {
+                return _buildShimmerList();
+              } else if (state is MovieLoaded) {
+                final movies = state.movies;
+                if (movies.isEmpty) {
+                  return ListView(
+                    children: [
+                      SizedBox(height: MediaQuery.of(context).size.height * 0.3),
+                      Center(
+                        child: Column(
+                          children: [
+                            const Text(AppStrings.noMoviesFound),
+                            const SizedBox(height: AppDimensions.spacingM),
+                            ElevatedButton(
+                              onPressed: () => context.read<MovieCubit>().loadMovies(),
+                              child: const Text(AppStrings.retry),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }
+                return AnimationLimiter(
                 child: ListView.builder(
                   controller: _scrollController,
                   itemCount: movies.length,
@@ -139,6 +159,7 @@ class _MoviesPageState extends State<MoviesPage> {
           },
         ),
       ),
+    ),
     );
   }
 

@@ -754,31 +754,9 @@ Please implement this premium tutorial flow and confirm when complete.
 **Context:**
 Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback.
 
-## Entry #31: Secure API Configuration with .env and Endpoints
+## Entry #32: Automatic Retry and Manual Refresh
 **Prompt:**
-Task 29: Secure API Configuration with .env and Endpoints
-
-Log this first: Please log this prompt into PROMPTS.md as Entry #31. Context: "Implementing a secure and scalable API configuration using flutter_dotenv for sensitive keys and a centralized AppEndpoints class for URLs."
-
-Action 1: Setup Environment Variables
-Please add the flutter_dotenv package to pubspec.yaml.
-Create a .env file in the root directory.
-Inside .env, add:
-TMDB_API_KEY=your_key_here
-REQRES_API_KEY=your_key_here
-Update pubspec.yaml to include .env in the assets section.
-Update main.dart to initialize the dotenv: await dotenv.load(fileName: ".env");.
-
-Action 2: Create Centralized Endpoints File
-Create /lib/core/constants/app_endpoints.dart. Define a class AppEndpoints that pulls base URLs and combines them with paths.
-Use dotenv.env['TMDB_API_KEY'] and dotenv.env['REQRES_API_KEY'] inside this file to construct the full request strings.
-Define static constants for: baseUrlTmdb, baseUrlReqres, trendingMovies, movieDetails, usersList.
-
-Action 3: Refactor Services
-Audit TmdbService and ReqresService.
-Replace all hardcoded URLs and key references with the constants from AppEndpoints.
-
-Please implement this secure configuration and confirm when complete.
+sometimes, showing no users found in the users_page, if null then call the api again
 
 **Context:**
-Implementing a secure and scalable API configuration using flutter_dotenv for sensitive keys and a centralized AppEndpoints class for URLs.
+Added `RefreshIndicator` and an explicit "Retry" button to the empty states of both `UsersPage` and `MoviesPage`. This allows users to manually "call the api again" if they encounter an empty list, ensuring data can be fetched even if the initial automatic sync failed or was incomplete.

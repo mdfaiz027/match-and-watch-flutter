@@ -4,19 +4,21 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'connection_state.dart';
 
+import '../constants/app_constants.dart';
+
 class ApiClient {
   late final Dio _dio;
 
   ApiClient() {
     _dio = Dio(
       BaseOptions(
-        connectTimeout: const Duration(seconds: 5),
-        receiveTimeout: const Duration(seconds: 3),
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 13),
       ),
     );
 
     _dio.interceptors.addAll([
-      FailureSimulatorInterceptor(),
+      if (AppConstants.enableNetworkSimulation) FailureSimulatorInterceptor(),
       RetryInterceptor(dio: _dio),
       LogInterceptor(responseBody: true, requestBody: true),
     ]);
@@ -31,11 +33,11 @@ class FailureSimulatorInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (_random.nextDouble() < 0.3) {
+    if (AppConstants.enableNetworkSimulation && _random.nextDouble() < AppConstants.networkFailureProbability) {
       handler.reject(
         DioException(
           requestOptions: options,
-          error: 'Simulated Network Failure (30% probability)',
+          error: 'SIMULATED_FAILURE: This is an intentional 30% failure for testing.',
           type: DioExceptionType.connectionError,
         ),
       );
@@ -99,6 +101,6 @@ class RetryInterceptor extends Interceptor {
     return err.type == DioExceptionType.connectionTimeout ||
         err.type == DioExceptionType.receiveTimeout ||
         err.type == DioExceptionType.connectionError ||
-        (err.error?.toString().contains('Simulated Network Failure') ?? false);
+        (err.error?.toString().contains('SIMULATED_FAILURE') ?? false);
   }
 }

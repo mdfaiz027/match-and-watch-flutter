@@ -14,8 +14,22 @@ class MovieRepository {
 
   Future<void> refreshMovies({int page = 1}) async {
     try {
+      print('DEBUG: MovieRepository.refreshMovies(page: $page) started');
       final response = await _tmdbService.getTrendingMovies(page: page);
-      final moviesData = response.data['results'] as List;
+      print('DEBUG: API Response received. Status: ${response.statusCode}');
+      
+      if (response.data == null) {
+        print('DEBUG: API Response data is NULL');
+        return;
+      }
+
+      final moviesData = response.data['results'] as List?;
+      if (moviesData == null) {
+        print('DEBUG: "results" field in API response is NULL');
+        return;
+      }
+      
+      print('DEBUG: Found ${moviesData.length} movies in response');
 
       final companions = moviesData.map((m) {
         return MoviesCompanion.insert(
@@ -30,7 +44,10 @@ class MovieRepository {
       await _db.batch((batch) {
         batch.insertAllOnConflictUpdate(_db.movies, companions);
       });
-    } catch (e) {
+      print('DEBUG: Successfully upserted ${companions.length} movies to DB');
+    } catch (e, stack) {
+      print('DEBUG: ERROR in refreshMovies: $e');
+      print('DEBUG: StackTrace: $stack');
       rethrow;
     }
   }
