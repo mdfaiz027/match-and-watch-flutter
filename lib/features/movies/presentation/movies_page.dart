@@ -48,15 +48,6 @@ class _MoviesPageState extends State<MoviesPage> {
     super.dispose();
   }
 
-  Widget _buildPosterPlaceholder() {
-    return Container(
-      width: AppDimensions.moviePosterWidth,
-      height: AppDimensions.movieCardHeight,
-      color: AppColors.surfaceLight,
-      child: const Icon(Icons.movie, color: AppColors.primaryGold),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
