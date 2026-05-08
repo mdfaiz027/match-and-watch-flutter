@@ -41,101 +41,104 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          return CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                expandedHeight: AppDimensions.appBarExpandedHeight,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Hero(
-                    tag: 'movie-poster-${movie.id}',
-                    child: CachedNetworkImage(
-                      imageUrl: movie.posterPath != null
-                          ? '${AppEndpoints.tmdbImageBaseW500}${movie.posterPath}'
-                          : '',
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) => Container(
-                        color: AppColors.surfaceLight,
-                        child: const Icon(Icons.movie, size: 100, color: AppColors.primaryGold),
+          return SafeArea(
+            top: false,
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  expandedHeight: AppDimensions.appBarExpandedHeight,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Hero(
+                      tag: 'movie-poster-${movie.id}',
+                      child: CachedNetworkImage(
+                        imageUrl: movie.posterPath != null
+                            ? '${AppEndpoints.tmdbImageBaseW500}${movie.posterPath}'
+                            : '',
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Container(
+                          color: AppColors.surfaceLight,
+                          child: const Icon(Icons.movie, size: 100, color: AppColors.primaryGold),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.all(AppDimensions.spacingM),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                movie.title,
-                                style: Theme.of(context).textTheme.headlineMedium,
-                              ),
-                              const SizedBox(height: AppDimensions.spacingXXS),
-                              Text(
-                                movie.releaseYear ?? '',
-                                style: Theme.of(context).textTheme.bodyLarge,
-                              ),
-                            ],
+                SliverPadding(
+                  padding: const EdgeInsets.all(AppDimensions.spacingM),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  movie.title,
+                                  style: Theme.of(context).textTheme.headlineMedium,
+                                ),
+                                const SizedBox(height: AppDimensions.spacingXXS),
+                                Text(
+                                  movie.releaseYear ?? '',
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        BlocBuilder<ActiveUserCubit, User?>(
-                          builder: (context, activeUser) {
-                            final userId = activeUser?.id ?? 0;
-                            return StreamBuilder<bool>(
-                              stream: context.read<MovieCubit>().isSaved(userId, movie.id),
-                              builder: (context, snapshot) {
-                                final isSaved = snapshot.data ?? false;
-                                return IconButton(
-                                  icon: Icon(
-                                    isSaved ? Icons.bookmark : Icons.bookmark_border,
-                                    color: isSaved ? AppColors.primaryGold : null,
-                                    size: AppDimensions.iconSizeL,
-                                  ),
-                                  onPressed: () {
-                                    if (userId != 0) {
-                                      HapticFeedback.lightImpact();
-                                      context.read<MovieCubit>().toggleSave(userId, movie);
+                          BlocBuilder<ActiveUserCubit, User?>(
+                            builder: (context, activeUser) {
+                              final userId = activeUser?.id ?? 0;
+                              return StreamBuilder<bool>(
+                                stream: context.read<MovieCubit>().isSaved(userId, movie.id),
+                                builder: (context, snapshot) {
+                                  final isSaved = snapshot.data ?? false;
+                                  return IconButton(
+                                    icon: Icon(
+                                      isSaved ? Icons.bookmark : Icons.bookmark_border,
+                                      color: isSaved ? AppColors.primaryGold : null,
+                                      size: AppDimensions.iconSizeL,
+                                    ),
+                                    onPressed: () {
+                                      if (userId != 0) {
+                                        HapticFeedback.lightImpact();
+                                        context.read<MovieCubit>().toggleSave(userId, movie);
 
-                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text(isSaved ? AppStrings.removedFromSaved : AppStrings.movieSaved),
-                                          duration: const Duration(seconds: 1),
-                                          backgroundColor: AppColors.primaryGold,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: AppDimensions.spacingL),
-                    Text(
-                      AppStrings.plot,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: AppDimensions.spacingXS),
-                    Text(
-                      movie.overview ?? AppStrings.noDescription,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: AppDimensions.spacingXL),
-                    _buildUsersWhoSaved(movie.id),
-                  ]),
+                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(
+                                            content: Text(isSaved ? AppStrings.removedFromSaved : AppStrings.movieSaved),
+                                            duration: const Duration(seconds: 1),
+                                            backgroundColor: AppColors.primaryGold,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppDimensions.spacingL),
+                      Text(
+                        AppStrings.plot,
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      const SizedBox(height: AppDimensions.spacingXS),
+                      Text(
+                        movie.overview ?? AppStrings.noDescription,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: AppDimensions.spacingXL),
+                      _buildUsersWhoSaved(movie.id),
+                    ]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         },
       ),
