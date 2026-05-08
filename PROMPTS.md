@@ -756,26 +756,80 @@ Implementing premium contextual coach marks using showcaseview, featuring backgr
 
 ## Entry #25: Automatic Retry and Manual Refresh
 **Prompt:**
-sometimes, showing no users found in the users_page, if null then call the api again
+Task 26: Automatic Retry and Manual Refresh
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #25. Context: "Adding RefreshIndicator and explicit Retry buttons to empty states to ensure data fetch reliability when the API returns no results."
+
+Action 1: Add RefreshIndicator
+Integrate a RefreshIndicator into the ListView on both the UsersPage and MoviesPage to allow manual pull-to-refresh functionality.
+
+Action 2: Implement Explicit Retry Buttons
+Update the empty state UI for both pages to include a "Retry" button. When pressed, it should trigger the respective Cubit to fetch data from the API again.
+
+Please implement these reliability features and confirm when complete.
 
 **Context:**
 Added `RefreshIndicator` and an explicit "Retry" button to the empty states of both `UsersPage` and `MoviesPage`. This allows users to manually "call the api again" if they encounter an empty list, ensuring data can be fetched even if the initial automatic sync failed or was incomplete.
 
 ## Entry #26: Final Rubric Audit & High-Impact Documentation
+**Prompt:**
+Task 27: Final Rubric Audit & High-Impact Documentation
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #26. Context: "Performing a final audit against the assignment rubric and generating high-impact Mermaid-enhanced documentation."
+
+Action 1: Final Reliability Checks
+Perform final reliability checks on SyncManager and Dio Interceptors to ensure robust offline-sync and error handling.
+
+Action 2: Code Quality Refactor
+Refactor the codebase for quality, ensuring adherence to clean architecture and proper separation of concerns.
+
+Action 3: High-Impact Documentation
+Generate a high-impact README featuring Mermaid diagrams to visualize the app's architecture and data flow.
+
+Please complete these final polish steps and confirm.
+
 **Context:**
 Final audit against the assignment scoring rubric (Functionality, UI Quality, Code Quality, Offline Sync, and Connection Handling) and generating the submission documentation.
 
-**Action:**
-Performing final reliability checks on SyncManager and Dio Interceptors, refactoring code for quality, and generating a high-impact Mermaid-enhanced README.
+## Entry #33: Strategic Test Suite (Unit & Widget Tests)
+**Prompt:**
+Task 34: Strategic Test Suite (Unit & Widget Tests)
 
----
+Log this first: Please log this prompt into PROMPTS.md as Entry #33. Context: "Implementing a strategic test suite to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria."
 
-### Entry #33
-**Context:** Implementing a strategic test suite (Unit and Widget tests) to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria.
-**Action:** Added bloc_test and mocktail to dev_dependencies. Created unit tests for MovieRepository, Bloc tests for UserCubit, and Widget tests for MovieCard. Updated README with Testing Strategy.
+Action 1: Add Test Dependencies
+Add `bloc_test` and `mocktail` to `dev_dependencies` in `pubspec.yaml`.
 
----
+Action 2: Unit and Bloc Testing
+Create comprehensive unit tests for `MovieRepository` and Bloc tests for `UserCubit` to verify data flow and state transitions.
 
-### Entry #34
-**Context:** Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name.
-**Action:** Added change_app_package_name to dev_dependencies. Executed the package name change to 'com.platform_commons.match_and_watch.app'. Manually verified Android and iOS configurations. Performed clean and rebuild.
+Action 3: Widget Testing
+Implement widget tests for `MovieCard` and other key UI components to ensure visual consistency and interaction reliability.
+
+Action 4: Testing Strategy Documentation
+Update the `README.md` with a detailed Testing Strategy section.
+
+Please implement this test suite and confirm when complete.
+
+**Context:**
+Implementing a strategic test suite (Unit and Widget tests) to verify core offline-sync logic and UI responsiveness, satisfying the 'go beyond' criteria.
+
+## Entry #34: Professional Package Name Refactor
+**Prompt:**
+Task 35: Professional Package Name Refactor
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #34. Context: "Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name."
+
+Action 1: Add Package Rename Tool
+Add `change_app_package_name` to `dev_dependencies` in `pubspec.yaml`.
+
+Action 2: Execute Package Name Change
+Execute the package name change to `com.platform_commons.match_and_watch.app` across the entire project.
+
+Action 3: Configuration Verification
+Manually verify Android and iOS configurations to ensure the new bundle ID is correctly applied. Perform a full clean and rebuild.
+
+Please execute this refactor and confirm when complete.
+
+**Context:**
+Refactoring the project to replace the default 'com.example' bundle ID with a unique, professional package name.
