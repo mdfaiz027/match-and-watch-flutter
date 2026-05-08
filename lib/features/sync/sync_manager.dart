@@ -23,9 +23,9 @@ void callbackDispatcher() {
       for (final user in pendingUsers) {
         try {
           // 2. Attempt to POST to API
+          final fullName = '${user.firstName} ${user.lastName}'.trim();
           final response = await reqresService.createUser(
-            firstName: user.firstName,
-            lastName: user.lastName,
+            fullName: fullName,
             movieTaste: user.movieTaste,
           );
 

@@ -21,15 +21,13 @@ class ReqresService {
   }
 
   Future<Response> createUser({
-    required String firstName,
-    required String lastName,
+    required String fullName,
     required String movieTaste,
   }) async {
     return _apiClient.dio.post(
       '$_baseUrl/users',
       data: {
-        'first_name': firstName,
-        'last_name': lastName,
+        'name': fullName,
         'job': movieTaste,
       },
       options: Options(

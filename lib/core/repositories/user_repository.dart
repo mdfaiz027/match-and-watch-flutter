@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:dio/dio.dart';
 import '../database/app_database.dart';
 import '../network/reqres_service.dart';
 
@@ -62,22 +63,34 @@ class UserRepository {
   }
 
   Future<void> createUser({
-    required String firstName,
-    required String lastName,
+    required String fullName,
     required String movieTaste,
   }) async {
+    // Safely split name
+    final parts = fullName.trim().split(' ');
+    final firstName = parts.first;
+    final lastName = parts.length > 1 ? parts.sublist(1).join(' ') : '';
+
     bool pendingSync = false;
     int? serverId;
 
     try {
       final response = await _reqresService.createUser(
-        firstName: firstName,
-        lastName: lastName,
+        fullName: fullName,
         movieTaste: movieTaste,
       );
       serverId = int.tryParse(response.data['id'].toString());
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout ||
+          e.type == DioExceptionType.receiveTimeout ||
+          e.type == DioExceptionType.sendTimeout ||
+          e.type == DioExceptionType.connectionError) {
+        pendingSync = true;
+      } else {
+        rethrow;
+      }
     } catch (e) {
-      pendingSync = true;
+      rethrow;
     }
 
     await _db.into(_db.users).insert(

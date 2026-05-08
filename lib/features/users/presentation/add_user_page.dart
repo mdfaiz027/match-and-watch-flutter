@@ -26,15 +26,12 @@ class _AddUserPageState extends State<AddUserPage> {
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       final fullName = _nameController.text.trim();
-      final nameParts = fullName.split(' ');
-      final firstName = nameParts.isNotEmpty ? nameParts[0] : fullName;
-      final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+      final movieTaste = _movieTasteController.text.trim();
 
       // Call createUser on UserCubit
       await context.read<UserCubit>().createUser(
-        firstName: firstName,
-        lastName: lastName,
-        movieTaste: _movieTasteController.text.trim(),
+        fullName: fullName,
+        movieTaste: movieTaste,
       );
 
       if (mounted) {

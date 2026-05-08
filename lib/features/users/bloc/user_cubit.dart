@@ -53,18 +53,16 @@ class UserCubit extends Cubit<UserState> {
   }
 
   Future<void> createUser({
-    required String firstName,
-    required String lastName,
+    required String fullName,
     required String movieTaste,
   }) async {
     try {
       await _repository.createUser(
-        firstName: firstName,
-        lastName: lastName,
+        fullName: fullName,
         movieTaste: movieTaste,
       );
     } catch (e) {
-      emit(UserError('Failed to add user locally'));
+      emit(UserError('Failed to add user: ${e.toString()}'));
     }
   }
 

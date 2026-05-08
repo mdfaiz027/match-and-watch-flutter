@@ -461,3 +461,28 @@ Please implement these fixes and confirm when complete.
 
 **Context:**
 Auditing Page 1 requirements to ensure dynamic saved movie counts are streamed from Drift, and establishing the 'Active User' state for navigation.
+
+## Entry #15: Page 2 Audit - Form Data Mapping & Offline Detection
+**Prompt:**
+Task 14: Page 2 Audit - Form Data Mapping & Offline Detection
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #15. Context: "Auditing Page 2 requirements to ensure correct data mapping between the UI, local DB, and Reqres API, and tightening the offline detection logic."
+
+Action 1: Form Data Mapping (Name & Job)
+The AddUserPage form has a single "Name" field, but our Users table expects firstName and lastName, and the Reqres API expects "name" and "job".
+
+In UserRepository.createUser, please ensure the single "Name" string is safely split by space (e.g., first word is firstName, the rest is lastName) before saving to Drift.
+
+Ensure the Dio POST request body correctly maps: {"name": fullName, "job": movieTaste}.
+
+Action 2: Robust Offline Detection
+To properly satisfy the offline requirement, the createUser method must reliably know when the device is actually offline to trigger the pendingSync = true local save.
+
+Please ensure the repository wraps the API call in a try/catch that specifically checks for connection-related DioException types (like connectionTimeout, receiveTimeout, sendTimeout, or connectionError).
+
+Only if it is a genuine connection error should it default to the offline pendingSync = true behavior. If it's a 4xx or 5xx server error, it should throw a normal exception so the UI can show an error Snackbar.
+
+Please implement these refinements and confirm when complete.
+
+**Context:**
+Auditing Page 2 requirements to ensure correct data mapping between the UI, local DB, and Reqres API, and tightening the offline detection logic.
