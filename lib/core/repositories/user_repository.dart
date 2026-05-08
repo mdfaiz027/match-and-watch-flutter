@@ -105,12 +105,14 @@ class UserRepository {
       rethrow;
     }
 
+    final avatarUrl = 'https://ui-avatars.com/api/?name=${Uri.encodeComponent(fullName)}&background=random';
+
     await _db.into(_db.users).insert(
           UsersCompanion.insert(
             serverId: Value(serverId),
             firstName: firstName,
             lastName: lastName,
-            avatar: const Value('assets/images/profile_pic.png'),
+            avatar: Value(avatarUrl),
             movieTaste: movieTaste,
             pendingSync: Value(pendingSync),
           ),
