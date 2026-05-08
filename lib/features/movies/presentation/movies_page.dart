@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../bloc/movie_cubit.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/database/app_database.dart';
@@ -58,13 +59,24 @@ class _MoviesPageState extends State<MoviesPage> {
             return _buildShimmerList();
           } else if (state is MovieLoaded) {
             final movies = state.movies;
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
-                final movie = movies[index];
-                return _MovieCard(movie: movie, userId: widget.userId);
-              },
+            return AnimationLimiter(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  final movie = movies[index];
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: _MovieCard(movie: movie, userId: widget.userId),
+                      ),
+                    ),
+                  );
+                },
+              ),
             );
           } else if (state is MovieError) {
             return Center(child: Text('Error: ${state.message}'));
@@ -162,7 +174,16 @@ class _MovieCard extends StatelessWidget {
                           builder: (context, snapshot) {
                             final count = snapshot.data ?? 0;
                             return Badge(
-                              label: Text(count.toString()),
+                              label: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 300),
+                                transitionBuilder: (Widget child, Animation<double> animation) {
+                                  return ScaleTransition(scale: animation, child: child);
+                                },
+                                child: Text(
+                                  count.toString(),
+                                  key: ValueKey<int>(count),
+                                ),
+                              ),
                               isLabelVisible: count > 0,
                               backgroundColor: AppTheme.cinematicGold,
                               child: StreamBuilder<bool>(

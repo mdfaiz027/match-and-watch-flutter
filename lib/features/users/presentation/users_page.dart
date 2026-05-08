@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import '../bloc/user_cubit.dart';
 import '../../../core/theme/app_theme.dart';
 
@@ -59,52 +60,63 @@ class _UsersPageState extends State<UsersPage> {
             if (users.isEmpty) {
               return const Center(child: Text('No users found.'));
             }
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: users.length,
-              itemBuilder: (context, index) {
-                final user = users[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: ListTile(
-                    onTap: () {
-                      context.push('/movies?userId=${user.id}');
-                    },
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: CachedNetworkImage(
-                        imageUrl: user.avatar ?? '',
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Container(
-                          color: Colors.grey[800],
-                          child: const Icon(Icons.person, color: Colors.white54),
+            return AnimationLimiter(
+              child: ListView.builder(
+                controller: _scrollController,
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  final user = users[index];
+                  return AnimationConfiguration.staggeredList(
+                    position: index,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 50.0,
+                      child: FadeInAnimation(
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: ListTile(
+                            onTap: () {
+                              context.push('/movies?userId=${user.id}');
+                            },
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(24),
+                              child: CachedNetworkImage(
+                                imageUrl: user.avatar ?? '',
+                                width: 48,
+                                height: 48,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey[800],
+                                  child: const Icon(Icons.person, color: Colors.white54),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey[800],
+                                  child: const Icon(Icons.person, color: Colors.white54),
+                                ),
+                                fadeInDuration: const Duration(milliseconds: 500),
+                              ),
+                            ),
+                            title: Text(
+                              '${user.firstName} ${user.lastName}',
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            subtitle: StreamBuilder<int>(
+                              stream: context.read<UserCubit>().getSavedMovieCount(user.id),
+                              builder: (context, snapshot) {
+                                final count = snapshot.data ?? 0;
+                                return Text(
+                                  'Saved movies: $count',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                );
+                              },
+                            ),
+                          ),
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          color: Colors.grey[800],
-                          child: const Icon(Icons.person, color: Colors.white54),
-                        ),
-                        fadeInDuration: const Duration(milliseconds: 500),
                       ),
                     ),
-                    title: Text(
-                      '${user.firstName} ${user.lastName}',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    subtitle: StreamBuilder<int>(
-                      stream: context.read<UserCubit>().getSavedMovieCount(user.id),
-                      builder: (context, snapshot) {
-                        final count = snapshot.data ?? 0;
-                        return Text(
-                          'Saved movies: $count',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           } else if (state is UserError) {
             return Center(child: Text('Error: ${state.message}'));

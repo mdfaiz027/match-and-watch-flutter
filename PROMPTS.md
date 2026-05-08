@@ -411,3 +411,28 @@ Please generate the fix and confirm exactly which file I need to open to paste m
 
 **Context:**
 Fixing the Reqres 'missing_api_key' error by injecting the required 'x-api-key' header into the Dio client.
+
+## Entry #13: The Final UI Polish & Reconnection State
+**Prompt:**
+Task 12: The Final UI Polish & Reconnection State
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #13. Context: "Implementing the final UI polish requirements from the assignment: Staggered list animations, animated count badges, and a non-blocking 'reconnecting...' UI bar."
+
+Action 1: Staggered List Animations
+Please add the flutter_staggered_animations package to pubspec.yaml.
+Update the ListView.builder in both the UsersPage and MoviesPage. Wrap the generated cards in AnimationConfiguration.staggeredList with a FadeInAnimation and a slight SlideAnimation so the list items fade in one by one when the page loads, as required by the assignment specs.
+
+Action 2: Animated Save Count Badge
+On the MoviesPage and MatchesPage, wrap the integer inside the "Save Count" badge with an AnimatedSwitcher. When the number of users who saved the movie changes (read from the local DB stream), the number should smoothly animate (e.g., a scale or slide transition) rather than instantly snapping.
+
+Action 3: "Reconnecting..." UI Bar
+The assignment requires a small "reconnecting..." bar when the network fails and Dio is automatically retrying.
+
+Please create a global connection state listener (e.g., a simple Cubit or ValueNotifier tied to our Dio Retry Interceptor).
+
+Update the root MaterialApp (perhaps using the builder property) to overlay a small, non-blocking animated banner at the very top or bottom of the screen that says "Reconnecting..." whenever a retry is in progress. It should disappear when the network call succeeds.
+
+Please implement these finishing touches and confirm when complete.
+
+**Context:**
+Implementing the final UI polish requirements from the assignment: Staggered list animations, animated count badges, and a non-blocking 'reconnecting...' UI bar.

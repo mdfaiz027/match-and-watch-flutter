@@ -86,9 +86,13 @@ class MatchesPage extends StatelessWidget {
                                     style: Theme.of(context).textTheme.titleLarge,
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
-                                    '${match.users.length} saves',
-                                    style: const TextStyle(color: AppTheme.cinematicGold),
+                                  AnimatedSwitcher(
+                                    duration: const Duration(milliseconds: 300),
+                                    child: Text(
+                                      '${match.users.length} saves',
+                                      key: ValueKey<int>(match.users.length),
+                                      style: const TextStyle(color: AppTheme.cinematicGold),
+                                    ),
                                   ),
                                   const SizedBox(height: 12),
                                   _buildUserAvatars(match.users),

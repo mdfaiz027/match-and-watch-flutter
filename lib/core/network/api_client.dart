@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:dio/dio.dart';
+import 'connection_state.dart';
 
 class ApiClient {
   late final Dio _dio;
@@ -62,6 +63,8 @@ class RetryInterceptor extends Interceptor {
     if (_shouldRetry(err) && retryCount < maxRetries) {
       retryCount++;
       extra['retryCount'] = retryCount;
+      
+      connectionNotifier.setReconnecting(true);
 
       // Exponential backoff: 1s, 2s, 4s...
       final delay = Duration(seconds: pow(2, retryCount - 1).toInt());
@@ -78,12 +81,17 @@ class RetryInterceptor extends Interceptor {
             extra: extra,
           ),
         );
+        connectionNotifier.setReconnecting(false);
         return handler.resolve(response);
       } on DioException catch (e) {
+        if (retryCount >= maxRetries) {
+          connectionNotifier.setReconnecting(false);
+        }
         return super.onError(e, handler);
       }
     }
 
+    connectionNotifier.setReconnecting(false);
     return super.onError(err, handler);
   }
 
