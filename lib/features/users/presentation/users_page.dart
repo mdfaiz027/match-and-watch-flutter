@@ -42,8 +42,12 @@ class _UsersPageState extends State<UsersPage> {
     final prefs = sl<SharedPreferences>();
     final hasSeenTutorial = prefs.getBool('hasSeenUsersTutorial') ?? false;
     if (!hasSeenTutorial) {
-      ShowCaseWidget.of(context).startShowCase([_fabKey, _matchesKey]);
-      prefs.setBool('hasSeenUsersTutorial', true);
+      Future.delayed(const Duration(milliseconds: 600), () {
+        if (mounted) {
+          ShowCaseWidget.of(context).startShowCase([_fabKey, _matchesKey]);
+          prefs.setBool('hasSeenUsersTutorial', true);
+        }
+      });
     }
   }
 
@@ -72,6 +76,7 @@ class _UsersPageState extends State<UsersPage> {
             description: AppStrings.tutorialMatchesDesc,
             tooltipBackgroundColor: AppColors.surfaceGrey,
             textColor: AppColors.onSurface,
+            targetPadding: const EdgeInsets.all(4),
             titleTextStyle: const TextStyle(
               color: AppColors.primaryGold,
               fontWeight: FontWeight.bold,
@@ -209,6 +214,8 @@ class _UsersPageState extends State<UsersPage> {
         description: AppStrings.tutorialNewUserDesc,
         tooltipBackgroundColor: AppColors.surfaceGrey,
         textColor: AppColors.onSurface,
+        targetShapeBorder: const CircleBorder(),
+        targetPadding: const EdgeInsets.all(4),
         titleTextStyle: const TextStyle(
           color: AppColors.primaryGold,
           fontWeight: FontWeight.bold,

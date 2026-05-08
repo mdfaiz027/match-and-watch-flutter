@@ -74,8 +74,12 @@ class _MoviesPageState extends State<MoviesPage> {
                 final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
                 if (!hasSeenTutorial) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
-                    prefs.setBool('hasSeenMoviesTutorial', true);
+                    Future.delayed(const Duration(milliseconds: 600), () {
+                      if (context.mounted) {
+                        ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
+                        prefs.setBool('hasSeenMoviesTutorial', true);
+                      }
+                    });
                   });
                 }
               }
@@ -258,7 +262,7 @@ class _MovieCard extends StatelessWidget {
                               stream: context.read<MovieCubit>().getSaveCount(movie.id),
                               builder: (context, snapshot) {
                                 final count = snapshot.data ?? 0;
-                                return Badge(
+                                final badge = Badge(
                                   label: AnimatedSwitcher(
                                     duration: const Duration(milliseconds: AppConstants.durationMediumMs),
                                     transitionBuilder: (Widget child, Animation<double> animation) {
@@ -275,7 +279,7 @@ class _MovieCard extends StatelessWidget {
                                     stream: context.read<MovieCubit>().isSaved(userId, movie.id),
                                     builder: (context, snapshot) {
                                       final isSaved = snapshot.data ?? false;
-                                      final iconButton = IconButton(
+                                      return IconButton(
                                         icon: Icon(
                                           isSaved ? Icons.bookmark : Icons.bookmark_border,
                                           color: isSaved ? AppColors.primaryGold : null,
@@ -296,46 +300,48 @@ class _MovieCard extends StatelessWidget {
                                           }
                                         },
                                       );
-
-                                      if (saveButtonKey != null) {
-                                        return Showcase(
-                                          key: saveButtonKey!,
-                                          title: AppStrings.tutorialSaveMovieTitle,
-                                          description: AppStrings.tutorialSaveMovieDesc,
-                                          tooltipBackgroundColor: AppColors.surfaceGrey,
-                                          textColor: AppColors.onSurface,
-                                          titleTextStyle: const TextStyle(
-                                            color: AppColors.primaryGold,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18,
-                                          ),
-                                          descTextStyle: const TextStyle(
-                                            color: AppColors.textSecondary,
-                                            fontSize: 14,
-                                          ),
-                                          onTargetClick: () {
-                                            HapticFeedback.lightImpact();
-                                            if (userId != 0) {
-                                              context.read<MovieCubit>().toggleSave(userId, movie);
-                                              
-                                              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                const SnackBar(
-                                                  content: Text(AppStrings.movieSaved),
-                                                  duration: Duration(seconds: 1),
-                                                  backgroundColor: AppColors.primaryGold,
-                                                ),
-                                              );
-                                            }
-                                          },
-                                          disposeOnTap: true,
-                                          child: iconButton,
-                                        );
-                                      }
-                                      return iconButton;
                                     },
                                   ),
                                 );
+
+                                if (saveButtonKey != null) {
+                                  return Showcase(
+                                    key: saveButtonKey!,
+                                    title: AppStrings.tutorialSaveMovieTitle,
+                                    description: AppStrings.tutorialSaveMovieDesc,
+                                    tooltipBackgroundColor: AppColors.surfaceGrey,
+                                    textColor: AppColors.onSurface,
+                                    targetShapeBorder: const CircleBorder(),
+                                    targetPadding: const EdgeInsets.all(8),
+                                    titleTextStyle: const TextStyle(
+                                      color: AppColors.primaryGold,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                    descTextStyle: const TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontSize: 14,
+                                    ),
+                                    onTargetClick: () {
+                                      HapticFeedback.lightImpact();
+                                      if (userId != 0) {
+                                        context.read<MovieCubit>().toggleSave(userId, movie);
+                                        
+                                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(AppStrings.movieSaved),
+                                            duration: Duration(seconds: 1),
+                                            backgroundColor: AppColors.primaryGold,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    disposeOnTap: true,
+                                    child: badge,
+                                  );
+                                }
+                                return badge;
                               },
                             ),
                           ],
