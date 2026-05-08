@@ -122,7 +122,7 @@ class SavedMoviesPage extends StatelessWidget {
 
         return AnimationLimiter(
           child: ListView.builder(
-            padding: const EdgeInsets.all(AppDimensions.spacingM),
+            padding: const EdgeInsets.symmetric(vertical: AppDimensions.spacingM),
             itemCount: movies.length,
             itemBuilder: (context, index) {
               final movie = movies[index];
@@ -133,56 +133,113 @@ class SavedMoviesPage extends StatelessWidget {
                   verticalOffset: 50.0,
                   child: FadeInAnimation(
                     child: Card(
-                      margin: const EdgeInsets.only(bottom: AppDimensions.spacingM),
-                      child: ListTile(
-                        leading: Hero(
-                          tag: 'movie-poster-${movie.id}',
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(AppDimensions.radiusM),
-                            child: CachedNetworkImage(
-                              imageUrl: movie.posterPath != null
-                                  ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
-                                  : '',
-                              width: 50,
-                              height: 75,
-                              fit: BoxFit.cover,
-                              errorWidget: (context, url, error) => Container(
-                                width: 50,
-                                height: 75,
-                                color: AppColors.surfaceLight,
-                                child: const Icon(Icons.movie, color: AppColors.primaryGold, size: 20),
-                              ),
-                            ),
-                          ),
-                        ),
-                        title: Text(movie.title, style: Theme.of(context).textTheme.titleLarge),
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: AppDimensions.spacingM,
+                        vertical: AppDimensions.spacingXS,
+                      ),
+                      child: InkWell(
                         onTap: () {
                           context.push('/movie/${movie.id}');
                         },
-                        trailing: StreamBuilder<bool>(
-                          stream: context.read<MovieCubit>().isSaved(activeUserId, movie.id),
-                          builder: (context, isSavedSnapshot) {
-                            final isSavedByActiveUser = isSavedSnapshot.data ?? false;
-                            return IconButton(
-                              icon: Icon(
-                                isSavedByActiveUser ? Icons.bookmark : Icons.bookmark_border,
-                                color: isSavedByActiveUser ? AppColors.primaryGold : Colors.grey,
-                              ),
-                              onPressed: () {
-                                HapticFeedback.lightImpact();
-                                context.read<MovieCubit>().toggleSave(activeUserId, movie);
-                                
-                                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(isSavedByActiveUser ? AppStrings.removedFromSaved : AppStrings.movieSaved),
-                                    duration: const Duration(seconds: 1),
-                                    backgroundColor: AppColors.primaryGold,
+                        borderRadius: BorderRadius.circular(AppDimensions.cardRadius),
+                        child: Row(
+                          children: [
+                            Hero(
+                              tag: 'movie-poster-${movie.id}',
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(AppDimensions.cardRadius),
+                                  bottomLeft: Radius.circular(AppDimensions.cardRadius),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: movie.posterPath != null
+                                      ? '${AppEndpoints.tmdbImageBaseW185}${movie.posterPath}'
+                                      : '',
+                                  width: AppDimensions.moviePosterWidth,
+                                  height: AppDimensions.movieCardHeight,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) => Container(
+                                    width: AppDimensions.moviePosterWidth,
+                                    height: AppDimensions.movieCardHeight,
+                                    color: AppColors.surfaceLight,
+                                    child: const Icon(Icons.movie, color: AppColors.primaryGold),
                                   ),
-                                );
-                              },
-                            );
-                          },
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(AppDimensions.spacingM),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movie.title,
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: AppDimensions.spacingXXS),
+                                    Text(
+                                      movie.releaseYear ?? '',
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                    const SizedBox(height: AppDimensions.spacingXS),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        StreamBuilder<int>(
+                                          stream: context.read<MovieCubit>().getSaveCount(movie.id),
+                                          builder: (context, snapshot) {
+                                            final count = snapshot.data ?? 0;
+                                            return Badge(
+                                              label: AnimatedSwitcher(
+                                                duration: const Duration(milliseconds: AppConstants.durationMediumMs),
+                                                transitionBuilder: (Widget child, Animation<double> animation) {
+                                                  return ScaleTransition(scale: animation, child: child);
+                                                },
+                                                child: Text(
+                                                  count.toString(),
+                                                  key: ValueKey<int>(count),
+                                                ),
+                                              ),
+                                              isLabelVisible: count > 0,
+                                              backgroundColor: AppColors.primaryGold,
+                                              child: StreamBuilder<bool>(
+                                                stream: context.read<MovieCubit>().isSaved(activeUserId, movie.id),
+                                                builder: (context, isSavedSnapshot) {
+                                                  final isSavedByActiveUser = isSavedSnapshot.data ?? false;
+                                                  return IconButton(
+                                                    icon: Icon(
+                                                      isSavedByActiveUser ? Icons.bookmark : Icons.bookmark_border,
+                                                      color: isSavedByActiveUser ? AppColors.primaryGold : null,
+                                                    ),
+                                                    onPressed: () {
+                                                      HapticFeedback.lightImpact();
+                                                      context.read<MovieCubit>().toggleSave(activeUserId, movie);
+                                                      
+                                                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                        SnackBar(
+                                                          content: Text(isSavedByActiveUser ? AppStrings.removedFromSaved : AppStrings.movieSaved),
+                                                          duration: const Duration(seconds: 1),
+                                                          backgroundColor: AppColors.primaryGold,
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
