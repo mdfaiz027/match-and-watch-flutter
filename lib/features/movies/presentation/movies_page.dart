@@ -31,17 +31,6 @@ class _MoviesPageState extends State<MoviesPage> {
     _scrollController.addListener(_onScroll);
   }
 
-  void _checkShowcase() {
-    final prefs = sl<SharedPreferences>();
-    final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
-    if (!hasSeenTutorial) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
-        prefs.setBool('hasSeenMoviesTutorial', true);
-      });
-    }
-  }
-
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
@@ -73,7 +62,14 @@ class _MoviesPageState extends State<MoviesPage> {
         child: BlocConsumer<MovieCubit, MovieState>(
           listener: (context, state) {
             if (state is MovieLoaded && state.movies.isNotEmpty) {
-              _checkShowcase();
+              final prefs = sl<SharedPreferences>();
+              final hasSeenTutorial = prefs.getBool('hasSeenMoviesTutorial') ?? false;
+              if (!hasSeenTutorial) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ShowCaseWidget.of(context).startShowCase([_saveButtonKey]);
+                  prefs.setBool('hasSeenMoviesTutorial', true);
+                });
+              }
             }
           },
           builder: (context, state) {

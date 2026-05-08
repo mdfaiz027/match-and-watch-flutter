@@ -754,27 +754,31 @@ Please implement this premium tutorial flow and confirm when complete.
 **Context:**
 Implementing premium contextual coach marks using showcaseview, featuring background blurring, custom tooltips, and haptic feedback.
 
-## Entry #25: Fix Showcase Sequence & Render Timing
+## Entry #26: Fix Showcase Sequence & Render Timing
 **Prompt:**
 Task 24.1: Fix Showcase Sequence & Render Timing
 
-Log this first: Please log this prompt into PROMPTS.md as Entry #26. Context: \"Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle.\"
+Log this first: Please log this prompt into PROMPTS.md as Entry #26. Context: "Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle and list state."
 
-Action 1: Fix UsersPage Sequence
-The UsersPage has two tutorials (FAB and Matches Icon). They are only showing one.
+Action 1: Fix UsersPage Sequence (Multi-item Tutorial)
+The UsersPage has two tutorials (the FAB and the Matches Icon in the AppBar). Currently, only one is appearing.
 
 Please ensure that BOTH GlobalKeys are passed into the trigger array in the exact order we want them to appear: ShowCaseWidget.of(context).startShowCase([fabKey, matchesKey]);
 
-Crucial Timing Fix: You cannot call startShowCase directly inside initState. You must wrap the trigger and the SharedPreferences check inside WidgetsBinding.instance.addPostFrameCallback((_) { ... }) so the widgets actually exist on screen before the overlay tries to find them.
+Crucial Timing Fix: Wrap the logic that checks SharedPreferences and calls startShowCase inside WidgetsBinding.instance.addPostFrameCallback((_) { ... }) within the initState. This ensures the AppBar and FAB are fully rendered before the showcase starts.
 
-Action 2: Fix MoviesPage Trigger
-The MoviesPage has one tutorial (the Save button on the first card).
+Action 2: Fix MoviesPage Trigger (Async List Tutorial)
+The MoviesPage tutorial highlights the "Save" button on the first movie card.
 
-If the list is still loading (Shimmer state), the GlobalKey won't be attached to anything.
+The Logic: You cannot trigger this tutorial in initState because the list is still loading (Shimmer state) and the "Save" button doesn't exist yet.
 
-Please update the logic: Do not trigger the showcase in initState. Instead, trigger the SharedPreferences check and the startShowCase inside the BlocConsumer or BlocListener only when the state becomes Loaded and the list is not empty. Wrap it in a WidgetsBinding.instance.addPostFrameCallback to be safe.
+The Fix: Move the showcase trigger logic into the BlocConsumer or BlocListener of the MovieCubit.
 
-Please implement these timing fixes and confirm when complete.
+Only call startShowCase([saveButtonKey]) when the state is Loaded AND the movie list is not empty.
+
+Still wrap this in a WidgetsBinding.instance.addPostFrameCallback to ensure the list items have finished their build cycle before the highlight appears.
+
+Please implement these lifecycle fixes to ensure the full premium tutorial sequence works.
 
 **Context:**
-Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle.
+Fixing the ShowcaseView sequence so all three tutorials fire correctly by handling Flutter's rendering lifecycle and list state.

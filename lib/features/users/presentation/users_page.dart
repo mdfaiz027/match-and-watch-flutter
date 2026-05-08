@@ -21,7 +21,7 @@ class UsersPage extends StatefulWidget {
 
 class _UsersPageState extends State<UsersPage> {
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _addUserKey = GlobalKey();
+  final GlobalKey _fabKey = GlobalKey();
   final GlobalKey _matchesKey = GlobalKey();
 
   @override
@@ -39,13 +39,8 @@ class _UsersPageState extends State<UsersPage> {
     final prefs = sl<SharedPreferences>();
     final hasSeenTutorial = prefs.getBool('hasSeenUsersTutorial') ?? false;
     if (!hasSeenTutorial) {
-      // Ensure the showcase starts after a small delay to allow UI to stabilize
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (mounted) {
-          ShowCaseWidget.of(context).startShowCase([_addUserKey, _matchesKey]);
-          prefs.setBool('hasSeenUsersTutorial', true);
-        }
-      });
+      ShowCaseWidget.of(context).startShowCase([_fabKey, _matchesKey]);
+      prefs.setBool('hasSeenUsersTutorial', true);
     }
   }
 
@@ -196,7 +191,7 @@ class _UsersPageState extends State<UsersPage> {
         ),
       ),
       floatingActionButton: Showcase(
-        key: _addUserKey,
+        key: _fabKey,
         title: 'New User',
         description: 'Start here! Create a profile to start saving movies.',
         tooltipBackgroundColor: AppTheme.surfaceGrey,
