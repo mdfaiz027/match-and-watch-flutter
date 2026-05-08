@@ -87,12 +87,7 @@ class MovieRepository {
   }
 
   Stream<List<User>> watchUsersWhoSavedMovie(int movieId) {
-    final query = _db.select(_db.users).join([
-      innerJoin(_db.savedMovies, _db.savedMovies.userId.equalsExp(_db.users.id)),
-    ])
-      ..where(_db.savedMovies.movieId.equals(movieId));
-
-    return query.watch().map((rows) => rows.map((row) => row.readTable(_db.users)).toList());
+    return _db.watchUsersWhoSavedMovie(movieId);
   }
 
   Stream<int> watchSaveCountForMovie(int movieId) {

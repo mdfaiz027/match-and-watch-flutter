@@ -45,6 +45,15 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   int get schemaVersion => 1;
+
+  Stream<List<User>> watchUsersWhoSavedMovie(int movieId) {
+    final query = select(users).join([
+      innerJoin(savedMovies, savedMovies.userId.equalsExp(users.id)),
+    ])
+      ..where(savedMovies.movieId.equals(movieId));
+
+    return query.watch().map((rows) => rows.map((row) => row.readTable(users)).toList());
+  }
 }
 
 LazyDatabase _openConnection() {

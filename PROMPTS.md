@@ -512,3 +512,30 @@ Please implement these data-flow refinements and confirm when complete.
 
 **Context:**
 Auditing Page 3 requirements to ensure aggressive local caching of API movies and setting up individual Drift streams for real-time save count badges.
+
+## Entry #17: Page 4 Audit - Avatar Streams & Offline-First Hydration
+**Prompt:**
+Task 16: Page 4 Audit - Avatar Streams & Offline-First Hydration
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #17. Context: "Auditing Page 4 to ensure the UI streams the actual User avatars for saved movies, and implementing offline-first hydration for the movie details."
+
+Action 1: Reactive User Avatars Stream
+The Movie Detail Page must show the profile photos of the users who saved the movie.
+
+Please add a query to Drift: watchUsersWhoSavedMovie(int movieId) that joins SavedMovies and Users and returns a Stream<List<User>>.
+
+Update the MovieDetailPage UI to use this stream. If the list is empty, show "Be the first to save this." If not empty, show "X users want to watch this" along with a Row of small CachedNetworkImage avatars for those users.
+
+Action 2: Offline-First Detail Hydration
+The app must load the detail page instantly when offline, but still fetch full details if online.
+
+In MovieDetailPage (or its Bloc), instantly load the movie data we already have cached in the local database.
+
+In the background (without blocking the UI with a spinner), call the MovieRepository method to hit the GET /movie/{id} TMDB endpoint.
+
+When the API returns the fresh data, perform an upsert on the Movies table in Drift. Because the UI is listening to the database stream, any new details (like a longer overview) will just smoothly pop into the UI.
+
+Please implement these refinements and confirm when complete.
+
+**Context:**
+Auditing Page 4 to ensure the UI streams the actual User avatars for saved movies, and implementing offline-first hydration for the movie details.

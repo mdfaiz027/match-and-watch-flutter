@@ -133,10 +133,13 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
       builder: (context, snapshot) {
         final users = snapshot.data ?? [];
         if (users.isEmpty) {
-          return Center(
-            child: Text(
-              'Be the first to save this.',
-              style: Theme.of(context).textTheme.bodyMedium,
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Text(
+                'Be the first to save this.',
+                style: TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+              ),
             ),
           );
         }
@@ -149,24 +152,27 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: users.length,
-                itemBuilder: (context, index) {
-                  final user = users[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: CircleAvatar(
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: users.map((user) => Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: CachedNetworkImage(
+                    imageUrl: user.avatar ?? '',
+                    imageBuilder: (context, imageProvider) => CircleAvatar(
                       radius: 20,
-                      backgroundImage: user.avatar != null
-                          ? CachedNetworkImageProvider(user.avatar!)
-                          : null,
-                      child: user.avatar == null ? const Icon(Icons.person) : null,
+                      backgroundImage: imageProvider,
                     ),
-                  );
-                },
+                    placeholder: (context, url) => const CircleAvatar(
+                      radius: 20,
+                      child: Icon(Icons.person),
+                    ),
+                    errorWidget: (context, url, error) => const CircleAvatar(
+                      radius: 20,
+                      child: Icon(Icons.person),
+                    ),
+                  ),
+                )).toList(),
               ),
             ),
           ],
