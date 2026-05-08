@@ -8,6 +8,10 @@ import 'core/repositories/user_repository.dart';
 import 'core/repositories/movie_repository.dart';
 import 'core/theme/app_theme.dart';
 import 'features/sync/sync_manager.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/users/bloc/user_cubit.dart';
+import 'features/movies/bloc/movie_cubit.dart';
+import 'core/router/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,13 +59,20 @@ class MatchAndWatchApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Match & Watch',
-      theme: AppTheme.darkTheme,
-      home: const Scaffold(
-        body: Center(
-          child: Text('Match & Watch Initialized'),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => UserCubit(userRepository),
         ),
+        BlocProvider(
+          create: (context) => MovieCubit(movieRepository),
+        ),
+      ],
+      child: MaterialApp.router(
+        title: 'Match & Watch',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        routerConfig: appRouter,
       ),
     );
   }

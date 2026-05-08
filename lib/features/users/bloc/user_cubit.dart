@@ -27,6 +27,8 @@ class UserError extends UserState {
 class UserCubit extends Cubit<UserState> {
   final UserRepository _repository;
   StreamSubscription? _subscription;
+  int _currentPage = 1;
+  bool _isFetchingNextPage = false;
 
   UserCubit(this._repository) : super(UserInitial());
 
@@ -39,10 +41,18 @@ class UserCubit extends Cubit<UserState> {
       },
       onError: (e) => emit(UserError(e.toString())),
     );
-    _repository.refreshUsers();
+    _repository.refreshUsers(page: 1);
   }
 
-  Future<void> addUser({
+  Future<void> loadNextPage() async {
+    if (_isFetchingNextPage) return;
+    _isFetchingNextPage = true;
+    _currentPage++;
+    await _repository.refreshUsers(page: _currentPage);
+    _isFetchingNextPage = false;
+  }
+
+  Future<void> createUser({
     required String firstName,
     required String lastName,
     required String movieTaste,

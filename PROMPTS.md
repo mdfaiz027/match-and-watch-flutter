@@ -236,3 +236,46 @@ Please generate these files and confirm when complete.
 
 **Context:**
 Implementing the WorkManager background task to sync offline-created users to the server, and setting up the app icon and splash screen packages.
+
+## Entry #8: UI - Users Page, Add User Form, & Routing
+**Prompt:**
+Task 7: UI - Users Page, Add User Form, & Routing
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #8. Context: "Building the initial UI screens (Users Page and Add User Form) using the Cinematic Gold theme, integrating the UserBloc, and setting up GoRouter."
+
+Action 1: App Router
+In /lib/core/router/app_router.dart, configure GoRouter.
+
+Create a route for / that points to UsersPage.
+
+Create a route for /add_user that points to AddUserPage.
+(We will add the other routes later, just set up the shell for now).
+
+Action 2: Users Page (Page 01)
+In /lib/features/users/presentation/users_page.dart, build the main screen.
+
+AppBar: Include a title and an action icon button for "Matches" (just make it print a debug log for now).
+
+Body: Use a BlocBuilder to listen to our UserCubit.
+
+Loading State: If the state is loading, display a Shimmer placeholder list (do NOT use a basic CircularProgressIndicator).
+
+Loaded State: Display a ListView.builder. Each item should be a Card showing the user's avatar (using CachedNetworkImage with a fade-in), First/Last name, and their saved movie count.
+
+Pagination: Implement a scroll controller to fetch the next page when the user reaches the bottom.
+
+FAB: Add a FloatingActionButton using our Primary Gold color that navigates to /add_user.
+
+Action 3: Add User Page (Page 02)
+In /lib/features/users/presentation/add_user_page.dart, build the form.
+
+Add two TextFormFields: Name and Movie Taste.
+
+Add a submit button. When pressed, call the createUser method on the UserCubit.
+
+Crucial UI Requirement: Once the save is complete (or if offline, immediately after local DB save), show a SnackBar at the bottom saying "User added successfully", then pop the screen to return to the Users list. Do NOT use blocking dialogs.
+
+Please generate these files, apply the app_theme.dart styles, and confirm when complete.
+
+**Context:**
+Building the initial UI screens (Users Page and Add User Form) using the Cinematic Gold theme, integrating the UserBloc, and setting up GoRouter.
