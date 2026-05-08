@@ -599,3 +599,28 @@ Please implement this DI refactor and confirm when complete.
 
 **Context:**
 Fulfilling the strict 'Dependency Injection' requirement from the assignment's technical checklist by implementing get_it.
+
+## Entry #21: Page 7 Audit - Exponential Backoff & The Offline ID Swap
+**Prompt:**
+Task 20: Page 7 Audit - Exponential Backoff & The Offline ID Swap
+
+Log this first: Please log this prompt into PROMPTS.md as Entry #21. Context: "Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync."
+
+Action 1: Exponential Backoff Verification
+The assignment mandates that network retries wait "a little longer between each retry" to handle the 30% failure simulation.
+
+Please audit the custom Dio Retry Interceptor we built. Ensure it uses an exponential backoff formula (e.g., delay = baseDelay * (2 ^ attempt)) rather than a fixed delay.
+
+Action 2: The "ID Swap" Safety Check
+The reviewers will create a user offline, save movies, and then go online. We must ensure no saved movies are unlinked during the background sync.
+
+Please audit the SavedMovies database table and the WorkManager sync logic.
+
+Confirm that SavedMovies.userId references the local SQLite auto-incremented id, NOT the Reqres serverId.
+
+Confirm that when SyncManager successfully posts the pending user to the API, it ONLY updates the serverId column for that user in the database, leaving the local id completely untouched so the foreign key relationship to their saved movies remains perfectly intact.
+
+Please implement these verifications and confirm when complete.
+
+**Context:**
+Auditing Page 07 requirements to ensure the network retry logic uses exponential backoff and that offline database foreign keys remain intact after a server sync.
