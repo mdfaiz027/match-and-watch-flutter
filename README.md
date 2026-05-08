@@ -86,7 +86,7 @@ flutter test
 ## 📦 Production Release
 
 The production-ready APK is available for download here:
-[Download Match&Watch Release APK](https://github.com/platform-commons/match_and_watch/releases/latest)
+[Download Match&Watch Release APK](https://drive.google.com/file/d/1OPQaY23cMHD82n4dt5lE2T9CAMqBcxVI/view?usp=drive_link)
 
 ---
 *Built with ❤️ for Platform Commons.*
