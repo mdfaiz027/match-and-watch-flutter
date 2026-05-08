@@ -5,6 +5,8 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import '../constants/app_constants.dart';
+
 part 'app_database.g.dart';
 
 class Users extends Table {
@@ -58,8 +60,22 @@ class AppDatabase extends _$AppDatabase {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'db.sqlite'));
-    return NativeDatabase.createInBackground(file);
+    String path;
+    if (Platform.isAndroid) {
+      // On Android, putting the DB in the 'databases' folder makes it 
+      // appear automatically in the Android Studio Database Inspector.
+      final dbFolder = await getApplicationDocumentsDirectory();
+      // getApplicationDocumentsDirectory is /data/user/0/com.example/app_flutter
+      // we want /data/user/0/com.example/databases
+      final databasesPath = p.join(p.dirname(dbFolder.path), 'databases');
+      await Directory(databasesPath).create(recursive: true);
+      path = p.join(databasesPath, AppConstants.databaseName);
+    } else {
+      final dbFolder = await getApplicationDocumentsDirectory();
+      path = p.join(dbFolder.path, AppConstants.databaseName);
+    }
+
+    final file = File(path);
+    return NativeDatabase(file);
   });
 }
